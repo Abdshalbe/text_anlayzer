@@ -4,7 +4,6 @@ import typing
 import os
 from NamesCounter import NamesCounter
 from Preprocesser import Preprocessor
-from SequinceCounter import SequinceCounter
 from SequinceCounter import generate_k_seqs
 
 
@@ -23,19 +22,23 @@ class PeopleKAssocions:
         self.__preprocessed: bool = preprocessed
         try:
             if preprocessed:
-                self.__names, self.__sentences = self.__get_names_sentences_from_json()
+                self.__names, self.__sentences = self.__get_names_sentences_from_jsom()
             else:
                 self.__names, self.__sentences = self.__get_names_sentences_from_paths()
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             print(f"Error: {e}")  # Handle any file-related or other errors
             sys.exit(1)  # Exit program if there's an error
 
+
+    def get_sentences_len(self) -> int :
+        return len(self.__sentences)
     def create_k_seqs(self) -> list[str|list[list[str]]]:
         """
         Creates the K-Sequences output ready for write to json file
         :return: a list of lists to lists of K-sequences
         """
         res = []
+
 
         def process_sequences(seq_counts: dict[str, list[tuple[str, int]]]) -> list[list[str]]:
             """
@@ -91,18 +94,10 @@ class PeopleKAssocions:
         except Exception as e:
             print(f"An unexpected error occurred: {str(e)}")
         return res
-
-    def get_lines_number(self):
-        """
-         getter method for the number of lines in the supplied text
-        :return: the number of lines in the supplied text
-        """
-        return len(self.__sentences)
-
     def get_names_apearances_idx(self) -> dict[str, list[int]]:
         """
-        Returns a dictionary mapping each name to a lines were they appeared
-        :return: a dictionary mapping each name to a lines were they appeared
+        Returns a dictionary mapping each __name to a lines were they appeared
+        :return: a dictionary mapping each __name to a lines were they appeared
         """
         try:
             name_counter = NamesCounter(5, preprocessed=self.__preprocessed,
@@ -125,7 +120,7 @@ class PeopleKAssocions:
 
         return remove_duplicates(namesIdx)
 
-    def __get_names_sentences_from_json(self) -> (list[list[str]], list[list[list[str]]]):
+    def __get_names_sentences_from_jsom(self) -> (list[list[str]], list[list[list[str]]]):
         """
         Loads preprocessed data from a JSON file.
         :param json_file_path: Path to the preprocessed JSON file
@@ -175,7 +170,8 @@ class PeopleKAssocions:
 
 
 if __name__ == "__main__":
-    PeopleKAssocions1 = PeopleKAssocions(6,people_input_path="text_analyzer/2_examples/Q6_examples/example_1/people_small_1.csv",
-                          sentence_input_path="text_analyzer/2_examples/Q6_examples/example_1/sentences_small_1.csv ",
-                          remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",N = 6)
-    print(PeopleKAssocions1.get_names_apearances_idx())
+    PeopleKAssocions1 = PeopleKAssocions(5,
+                                         people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
+                                         sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv",
+                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=50)
+    print(PeopleKAssocions1.get_sentences_len())

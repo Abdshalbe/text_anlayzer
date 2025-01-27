@@ -3,9 +3,9 @@ import json
 import pytest
 from NamesCounter import NamesCounter
 
-NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json")
-NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json")
-NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json")
+NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json",preprocessed=True)
+NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json",preprocessed= True)
+NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json",preprocessed= True)
 NAMES_COUNTER4 = NamesCounter(3,
                               people_input_path="text_analyzer/2_examples/Q3_examples/example_1/people_small_1.csv",
                               remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
@@ -134,9 +134,9 @@ def test_get_sentence():
 
 
 def test_people_counter():
-    res1 = {'aunt marge dursley': 19, 'aurelius dumbledore': 32}
-    res2 = {'igor karkaroff': 8}
-    res3 = {'harry potter': 5, 'malcolm mcgonagall': 3}
+    res1 = ({'aurelius dumbledore': 32, 'aunt marge dursley': 19}, {'aurelius dumbledore': [0, 2, 2, 2, 5, 5, 9, 10, 10, 11, 12, 14, 15, 17, 18, 19, 19, 20, 21, 22, 22, 22, 22, 24, 25, 25, 25, 25, 25, 25, 25, 25], 'aunt marge dursley': [5, 5, 5, 25, 25, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 29]})
+    res2 = ({'igor karkaroff': 8}, {'igor karkaroff': [0, 1, 2, 3, 4, 5, 5, 6]})
+    res3 = ({'harry potter': 5, 'malcolm mcgonagall': 3}, {'harry potter': [0, 4, 5, 5, 5], 'malcolm mcgonagall': [5, 7, 7]})
     assert NAMES_COUNTER1.count_names() == res1
     assert NAMES_COUNTER4.count_names() == res1
     assert NAMES_COUNTER2.count_names() == res2
