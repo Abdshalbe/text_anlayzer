@@ -16,7 +16,7 @@ class NamesCounter:
         :param sentence_input_path: file path for sentence input(default value None)
         :param remove_input_path: file path for sentence input after preprocessing and removing(default value None)
         :param people_input_path: path for people input  (default value None)
-        :param json_input_path: file path for json input to get name from him (default value None)
+        :param json_input_path: file path for json input to get __name from him (default value None)
         """
         self.__QNum = QNum
         self.__json_input_path = json_input_path
@@ -35,7 +35,6 @@ class NamesCounter:
                     "either json_input_path or remove_input_path and sentence_input_path or people_input_path must be provided")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)  # Exit program if there's an error
 
     def __load_json(self, json_file_path: typing.Union[str, os]) -> Exception | None:
         """
@@ -89,26 +88,26 @@ class NamesCounter:
         """
         Builds the names dictionary based on the provided people list.
         :return: A tuple containing two dictionaries:
-                 - A dictionary mapping individual words to the main name they belong to.
+                 - A dictionary mapping individual words to the main __name they belong to.
                  - A dictionary indicating whether the word has a partial match (True/False).
-        :note: This function optimizes runtime by making name searches efficient (O(1) for each search).
+        :note: This function optimizes runtime by making __name searches efficient (O(1) for each search).
         :time complexity: search = O(1), build = O(Len(names) * len(other names)).
         """
         mapToMain = {}
         have_conutnue = {}
         join_words = lambda words: ' '.join(words)  # lambda function
         for names in self.__names:
-            value = join_words(names[0]).strip()  # creat the main name sequence
+            value = join_words(names[0]).strip()  # creat the main __name sequence
             for name in names[0]:
-                if name not in mapToMain:  # map every part of main to the name mapper and add thim to a list
+                if name not in mapToMain:  # map every part of main to the __name mapper and add thim to a list
                     mapToMain[name] = [value]
                 else:
                     if value not in mapToMain[name]:
                         mapToMain[name].append(value)
-                have_conutnue[name] = False  # there is no need to the name to be continued to count
+                have_conutnue[name] = False  # there is no need to the __name to be continued to count
             for name in names[1]:  # add nick names to dictionary
-                if join_words(name) in mapToMain:  # check member ship of nick name connected
-                    if value not in mapToMain[join_words(name)]:# check if the main name in the res so we didnt count twice
+                if join_words(name) in mapToMain:  # check member ship of nick __name connected
+                    if value not in mapToMain[join_words(name)]:# check if the main __name in the res so we didnt count twice
                         mapToMain[join_words(name)].append(value)
                 else:
                     mapToMain[join_words(name)] = [value]
@@ -116,16 +115,16 @@ class NamesCounter:
                 res = ""
                 for word in name[:-1]:
                     res += word
-                    have_conutnue[res] = True # set every sub name of the nick name as have continue
+                    have_conutnue[res] = True # set every sub __name of the nick __name as have continue
                     res += " "
         return mapToMain, have_conutnue
 
     def count_names(self) -> (dict[str, int],dict[str,list[int]]):
         """
-        Count the number of sentences that contain each name or part of a name from the names list.
+        Count the number of sentences that contain each __name or part of a __name from the names list.
         :param sentence_list: List of sentences, where each sentence is a list of words.
-        :return: A dictionary where each key is a name/part and the value is the count of sentences
-                 containing that name/part.
+        :return: A dictionary where each key is a __name/part and the value is the count of sentences
+                 containing that __name/part.
         """
         counter = {}
         names_appear_lines = {}
@@ -207,12 +206,19 @@ class NamesCounter:
 if __name__ == '__main__':
     # names_counter = NamesCounter(3,people_input_path="text_analyzer/2_examples/Q3_examples/example_2/people_small_2.csv",sentence_input_path= "text_analyzer/2_examples/Q3_examples/example_2/sentences_small_2.csv",remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv")
     # print(names_counter.count_names())
-    NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json")
-    NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json")
-    NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json")
+
+    NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json",preprocessed= True)
+    NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json",preprocessed= True)
+    NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json",preprocessed= True)
     NAMES_COUNTER4 = NamesCounter(3,
                                   people_input_path="text_analyzer/2_examples/Q3_examples/example_1/people_small_1.csv",
-                                  sentence_input_path="Q2resEx1",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv")
-    # print(NAMES_COUNTER4.build_names_dictionary())
-    print(NAMES_COUNTER3.get_sentences())
+                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_1/sentences_small_1.csv")
+    NAMES_COUNTER5 = NamesCounter(3,
+                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_2/people_small_2.csv",
+                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_2/sentences_small_2.csv")
+    NAMES_COUNTER6 = NamesCounter(3,
+                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_3/people_small_3.csv",
+                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_3/sentences_small_3.csv")

@@ -169,6 +169,6 @@ class SearchEngine:
 
 
 if __name__ == "__main__":
-    searchEngine = SearchEngine(4, jsonInputFile="text_analyzer/Q1_result1.json", kSeqJson="text_analyzer/2_examples/Q4_examples/example_1/kseq_query_keys_1.json")
-    print(searchEngine.write_to_json("text_analyzer/Q4_result1.json"))
+    searchEngine = SearchEngine(4, jsonInputFile="text_analyzer/Q1_result1.json", kSeqJson="text_analyzer/2_examples/Q4_examples/example_1/kseq_query_keys_1.json",preprocessed=True)
+    print(searchEngine.buildKseqData())
     # print(tuple(["str","hello"]))

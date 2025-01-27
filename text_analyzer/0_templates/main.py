@@ -47,7 +47,7 @@ def readargs(args=None):
                         )
     parser.add_argument('--maximal_distance',
                         type=int,
-                        help="maximal distance between nodes in graph",
+                        help="maximal distance between __nodes in graph",
                         )
 
     parser.add_argument('--qsek_query_path',
