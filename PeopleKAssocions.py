@@ -32,8 +32,6 @@ class PeopleKAssocions:
     def get_sentences_len(self) -> int:
         return len(self.__sentences)
 
-    def get_N(self) -> int:
-        return self.__sentences,self.__names
 
     def create_k_seqs(self) -> list[list[str | list[list[str]]]]:
         """
@@ -133,4 +131,4 @@ if __name__ == "__main__":
     PeopleKAssocions6 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",preprocessed=True, N=4)
     PeopleKAssocions7 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",preprocessed=True, N=5)
 
-    print(PeopleKAssocions1.get_N(),PeopleKAssocions5.get_N())
+    print(PeopleKAssocions1.get_sentences_len())

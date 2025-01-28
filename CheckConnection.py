@@ -182,7 +182,7 @@ class CheckConnection:
         :return: True if the file was successfully written, False otherwise.
         """
         try:
-            if not self.__is_fixed_length :
+            if not self.__is_fixed_length:
                 data = self.get_result_without_fixed_length()
             else:
                 data = self.get_result_with_fixed_length()

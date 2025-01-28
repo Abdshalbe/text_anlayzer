@@ -9,7 +9,7 @@ import collections
 
 from Preprocesser import writeTojsonFile
 class SentenceGraph:
-    def __init__(self,question_number , threshold, remove_input_path: str | os.PathLike = None, json_input_path: str = None, sentence_input_path: str= None, preprocessed: bool = False):
+    def __init__(self, question_number, threshold, remove_input_path: str | os.PathLike = None, json_input_path: str = None, sentence_input_path: str= None, preprocessed: bool = False):
         self.__question_number = question_number
         try:
             if preprocessed:
@@ -17,8 +17,7 @@ class SentenceGraph:
             else:
                 self.__sentences = Preprocesser.Preprocessor(1,sentenceInputPath=sentence_input_path,removeInputPath=remove_input_path).getSentences()
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)  # Exit program if there's an error
+            raise e # Handle any file-related or other errors
         self.threshold = threshold  # Minimum number of shared words to form an edge
         self.__graph = self.builed_graph() # Adjacency list
 
@@ -34,46 +33,44 @@ class SentenceGraph:
                     graph.add_edge(tuple(self.__sentences[i]),tuple(self.__sentences[j]))
         return graph
 
-    def _dfs(self, node, visited, component):
+    def __dfs(self, node, visited, component):
         visited[node] = True
-        component.append(sorted(self.__graph.get_node(node).get_data()))  # Sort each sentence lexicographically before adding to the component
+        component.append(self.__graph.get_node(node).get_data())  # Sort each sentence lexicographically before adding to the component
         for neighbor in self.__graph.get_node(node).get_connected_data():
             neighbor_data = neighbor.get_data()
             if not visited[neighbor_data]:
-                self._dfs(neighbor_data, visited, component)
+                self.__dfs(neighbor_data, visited, component)
 
     def get_groups(self):
+        #  Prepare a visited dictionary (you already have this logic)
         visited = {tuple(sentence): False for sentence in self.__sentences}
         groups = []
 
+        #  Perform DFS to find connected components
         for sentence in self.__sentences:
             sentence_tuple = tuple(sentence)
             if not visited[sentence_tuple]:
                 component = []
-                self._dfs(sentence_tuple, visited, component)
+                self.__dfs(sentence_tuple, visited, component)
                 groups.append(component)
-
-        groups = sorted(groups, key=lambda x: len(x))  # Sort groups by size
         for group in groups:
-            group.sort()  # Sort sentences lexicographically within each group
+            group.sort(key=lambda sentence: list(sentence))
+        groups.sort(key=lambda g: (len(g), g))
 
-        result = {f"Group {i + 1}": group for i, group in enumerate(groups)}
-
-        # Final result format as required
+        # Construct final result format
         return {
             "Question 9": {
-                "Group Matches": [
+                "group Matches": [
                     [f"Group {i + 1}", group] for i, group in enumerate(groups)
                 ]
             }
         }
 
-
     def write_to_json(self, path):
         return writeTojsonFile(path,self.get_groups())
 
 if __name__ == "__main__":
-    sentencesGraph = SentenceGraph(9,threshold=3,sentence_input_path="text_analyzer/2_examples/Q9_examples/exmaple_2/sentences_small_2.csv",remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+    sentencesGraph = SentenceGraph(9,threshold=1,sentence_input_path="text_analyzer/2_examples/Q9_examples/exmaple_3/sentences_small_3.csv",remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv")
     print(sentencesGraph.write_to_json("json91.json"))
     # print(sentencesGraph.build_graph())
     # print(sentencesGraph.get_groups())

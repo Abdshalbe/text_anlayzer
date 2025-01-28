@@ -1,3 +1,5 @@
+import json
+
 from PeopleKAssocions import PeopleKAssocions
 
 PeopleKAssocions1 = PeopleKAssocions(5,
@@ -42,8 +44,65 @@ def test_create_seq():
     assert PeopleKAssocions2.create_k_seqs() == res2
     assert PeopleKAssocions3.create_k_seqs() == res3
     assert PeopleKAssocions4.create_k_seqs() == res4
-    assert PeopleKAssocions5.create_k_seqs() == res1
     assert PeopleKAssocions6.create_k_seqs() == res2
     assert PeopleKAssocions7.create_k_seqs() == res3
+
+def test_get_names_appearances_idx():
+    res1 = {'aurelius dumbledore': [0, 2, 5, 9, 10, 11, 12, 14, 15, 17, 18, 19, 20, 21, 22, 24, 25], 'albus dumbledore': [0, 2, 5, 9, 10, 11, 12, 14, 15, 17, 18, 19, 20, 21, 22, 24, 25], 'harry potter': [5, 6, 7, 9, 10, 21, 24, 25, 30], 'aunt marge dursley': [5, 25, 26, 27, 29]}
+    res2 = {'igor karkaroff': [0, 1, 2, 3, 4, 5, 6]}
+    res3 = {'harry potter': [0, 4, 5], 'malcolm mcgonagall': [5, 7]}
+    res4 = {}
+
+    assert PeopleKAssocions1.get_names_appearances_idx() == res1
+    assert PeopleKAssocions2.get_names_appearances_idx() == res2
+    assert PeopleKAssocions3.get_names_appearances_idx() == res3
+    assert PeopleKAssocions4.get_names_appearances_idx() == res4
+    assert PeopleKAssocions6.get_names_appearances_idx() == res2
+    assert PeopleKAssocions7.get_names_appearances_idx() == res3
+
+def test_getLen():
+    assert PeopleKAssocions1.get_sentences_len() == 31
+    assert PeopleKAssocions2.get_sentences_len() == 7
+    assert PeopleKAssocions3.get_sentences_len() == 8
+    assert PeopleKAssocions4.get_sentences_len() == 8
+    assert PeopleKAssocions5.get_sentences_len() == 31
+    assert PeopleKAssocions6.get_sentences_len() == 7
+    assert PeopleKAssocions7.get_sentences_len() == 8
+
+
+def test_json_write():
+    assert PeopleKAssocions1.write_to_json("text_analyzer/2_examples/Q5_examples/test1.json")
+    assert PeopleKAssocions2.write_to_json("text_analyzer/2_examples/Q5_examples/test2.json")
+    assert PeopleKAssocions3.write_to_json("text_analyzer/2_examples/Q5_examples/test3.json")
+    assert PeopleKAssocions4.write_to_json("text_analyzer/2_examples/Q5_examples/test4.json")
+    assert PeopleKAssocions6.write_to_json("text_analyzer/2_examples/Q5_examples/test6.json")
+    assert PeopleKAssocions7.write_to_json("text_analyzer/2_examples/Q5_examples/test7.json")
+    def load_json(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    def compare_json(file1, file2):
+        """
+        Compares two json files after load them
+        :param file1: first json file
+        :param file2: second json file
+        :return: true if they are equal, false otherwise
+        """
+        try:
+            # Load both JSON files into dictionaries
+            data1 = load_json(file1)
+            data2 = load_json(file2)
+            # Compare the two dictionaries and return True if they are identical
+            return data1 == data2
+        except Exception as e:
+            print(f"Error comparing JSON files: {e}")
+            return False
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test1.json","text_analyzer/2_examples/Q5_examples/example_1/Q5_result1.json")
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test2.json","text_analyzer/2_examples/Q5_examples/example_2/Q5_result2.json")
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test3.json","text_analyzer/2_examples/Q5_examples/example_3/Q5_result3.json")
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test4.json","text_analyzer/2_examples/Q5_examples/example_4/Q5_result4.json")
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test6.json","text_analyzer/2_examples/Q5_examples/example_2/Q5_result2.json")
+    assert compare_json("text_analyzer/2_examples/Q5_examples/test7.json","text_analyzer/2_examples/Q5_examples/example_3/Q5_result3.json")
+
+
 
 

@@ -2,6 +2,7 @@ import json
 import os
 import typing
 from PeopleKAssocions import PeopleKAssocions
+from Preprocesser import writeTojsonFile
 
 
 class Node:
@@ -106,7 +107,6 @@ class PeopleConnectionGraph(PeopleKAssocions):
         :param filePath: path to JSON file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
-
         def format_edges(edges: list[Node]) -> list[str | list[str]]:
             """
             Converts the __edges from tuples of names to lists of names, formatted as required.
@@ -119,33 +119,16 @@ class PeopleConnectionGraph(PeopleKAssocions):
                 person1, person2 = edge
                 # Ensure the format is a list of individual words for each data in the edge
                 formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
-
             # Sort __edges to ensure the order is as required in the question
             formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
-
             return formatted_edges
+        data = {
+            f"Question {self.__question_number}": {  # Use the corrected attribute node_data
+                "Pair Matches": format_edges(self.__graph.get_edge())
+            }
+        }
+        return writeTojsonFile(filePath, data)
 
-        try:
-            with open(filePath, 'w', encoding='utf-8') as f:
-                res = False
-                data = {
-                    f"Question {self.__question_number}": {  # Use the corrected attribute node_data
-                        "Pair Matches": format_edges(self.__graph.get_edge())
-                    }
-                }
-                # Try to write the data to the file
-                json.dump(data, f, ensure_ascii=False, indent=4)
-                res = True
-        except FileNotFoundError:
-            print(f"FileNotFoundError: The path {filePath} was not found.")
-        except PermissionError:
-            print(f"PermissionError: Permission denied to write to {filePath}.")
-        except IOError as e:
-            print(f"IOError: An error occurred while writing to {filePath}. Error: {str(e)}")
-            return False
-        except Exception as e:
-            print(f"An unexpected error occurred: {str(e)}")
-        return res
 
     def count_people_in_window(self) -> dict[str, dict[str, int]]:
         """
@@ -199,10 +182,9 @@ if __name__ == '__main__':
     # /people_small_1.csv", sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv
     # ", remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv",Threshold=4, WindowSize=4)
     graph = PeopleConnectionGraph(6,
-                                  people_input_path="text_analyzer/2_examples/Q6_examples/example_4/people_small_4.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q6_examples/example_4"
-                                                      "/sentences_small_4.csv",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv", Threshold=1,
-                                  WindowSize=5)
-    # __graph.write_to_json("Q6_example_1.json")
-    print(graph.build_people_graph())
+                                  people_input_path="text_analyzer/2_examples/Q6_examples/example_1/people_small_1.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q6_examples/example_1/sentences_small_1.csv",
+                                  remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv", Threshold=4,
+                                  WindowSize=4)
+    graph.write_to_json("Q6_example_1.json")
+    # print(graph.build_people_graph())
