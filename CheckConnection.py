@@ -55,7 +55,7 @@ class CheckConnection:
             sys.exit(1)  # Exit program if there's an error
     def bfs_shortest_path(self, start_name: str, target_name: str) -> list[str]:
         """
-        Perform BFS to find the shortest path between two people (nodes) in the graph.
+        Perform BFS to find the shortest path between two people (nodes) in the __graph.
         :param start_name: The starting data (node) node_data.
         :param target_name: The target data (node) node_data.
         :return: The shortest path between start_name and target_name as a list of names.
@@ -120,7 +120,7 @@ class CheckConnection:
 
     def build_graph_from_json(self, file_path: str) -> Graph:
         """
-        Builds a graph from a JSON file.
+        Builds a __graph from a JSON file.
         :param file_path: Path to the JSON file
         :return: A Graph object with __nodes and edges built from the JSON file
         """
@@ -138,7 +138,7 @@ class CheckConnection:
             for pair in pair_matches:
                 person1 = " ".join(pair[0])  # Convert the list of names into a single string
                 person2 = " ".join(pair[1])
-                graph.add_node(person1)  # Add __nodes to the graph
+                graph.add_node(person1)  # Add __nodes to the __graph
                 graph.add_node(person2)
                 # Add edge if the data pair exists
                 graph.add_edge(person1, person2)
@@ -212,7 +212,7 @@ class CheckConnection:
 
     def dfs_find_path(self, start: str, target: str, path=None, visited=None) -> bool:
         """
-        Checks if there is a path of exact length k between two people in the graph.
+        Checks if there is a path of exact length k between two people in the __graph.
         :param start: The starting data's node_data.
         :param target: The target data's node_data.
         :param path: The current path (used for recursion).

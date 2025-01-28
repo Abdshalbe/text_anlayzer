@@ -53,11 +53,11 @@ class Graph:
         self.__nodes = {}
         self.__edges = []
 
-    def add_node(self, data: str | list[str]) -> None:
+    def add_node(self, data: str | tuple[str]) -> None:
         if data not in self.__nodes:
             self.__nodes[data] = Node(data)
 
-    def add_edge(self, data1: str | list[str], data2: str | list[str]) -> None:
+    def add_edge(self, data1: str | tuple[list[str]], data2: str | tuple[list[str]]) -> None:
         if data1 in self.__nodes and data2 in self.__nodes:
             self.__nodes[data1].add_connected_data(self.__nodes[data2])
             self.__nodes[data2].add_connected_data(self.__nodes[data1])
@@ -95,14 +95,14 @@ class PeopleConnectionGraph(PeopleKAssocions):
 
     def get_graph(self) -> Graph:
         """
-        get the graph of the People Connection
-        :return: the graph of the People Connection
+        get the __graph of the People Connection
+        :return: the __graph of the People Connection
         """
         return self.__graph
 
     def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
         """
-        Write the graph __edges to a JSON file with the required format.
+        Write the __graph __edges to a JSON file with the required format.
         :param filePath: path to JSON file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
@@ -153,10 +153,10 @@ class PeopleConnectionGraph(PeopleKAssocions):
         maps each data to other persons and the number of distinct windows they appeared together.
         """
         personMetsCounter = {
-            person: {otherPerson: 0 for otherPerson in self.get_names_apearances_idx().keys() if person != otherPerson}
-            for person in self.get_names_apearances_idx().keys()}
+            person: {otherPerson: 0 for otherPerson in self.get_names_appearances_idx().keys() if person != otherPerson}
+            for person in self.get_names_appearances_idx().keys()}
         # Get the appearance indices of each data
-        names_appearances_idx = self.get_names_apearances_idx()
+        names_appearances_idx = self.get_names_appearances_idx()
         window_size = self.__windowSize  # Window size for counting occurrences
         total_lines = self.get_sentences_len()  # Loop through each possible window (startIndex)
         for startIndex in range(total_lines - window_size + 1):
@@ -177,7 +177,7 @@ class PeopleConnectionGraph(PeopleKAssocions):
 
     def build_people_graph(self) -> Graph:
         """
-        Build a graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >=
+        Build a __graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >=
         __Threshold. :return: A Graph object with the constructed __nodes and __edges.
         """
         main_dict = self.count_people_in_window()
@@ -195,7 +195,7 @@ class PeopleConnectionGraph(PeopleKAssocions):
 
 
 if __name__ == '__main__':
-    # graph = PeopleConnectionGraph(6, people_input_path=r"text_analyzer/2_examples/Q5_examples/example_1
+    # __graph = PeopleConnectionGraph(6, people_input_path=r"text_analyzer/2_examples/Q5_examples/example_1
     # /people_small_1.csv", sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv
     # ", remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv",Threshold=4, WindowSize=4)
     graph = PeopleConnectionGraph(6,
@@ -204,5 +204,5 @@ if __name__ == '__main__':
                                                       "/sentences_small_4.csv",
                                   remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv", Threshold=1,
                                   WindowSize=5)
-    # graph.write_to_json("Q6_example_1.json")
+    # __graph.write_to_json("Q6_example_1.json")
     print(graph.build_people_graph())

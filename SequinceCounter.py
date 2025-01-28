@@ -55,6 +55,34 @@ def load_Sentences_names(json_file_path: typing.Union[str, os]) -> (list[list[st
     return Sentences, names
 
 
+def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typing.Union[str, os], people_input_path: typing.Union[str, os] = None) -> (list[list[str]],list[list[str]]):
+    """
+    Loads __sentences and removes unwanted words based on the provided files.
+    :param sentence_input_path: Path to the sentence input file
+    :param remove_input_path: Path to the file with words to remove
+    :time complexity: O(n)
+    """
+    try:
+        if people_input_path is None:
+            dataLoader = Preprocesser.Preprocessor(1, sentenceInputPath=sentence_input_path,
+                                               removeInputPath=remove_input_path)
+        else:
+            dataLoader = Preprocesser.Preprocessor(1, sentenceInputPath=sentence_input_path,
+                                               removeInputPath=remove_input_path, peopleInputPath=people_input_path)
+        sentences = dataLoader.getSentences()
+        names = dataLoader.get_people()
+    except ValueError as e:
+        raise ValueError("{0}".format(e))
+    except FileNotFoundError as e:
+        raise FileNotFoundError("{0}".format(e))
+    except PermissionError as e:
+        raise PermissionError("{0}".format(e))
+    except Exception as e:
+        raise Exception("{0}".format(e))
+
+    return sentences, names
+
+
 class SequinceCounter:
 
     def __init__(self, question_num: int, sentence_input_path: typing.Union[str, os.PathLike] = None,
@@ -78,33 +106,12 @@ class SequinceCounter:
                 self.__sentences, _ = load_Sentences_names(json_input_path)
             elif sentence_input_path and remove_input_path:
                 # If sentence and remove files are provided, load the raw data
-                self.__sentences = self.__load_data(sentence_input_path, remove_input_path)
+                self.__sentences,_ = load_data(sentence_input_path, remove_input_path)
             else:
                 raise ValueError("Either --preprocessed or both --sentence_input and --remove_input must be provided.")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             print(f"Error: {e}")  # Handle any file-related or other errors
             sys.exit(1)  # Exit program if there's an error
-
-    def __load_data(self, sentence_input_path: typing.Union[str, os], remove_input_path: typing.Union[str, os]) -> list[list[str]]:
-        """
-        Loads __sentences and removes unwanted words based on the provided files.
-        :param sentence_input_path: Path to the sentence input file
-        :param remove_input_path: Path to the file with words to remove
-        :time complexity: O(n)
-        """
-        try:
-            dataLoader = Preprocesser.Preprocessor(1, sentenceInputPath=sentence_input_path,
-                                                   removeInputPath=remove_input_path)
-            sentences = dataLoader.getSentences()
-        except ValueError as e:
-            raise ValueError("{0}".format(e))
-        except FileNotFoundError as e:
-            raise FileNotFoundError("{0}".format(e))
-        except PermissionError as e:
-            raise PermissionError("{0}".format(e))
-        except Exception as e:
-            raise Exception("{0}".format(e))
-        return sentences
 
     def count_sequences(self) -> list[list[str|list[list[str|int]]]]:
         """
@@ -146,6 +153,7 @@ if __name__ == '__main__':
     SEQUENCE_COUNTER1 = SequinceCounter(2,
                                         sentence_input_path="text_analyzer/2_examples/Q2_examples/example_1"
                                                             "/sentences_small_1.csv",
+                                        people_input_path= "text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
                                         remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
                                         N=3)
     SEQUENCE_COUNTER2 = SequinceCounter(2,

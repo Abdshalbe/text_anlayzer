@@ -3,32 +3,7 @@ import sys
 import typing
 from Preprocesser import writeTojsonFile
 from Preprocesser import Preprocessor
-from SequinceCounter import load_Sentences_names
-
-
-def load_data(sentence_input_path: typing.Union[str, os], people_input_path: typing.Union[str, os],
-              remove_input_path: typing.Union[str, os]) -> (list[list[str]], list[list[str]]):
-    """
-    Loads __sentences and removes unwanted words based on the provided files.
-    :param sentence_input_path: Path to the sentence input file
-    :param people_input_path: Path to the people input file
-    :param remove_input_path: Path to the file with words to remove
-    :time complexity: O(n)
-    """
-    try:
-        dataLoader = Preprocessor(1, sentenceInputPath=sentence_input_path, removeInputPath=remove_input_path,
-                                  peopleInputPath=people_input_path)
-        sentences = dataLoader.getSentences()
-        names = dataLoader.get_people()
-    except ValueError:
-        raise
-    except FileNotFoundError as e:
-        raise FileNotFoundError("{0}".format(e))
-    except PermissionError as e:
-        raise PermissionError("{0}".format(e))
-    except Exception as e:
-        raise Exception("{0}".format(e))
-    return sentences, names
+from SequinceCounter import load_Sentences_names, load_data
 
 
 class NamesCounter:
@@ -53,8 +28,8 @@ class NamesCounter:
             if preprocessed:
                 self.__sentences, self.__names = load_Sentences_names(self.__json_input_path)
             elif self.__remove_input_path is not None and self.__sentence_input_path is not None and self.__people_input_path is not None:
-                self.__sentences, self.__names = load_data(self.__sentence_input_path, self.__people_input_path,
-                                                           self.__remove_input_path)
+                self.__sentences, self.__names = load_data(self.__sentence_input_path,
+                                                           self.__remove_input_path, self.__people_input_path)
             else:
                 raise ValueError(
                     "either json_input_path or remove_input_path and sentence_input_path or people_input_path must be provided")
@@ -83,8 +58,8 @@ class NamesCounter:
                     if value not in mapToMain[name]:
                         mapToMain[name].append(value)
                 have_conutnue[name] = False  # there is no need to the __data to be continued to count
-            for name in names[1]:  # add nick names to dictionary
-                if join_words(name) in mapToMain:  # check member ship of nick __data connected
+            for name in names[1]:  # add nicknames to dictionary
+                if join_words(name) in mapToMain:  # check membership of nick __data connected
                     if value not in mapToMain[
                         join_words(name)]:  # check if the main __data in the res so we didnt count twice
                         mapToMain[join_words(name)].append(value)
@@ -100,8 +75,8 @@ class NamesCounter:
 
     def count_names(self) -> (dict[str, int], dict[str, list[int]]):
         """
-        Count the number of sentences that contain each __data or part of a __data from the names list.
-        :return: A dictionary where each key is a __data/part and the value is the count of sentences
+        Count the number of __sentences that contain each __data or part of a __data from the names list.
+        :return: A dictionary where each key is a __data/part and the value is the count of __sentences
                  containing that __data/part.
         """
         counter = {}
@@ -150,22 +125,19 @@ class NamesCounter:
                 "Name Mentions": sorted([[key, names_counter[key]] for key in names_counter.keys()])
             }
         }
-        if writeTojsonFile(filePath, data):
-            return True
-        else:
-            return False
+        return writeTojsonFile(filePath, data)
 
     def get_names(self) -> list[list[str]]:
         """
         get the names list
-        :return: list
+        :return: list of
         """
         return self.__names
 
-    def get_sentences(self) -> list[list[str]]:
+    def get_sentences(self) -> list[list[list[str]]]:
         """
-        get the sentences list
-        :return: list of sentences
+        get the __sentences list
+        :return: list of __sentences
         """
         return self.__sentences
 
@@ -175,9 +147,9 @@ if __name__ == '__main__':
     # .csv",sentence_input_path= "text_analyzer/2_examples/Q3_examples/example_2/sentences_small_2.csv",
     # remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv") print(names_counter.count_names())
 
-    NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json", preprocessed=True)
-    NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json", preprocessed=True)
-    NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json", preprocessed=True)
+    # NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json", preprocessed=True)
+    # NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json", preprocessed=True)
+    # NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json", preprocessed=True)
     NAMES_COUNTER4 = NamesCounter(3,
                                   people_input_path="text_analyzer/2_examples/Q3_examples/example_1/people_small_1.csv",
                                   remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
@@ -190,3 +162,9 @@ if __name__ == '__main__':
                                   people_input_path="text_analyzer/2_examples/Q3_examples/example_3/people_small_3.csv",
                                   remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
                                   sentence_input_path="text_analyzer/2_examples/Q3_examples/example_3/sentences_small_3.csv")
+    NAMES_COUNTER7 = NamesCounter(3,
+                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_4/people_small_4.csv",
+                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_4/sentences_small_4.csv")
+
+    print(NAMES_COUNTER7.get_names())

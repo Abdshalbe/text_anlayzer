@@ -185,6 +185,7 @@ class Preprocessor:
             reader = csv.reader(file)
             for row in reader:
                 # Join the elements of the row into a single string and append it to the list
+
                 if rowCounter == 0:
                     rowCounter += 1
                 else:
@@ -204,7 +205,7 @@ class Preprocessor:
         peopleList = self.__readPeopleFile(self.__PeopleInputPath)
         for person in peopleList:
             mainName = self.__removeUnwantedWords(process_sentence(person[0]))
-            if mainName not in res:
+            if mainName not in res and mainName != " ":
                 res[mainName] = []
                 nickNames = person[1].split(",")
                 for nickName in nickNames:

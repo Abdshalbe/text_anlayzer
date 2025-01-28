@@ -1,10 +1,10 @@
-import json
+import os
 import sys
 import typing
-import os
+
 from NamesCounter import NamesCounter
-from Preprocesser import Preprocessor
-from SequinceCounter import generate_k_seqs
+from Preprocesser import writeTojsonFile
+from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
 
 
 class PeopleKAssocions:
@@ -22,23 +22,25 @@ class PeopleKAssocions:
         self.__preprocessed: bool = preprocessed
         try:
             if preprocessed:
-                self.__names, self.__sentences = self.__get_names_sentences_from_jsom()
+                self.__sentences, self.__names = load_Sentences_names(json_input_path)
             else:
-                self.__names, self.__sentences = self.__get_names_sentences_from_paths()
+                self.__sentences, self.__names = load_data(sentence_input_path=sentence_input_path,remove_input_path= remove_input_path,people_input_path=people_input_path)
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             print(f"Error: {e}")  # Handle any file-related or other errors
             sys.exit(1)  # Exit program if there's an error
 
-
-    def get_sentences_len(self) -> int :
+    def get_sentences_len(self) -> int:
         return len(self.__sentences)
-    def create_k_seqs(self) -> list[str|list[list[str]]]:
+
+    def get_N(self) -> int:
+        return self.__sentences,self.__names
+
+    def create_k_seqs(self) -> list[list[str | list[list[str]]]]:
         """
         Creates the K-Sequences output ready for write to json file
         :return: a list of lists to lists of K-sequences
         """
         res = []
-
 
         def process_sequences(seq_counts: dict[str, list[tuple[str, int]]]) -> list[list[str]]:
             """
@@ -61,10 +63,10 @@ class PeopleKAssocions:
 
             return result
 
-        idx_people = self.get_names_apearances_idx()
+        idx_people = self.get_names_appearances_idx()
         for person in sorted(idx_people.keys()):
             sentences = [line for index, line in enumerate(self.__sentences) if index in idx_people[person]]
-            res.append([person,process_sequences(generate_k_seqs(sentences, self.__N))])
+            res.append([person, process_sequences(generate_k_seqs(sentences, self.__N))])
         return res
 
     def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
@@ -73,28 +75,15 @@ class PeopleKAssocions:
         :param filePath: path to json file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
-        try:
-            with open(filePath, 'w', encoding='utf-8') as f:
-                res = False
-                data = {
-                    f"Question {self.__qustion_number}": {
-                         "Person Contexts and K-Seqs": self.create_k_seqs()
-                    }
-                }
-                # Try to write the data to the file
-                json.dump(data, f, ensure_ascii=False, indent=4)
-                res = True
-        except FileNotFoundError:
-            print(f"FileNotFoundError: The path {filePath} was not found.")
-        except PermissionError:
-            print(f"PermissionError: Permission denied to write to {filePath}.")
-        except IOError as e:
-            print(f"IOError: An error occurred while writing to {filePath}. Error: {str(e)}")
-            return False
-        except Exception as e:
-            print(f"An unexpected error occurred: {str(e)}")
-        return res
-    def get_names_apearances_idx(self) -> dict[str, list[int]]:
+
+        data = {
+            f"Question {self.__qustion_number}": {
+                "Person Contexts and K-Seqs": self.create_k_seqs()
+            }
+        }
+        return writeTojsonFile(filePath, data)
+
+    def get_names_appearances_idx(self) -> dict[str, list[int]]:
         """
         Returns a dictionary mapping each __data to a lines were they appeared
         :return: a dictionary mapping each __data to a lines were they appeared
@@ -120,58 +109,28 @@ class PeopleKAssocions:
 
         return remove_duplicates(namesIdx)
 
-    def __get_names_sentences_from_jsom(self) -> (list[list[str]], list[list[list[str]]]):
-        """
-        Loads preprocessed data from a JSON file.
-        :param json_file_path: Path to the preprocessed JSON file
-        :time complicity = O(1) because the file is already preprocessed and therefore
-         we just want to enter the data
-        """
-        try:
-            with open(self.__json_input_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                # Dynamically get the first key that matches 'Question' followed by a number
-                question_key = next(key for key in data.keys() if key.lower().startswith('question'))
-                # Extract __sentences from the dynamic question key
-                names = data.get(question_key, {}).get('Processed Names', [])
-                sentences = data.get(question_key, {}).get('Processed Sentences', [])
-        except FileNotFoundError:
-            raise FileNotFoundError(f"FileNotFoundError: The file {self.__json_input_path} was not found.")
-        except json.JSONDecodeError:
-            raise json.JSONDecodeError(f"JSONDecodeError: The file {self.__json_input_path} is not a valid JSON file.")
-
-        except PermissionError:
-            raise PermissionError(f"PermissionError: Permission denied to read {self.__json_input_path}.")
-
-        except Exception as e:
-            raise Exception(f"An error occurred while loading preprocessed data: {str(e)}")
-        return names, sentences
-
-    def __get_names_sentences_from_paths(self) -> (list[list[str]], list[list[list[str]]]):
-        """
-        load a list of names and sentences from a geetin file path to process
-        :return: lists of names and sentences to be set
-        """
-        try:
-            dataLoader = Preprocessor(1, sentenceInputPath=self.__sentence_input_path,
-                                      removeInputPath=self.__remove_input_path,
-                                      peopleInputPath=self.__people_input_path)
-            sentences = dataLoader.getSentences()
-            names = dataLoader.get_people()
-        except ValueError:
-            raise
-        except FileNotFoundError as e:
-            raise FileNotFoundError("{0}".format(e))
-        except PermissionError as e:
-            raise PermissionError("{0}".format(e))
-        except Exception as e:
-            raise Exception("{0}".format(e))
-        return names, sentences
 
 
 if __name__ == "__main__":
+
     PeopleKAssocions1 = PeopleKAssocions(5,
                                          people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
                                          sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv",
-                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=50)
-    print(PeopleKAssocions1.get_sentences_len())
+                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=3)
+    PeopleKAssocions2 = PeopleKAssocions(5,
+                                         people_input_path="text_analyzer/2_examples/Q5_examples/example_2/people_small_2.csv",
+                                         sentence_input_path="text_analyzer/2_examples/Q5_examples/example_2/sentences_small_2.csv",
+                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=4)
+    PeopleKAssocions3 = PeopleKAssocions(5,
+                                         people_input_path="text_analyzer/2_examples/Q5_examples/example_3/people_small_3.csv",
+                                         sentence_input_path="text_analyzer/2_examples/Q5_examples/example_3/sentences_small_3.csv",
+                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=5)
+    PeopleKAssocions4 = PeopleKAssocions(5,
+                                         people_input_path="text_analyzer/2_examples/Q5_examples/example_4/people_small_4.csv",
+                                         sentence_input_path="text_analyzer/2_examples/Q5_examples/example_4/sentences_small_4.csv",
+                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=6)
+    PeopleKAssocions5 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",preprocessed=True, N=3)
+    PeopleKAssocions6 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",preprocessed=True, N=4)
+    PeopleKAssocions7 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",preprocessed=True, N=5)
+
+    print(PeopleKAssocions1.get_N(),PeopleKAssocions5.get_N())
