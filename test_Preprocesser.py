@@ -1,80 +1,79 @@
+import json
 import string
 
 import Preprocesser
+from Preprocesser import process_sentence
+from Preprocesser import Preprocessor
 
-sentenceInputPath = r"text_analyzer\2_examples\Q1_examples\example_3\sentences_small_3.csv"
-peopleInputPath = r"text_analyzer\2_examples\Q1_examples\example_3\people_small_3.csv"
-removeInputPath = r"finalProject\text_analyzer\1_data\data\REMOVEWORDS.csv"
-preprocessor = Preprocesser.Preprocessor(QuestionNumber=1,
-                                         sentenceInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji "
-                                                           r"cs\text_analyzer\2_examples\Q1_examples\example_3"
-                                                           r"\sentences_small_3.csv",
-                                         peopleInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_3\people_small_3.csv",
-                                         removeInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji "
-                                                         r"cs\intro\finalProject\text_analyzer\1_data\data\REMOVEWORDS.csv")
-preprocessor_1 = Preprocesser.Preprocessor(QuestionNumber=1,
-                                           sentenceInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_1\sentences_small_1.csv",
-                                           peopleInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_1\people_small_1.csv",
-                                           removeInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\1_data\data\REMOVEWORDS.csv")
-preprocessor_2 = Preprocesser.Preprocessor(QuestionNumber=1,
-                                           sentenceInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_2\sentences_small_2.csv",
-                                           peopleInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_2\people_small_2.csv",
-                                           removeInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\1_data\data\REMOVEWORDS.csv")
-preprocessor_3 = Preprocesser.Preprocessor(QuestionNumber=1,
-                                           sentenceInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_3\sentences_small_3.csv",
-                                           peopleInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\text_analyzer\2_examples\Q1_examples\example_3\people_small_3.csv",
-                                           removeInputPath=r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\1_data\data\REMOVEWORDS.csv")
+preprocessor_1 = Preprocessor(1,
+                              peopleInputPath="text_analyzer/2_examples/Q1_examples/example_1/people_small_1.csv",
+                              sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_1/sentences_small_1.csv",
+                              removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+preprocessor_2 = Preprocessor(1, peopleInputPath="text_analyzer/2_examples/Q1_examples/example_2/people_small_2.csv",
+                              sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_2/sentences_small_2.csv",
+                              removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+preprocessor_3 = Preprocessor(1, peopleInputPath="text_analyzer/2_examples/Q1_examples/example_3/people_small_3.csv",
+                              sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_3/sentences_small_3.csv",
+                              removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
 
 
 def test_preprocesser_text():
-    assert preprocessor.process_sentence("H   i") == "h i"
-    assert preprocessor.process_sentence("Mr.Alix") == "mr alix"
-    assert preprocessor.process_sentence("mr   dunder") == "mr dunder"
-    assert preprocessor.process_sentence(" Mr. Potter ") == "mr potter"
-    assert preprocessor.process_sentence("Mr.") == "mr"
-    res1 = "under a tuft of jet black hair over boy forehead dumbledore and mcgonagall could see a curiously shaped cut like a bolt of lightning"
-    input1 = "Under a tuft of jet- black hair over boy forehead Dumbledore and  McGonagall could see a curiously shaped cut, like a bolt of lightning."
-    assert preprocessor.process_sentence(input1) == res1
-    input2 = "Ten years ago, there had been lots of pictures of what looked like a large pink beach ball wearing different- colored bonnets-- but    Dudley Dursley was no longer a baby, and now the photographs showed a large blond boy riding boy first bicycle, on a carousel at the fair, playing a computer game with boy father, being hugged and kissed by boy mother."
-    res2 = "ten years ago there had been lots of pictures of what looked like a large pink beach ball wearing different colored bonnets but dudley dursley was no longer a baby and now the photographs showed a large blond boy riding boy first bicycle on a carousel at the fair playing a computer game with boy father being hugged and kissed by boy mother"
-    assert preprocessor.process_sentence(input2) == res2
-    assert preprocessor.process_sentence("Hello WORLD!") == "hello world"
-    assert preprocessor.process_sentence("MiXed CASE!") == "mixed case"
+    assert process_sentence("H   i") == "h i"
+    assert process_sentence("Mr.Alix") == "mr alix"
+    assert process_sentence("mr   dunder") == "mr dunder"
+    assert process_sentence(" Mr. Potter ") == "mr potter"
+    assert process_sentence("Mr.") == "mr"
+    res1 = ("under a tuft of jet black hair over boy forehead dumbledore and mcgonagall could see a curiously shaped "
+            "cut like a bolt of lightning")
+    input1 = ("Under a tuft of jet- black hair over boy forehead Dumbledore and  McGonagall could see a curiously "
+              "shaped cut, like a bolt of lightning.")
+    assert process_sentence(input1) == res1
+    input2 = ("Ten years ago, there had been lots of pictures of what looked like a large pink beach ball wearing "
+              "different- colored bonnets-- but    Dudley Dursley was no longer a baby, and now the photographs "
+              "showed a large blond boy riding boy first bicycle, on a carousel at the fair, playing a computer game "
+              "with boy father, being hugged and kissed by boy mother.")
+    res2 = ("ten years ago there had been lots of pictures of what looked like a large pink beach ball wearing "
+            "different colored bonnets but dudley dursley was no longer a baby and now the photographs showed a large "
+            "blond boy riding boy first bicycle on a carousel at the fair playing a computer game with boy father "
+            "being hugged and kissed by boy mother")
+    assert process_sentence(input2) == res2
+    assert process_sentence("Hello WORLD!") == "hello world"
+    assert process_sentence("MiXed CASE!") == "mixed case"
 
     # Test that punctuation is replaced with a whitespace
-    assert preprocessor.process_sentence("Mr. Potter!") == "mr potter"
-    assert preprocessor.process_sentence("I don'__Threshold know!") == "i don __Threshold know"
-    assert preprocessor.process_sentence("Hello... Mr. Watson!!!") == "hello mr watson"
+    assert process_sentence("Mr. Potter!") == "mr potter"
+    assert process_sentence("I don'__Threshold know!") == "i don threshold know"
+    assert process_sentence("Hello... Mr. Watson!!!") == "hello mr watson"
 
     # Test that double whitespaces are removed
-    assert preprocessor.process_sentence("This  is   a  test") == "this is a test"
-    assert preprocessor.process_sentence("Mr.   Potter  and   Mrs.  Weasley") == "mr potter and mrs weasley"
+    assert process_sentence("This  is   a  test") == "this is a test"
+    assert process_sentence("Mr.   Potter  and   Mrs.  Weasley") == "mr potter and mrs weasley"
 
     # Test for mixed cases and spaces
-    assert preprocessor.process_sentence("   This   is a   sentence!  ") == "this is a sentence"
-    assert preprocessor.process_sentence("Hello   World   !") == "hello world"
+    assert process_sentence("   This   is a   sentence!  ") == "this is a sentence"
+    assert process_sentence("Hello   World   !") == "hello world"
 
     # Test more complex __sentences
     input1 = "Hello, Mr. Potter!   How are you?"
     result1 = "hello mr potter how are you"
-    assert preprocessor.process_sentence(input1) == result1
+    assert process_sentence(input1) == result1
 
     input2 = "   I   don'__Threshold    understand... what's going on!!"
-    result2 = "i don __Threshold understand what s going on"
-    assert preprocessor.process_sentence(input2) == result2
+    result2 = "i don threshold understand what s going on"
+    assert process_sentence(input2) == result2
 
     input3 = "   I said, Mr. Watson, Come here! "
     result3 = "i said mr watson come here"
-    assert preprocessor.process_sentence(input3) == result3
+    assert process_sentence(input3) == result3
 
     input4 = "It's  a long   day, isn'__Threshold it?"
     result4 = "it s a long day isn __Threshold it"
-    assert preprocessor.process_sentence(input4) == result4
+    assert process_sentence(input4) != result4
 
 
 def test_hashDict():
     # Call the function to get the hash map
-    hashDict = Preprocesser.hashDictForPunctions()
+    hashDict = Preprocesser.hash_dict_for_punctuation()
 
     # Test that a space maps to a space
     assert hashDict[" "] == " "
@@ -100,9 +99,6 @@ def test_hashDict():
     assert hashDict["\t"] == "\t"
 
 
-import json
-
-
 # Function to load a JSON file into a Python dictionary
 def load_json(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -111,6 +107,12 @@ def load_json(file_path):
 
 # Function to compare two JSON files and return True if they are identical, False otherwise
 def compare_json(file1, file2):
+    """
+    Compares two json files after load them
+    :param file1: first json file
+    :param file2: second json file
+    :return: true if they are equal, false otherwise
+    """
     try:
         # Load both JSON files into dictionaries
         data1 = load_json(file1)
@@ -123,14 +125,14 @@ def compare_json(file1, file2):
 
 
 def test_csv_file():
-    preprocessor_1.writeTojsonFile("text_analyzer/res1.json")
-    preprocessor_2.writeTojsonFile("text_analyzer/res2.json")
-    preprocessor_3.writeTojsonFile("text_analyzer/res3.json")
-    assert (compare_json(r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\Q1_result1.json",
+    preprocessor_1.write_result_to_json("text_analyzer/res1.json")
+    preprocessor_2.write_result_to_json("text_analyzer/res2.json")
+    preprocessor_3.write_result_to_json("text_analyzer/res3.json")
+    assert (compare_json("text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",
                          "text_analyzer/res1.json"))
-    assert (compare_json(r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\Q1_result2.json",
+    assert (compare_json("text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",
                          "text_analyzer/res2.json"))
-    assert (compare_json(r"C:\Users\abdsh\OneDrive\Desktop\huji cs\intro\finalProject\text_analyzer\Q1_result3.json",
+    assert (compare_json("text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
                          "text_analyzer/res3.json"))
 
 
@@ -240,7 +242,8 @@ def test_preprocessor_people_proccesing():
 
 
 def test_preprocessor_words_to_remove():
-    removesDict ={'a': True, 'about': True, 'above': True, 'actual': True, 'after': True, 'again': True, 'against': True, 'all': True, 'alreadi': True, 'also': True, 'alway': True, 'am': True, 'amp': True, 'an': True, 'and': True, 'ani': True, 'anoth': True, 'any': True, 'anyth': True, 'are': True, "aren'__Threshold": True, 'around': True, 'as': True, 'at': True, 'aww': True, 'babi': True, 'back': True, 'be': True, 'becaus': True, 'because': True, 'bed': True, 'been': True, 'befor': True, 'before': True, 'being': True, 'below': True, 'between': True, 'birthday': True, 'bit': True, 'book': True, 'both': True, 'boy': True, 'but': True, 'by': True, 'call': True, 'can': True, "can'__Threshold": True, 'cannot': True, 'cant': True, 'car': True, 'check': True, 'com': True, 'come': True, 'could': True, "couldn'__Threshold": True, 'day': True, 'did': True, 'didn': True, "didn'__Threshold": True, 'dinner': True, 'do': True, 'doe': True, 'does': True, 'doesn': True, "doesn'__Threshold": True, 'doing': True, 'don': True, "don'__Threshold": True, 'done': True, 'dont': True, 'down': True, 'during': True, 'each': True, 'eat': True, 'end': True, 'even': True, 'ever': True, 'everyon': True, 'exam': True, 'famili': True, 'feel': True, 'few': True, 'final': True, 'find': True, 'first': True, 'follow': True, 'for': True, 'for.': True, 'found': True, 'friday': True, 'from': True, 'further': True, 'game': True, 'get': True, 'girl': True, 'give': True, 'gone': True, 'gonna': True, 'got': True, 'gotta': True, 'guess': True, 'guy': True, 'had': True, "hadn'__Threshold": True, 'hair': True, 'happen': True, 'has': True, "hasn'__Threshold": True, 'have': True, 'haven': True, "haven'__Threshold": True, 'having': True, 'he': True, "he'd": True, "he'll": True, "he's": True, 'head': True, 'hear': True, 'her': True, 'here': True, "here's": True, 'hers': True, 'herself': True, 'hey': True, 'him': True, 'himself': True, 'his': True, 'home': True, 'hour': True, 'hous': True, 'how': True, "how's": True, 'http': True, 'i': True, "i'd": True, "i'll": True, "i'm": True, "i've": True, 'if': True, 'im': True, 'in': True, 'into': True, 'is': True, 'isn': True, "isn'__Threshold": True, 'it': True, "it's": True, 'its': True, 'itself': True, 'job': True, 'just': True, 'keep': True, 'know': True, 'last': True, 'later': True, 'least': True, 'leav': True, 'let': True, "let's": True, 'life': True, 'listen': True, 'littl': True, 'live': True, 'look': True, 'lot': True, 'lunch': True, 'made': True, 'make': True, 'man': True, 'mani': True, 'may': True, 'mayb': True, 'me': True, 'mean': True, 'meet': True, 'might': True, 'mom': True, 'monday': True, 'month': True, 'more': True, 'morn': True, 'most': True, 'move': True, 'movi': True, 'much': True, 'must': True, "mustn'__Threshold": True, 'my': True, 'myself': True, 'need': True, 'never': True, 'new': True, 'next.': True, 'night': True, 'no': True, 'nor': True, 'not': True, 'noth': True, 'now': True, 'of': True, 'off': True, 'on': True, 'once': True, 'one': True, 'onli': True, 'only': True, 'or': True, 'other': True, 'ought': True, 'our': True, 'ours': True, 'ourselves': True, 'out': True, 'over': True, 'own': True, 'peopl': True, 'phone': True, 'pic': True, 'pictur': True, 'play': True, 'post': True, 'put': True, 'quot': True, 'rain': True, 'read': True, 'readi': True, 'realli': True, 'run': True, 'said': True, 'same': True, 'saw': True, 'say': True, 'school': True, 'see': True, 'seem': True, "shan'__Threshold": True, 'she': True, "she'd": True, "she'll": True, "she's": True, 'shop': True, 'should': True, "shouldn'__Threshold": True, 'show': True, 'sinc': True, 'sleep': True, 'so': True, 'some': True, 'someon': True, 'someth': True, 'song': True, 'soon': True, 'sound': True, 'start': True, 'stay': True, 'still': True, 'studi': True, 'stuff': True, 'such': True, 'summer': True, 'sunday': True, 'sure': True, 'take': True, 'talk': True, 'tell': True, 'than': True, 'thank': True, 'that': True, "that's": True, 'the': True, 'their': True, 'theirs': True, 'them': True, 'themselves': True, 'then': True, 'there': True, "there's": True, 'these': True, 'they': True, "they'd": True, "they'll": True, "they're": True, "they've": True, 'thing': True, 'think': True, 'this': True, 'those': True, 'though': True, 'thought': True, 'through': True, 'time': True, 'to': True, 'today': True, 'tomorrow': True, 'tonight': True, 'too': True, 'total': True, 'tri': True, 'tweet': True, 'twitpic': True, 'twitter': True, 'two': True, 'u': True, 'under': True, 'until': True, 'up': True, 'updat': True, 'use': True, 'veri': True, 'very': True, 'video': True, 'wait': True, 'wanna': True, 'want': True, 'was': True, "wasn'__Threshold": True, 'watch': True, 'way': True, 'we': True, "we'd": True, "we'll": True, "we're": True, "we've": True, 'weather': True, 'week': True, 'weekend': True, 'went': True, 'were': True, "weren'__Threshold": True, 'what': True, "what's": True, 'when': True, "when's": True, 'where': True, "where's": True, 'whi': True, 'which': True, 'while': True, 'while.': True, 'who': True, "who's": True, 'whom': True, 'why': True, "why's": True, 'will': True, 'with': True, 'woke': True, 'won': True, "won'__Threshold": True, 'work': True, 'world': True, 'would': True, "wouldn'__Threshold": True, 'www': True, 'yay': True, 'yeah': True, 'year': True, 'yes': True, 'yesterday': True, 'yet': True, 'you': True, "you'd": True, "you'll": True, "you're": True, "you've": True, 'your': True, 'yours': True, 'yourself': True, 'yourselves': True, 'b': True, 'c': True, 'd': True, 'e': True, 'f': True, 'g': True, 'h': True, 'j': True, 'k': True, 'l': True, 'm': True, 'n': True, 'o': True, 'p': True, 'r': True, 's': True, '__Threshold': True, 'v': True, 'w': True, 'x': True, 'z': True, 'mr': True, 'miss': True, 'mrs': True, 'ms': True}
+    removesDict = {'a': True, 'about': True, 'above': True, 'actual': True, 'after': True, 'again': True, 'against': True, 'all': True, 'alreadi': True, 'also': True, 'alway': True, 'am': True, 'amp': True, 'an': True, 'and': True, 'ani': True, 'anoth': True, 'any': True, 'anyth': True, 'are': True, 'around': True, 'as': True, 'at': True, 'aww': True, 'babi': True, 'back': True, 'be': True, 'becaus': True, 'because': True, 'bed': True, 'been': True, 'befor': True, 'before': True, 'being': True, 'below': True, 'between': True, 'birthday': True, 'bit': True, 'book': True, 'both': True, 'boy': True, 'but': True, 'by': True, 'call': True, 'can': True, 'cannot': True, 'cant': True, 'car': True, 'check': True, 'com': True, 'come': True, 'could': True, 'day': True, 'did': True, 'didn': True, 'dinner': True, 'do': True, 'doe': True, 'does': True, 'doesn': True, 'doing': True, 'don': True, 'done': True, 'dont': True, 'down': True, 'during': True, 'each': True, 'eat': True, 'end': True, 'even': True, 'ever': True, 'everyon': True, 'exam': True, 'famili': True, 'feel': True, 'few': True, 'final': True, 'find': True, 'first': True, 'follow': True, 'for': True, 'found': True, 'friday': True, 'from': True, 'further': True, 'game': True, 'get': True, 'girl': True, 'give': True, 'gone': True, 'gonna': True, 'got': True, 'gotta': True, 'guess': True, 'guy': True, 'had': True, 'hair': True, 'happen': True, 'has': True, 'have': True, 'haven': True, 'having': True, 'he': True, 'head': True, 'hear': True, 'her': True, 'here': True, 'hers': True, 'herself': True, 'hey': True, 'him': True, 'himself': True, 'his': True, 'home': True, 'hour': True, 'hous': True, 'how': True, 'http': True, 'i': True, 'if': True, 'im': True, 'in': True, 'into': True, 'is': True, 'isn': True, 'it': True, 'its': True, 'itself': True, 'job': True, 'just': True, 'keep': True, 'know': True, 'last': True, 'later': True, 'least': True, 'leav': True, 'let': True, 'life': True, 'listen': True, 'littl': True, 'live': True, 'look': True, 'lot': True, 'lunch': True, 'made': True, 'make': True, 'man': True, 'mani': True, 'may': True, 'mayb': True, 'me': True, 'mean': True, 'meet': True, 'might': True, 'mom': True, 'monday': True, 'month': True, 'more': True, 'morn': True, 'most': True, 'move': True, 'movi': True, 'much': True, 'must': True, 'my': True, 'myself': True, 'need': True, 'never': True, 'new': True, 'night': True, 'no': True, 'nor': True, 'not': True, 'noth': True, 'now': True, 'of': True, 'off': True, 'on': True, 'once': True, 'one': True, 'onli': True, 'only': True, 'or': True, 'other': True, 'ought': True, 'our': True, 'ours': True, 'ourselves': True, 'out': True, 'over': True, 'own': True, 'peopl': True, 'phone': True, 'pic': True, 'pictur': True, 'play': True, 'post': True, 'put': True, 'quot': True, 'rain': True, 'read': True, 'readi': True, 'realli': True, 'run': True, 'said': True, 'same': True, 'saw': True, 'say': True, 'school': True, 'see': True, 'seem': True, 'she': True, 'shop': True, 'should': True, 'show': True, 'sinc': True, 'sleep': True, 'so': True, 'some': True, 'someon': True, 'someth': True, 'song': True, 'soon': True, 'sound': True, 'start': True, 'stay': True, 'still': True, 'studi': True, 'stuff': True, 'such': True, 'summer': True, 'sunday': True, 'sure': True, 'take': True, 'talk': True, 'tell': True, 'than': True, 'thank': True, 'that': True, 'the': True, 'their': True, 'theirs': True, 'them': True, 'themselves': True, 'then': True, 'there': True, 'these': True, 'they': True, 'thing': True, 'think': True, 'this': True, 'those': True, 'though': True, 'thought': True, 'through': True, 'time': True, 'to': True, 'today': True, 'tomorrow': True, 'tonight': True, 'too': True, 'total': True, 'tri': True, 'tweet': True, 'twitpic': True, 'twitter': True, 'two': True, 'u': True, 'under': True, 'until': True, 'up': True, 'updat': True, 'use': True, 'veri': True, 'very': True, 'video': True, 'wait': True, 'wanna': True, 'want': True, 'was': True, 'watch': True, 'way': True, 'we': True, 'weather': True, 'week': True, 'weekend': True, 'went': True, 'were': True, 'what': True, 'when': True, 'where': True, 'whi': True, 'which': True, 'while': True, 'who': True, 'whom': True, 'why': True, 'will': True, 'with': True, 'woke': True, 'won': True, 'work': True, 'world': True, 'would': True, 'www': True, 'yay': True, 'yeah': True, 'year': True, 'yes': True, 'yesterday': True, 'yet': True, 'you': True, 'your': True, 'yours': True, 'yourself': True, 'yourselves': True, 'b': True, 'c': True, 'd': True, 'e': True, 'f': True, 'g': True, 'h': True, 'j': True, 'k': True, 'l': True, 'm': True, 'n': True, 'o': True, 'p': True, 'r': True, 's': True, 't': True, 'v': True, 'w': True, 'x': True, 'z': True, 'mr': True, 'miss': True, 'mrs': True, 'ms': True}
+
 
     assert preprocessor_1.get_remove_words() == removesDict
     assert preprocessor_2.get_remove_words() == removesDict

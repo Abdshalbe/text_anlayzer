@@ -56,8 +56,8 @@ class CheckConnection:
     def bfs_shortest_path(self, start_name: str, target_name: str) -> list[str]:
         """
         Perform BFS to find the shortest path between two people (nodes) in the graph.
-        :param start_name: The starting person (node) name.
-        :param target_name: The target person (node) name.
+        :param start_name: The starting data (node) node_data.
+        :param target_name: The target data (node) node_data.
         :return: The shortest path between start_name and target_name as a list of names.
         """
         graph = self.__graph
@@ -81,8 +81,8 @@ class CheckConnection:
 
             # Explore neighbors (connected people) of the current node
             if graph.get_node(current_node) is not None:
-                for neighbor in graph.get_node(current_node).get_connected_people():
-                    neighbor_name = neighbor.get_name()
+                for neighbor in graph.get_node(current_node).get_connected_data():
+                    neighbor_name = neighbor.get_data()
                     if neighbor_name not in visited:
                         # Append the neighbor to the path and enqueue it
                         queue.append((neighbor_name, path + [neighbor_name]))
@@ -140,7 +140,7 @@ class CheckConnection:
                 person2 = " ".join(pair[1])
                 graph.add_node(person1)  # Add __nodes to the graph
                 graph.add_node(person2)
-                # Add edge if the person pair exists
+                # Add edge if the data pair exists
                 graph.add_edge(person1, person2)
         except FileNotFoundError:
             raise FileNotFoundError(f"FileNotFoundError: The path {file_path} was not found.")
@@ -213,8 +213,8 @@ class CheckConnection:
     def dfs_find_path(self, start: str, target: str, path=None, visited=None) -> bool:
         """
         Checks if there is a path of exact length k between two people in the graph.
-        :param start: The starting person's name.
-        :param target: The target person's name.
+        :param start: The starting data's node_data.
+        :param target: The target data's node_data.
         :param path: The current path (used for recursion).
         :param visited: Set of visited nodes to avoid revisiting.
         :return: True if a path of length k exists, False otherwise.
@@ -235,8 +235,8 @@ class CheckConnection:
         visited.add(start)
         if graph.get_node(start):
             # Explore all connected nodes (neighbors)
-            for neighbor in graph.get_node(start).get_connected_people():
-                neighbor_name = neighbor.get_name()
+            for neighbor in graph.get_node(start).get_connected_data():
+                neighbor_name = neighbor.get_data()
                 if neighbor_name not in visited:
                     # Recursively call DFS with the next node
                     if self.dfs_find_path(neighbor_name, target, path + [neighbor_name], visited):

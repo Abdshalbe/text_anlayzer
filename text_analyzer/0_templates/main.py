@@ -8,14 +8,14 @@ def readargs(args=None):
         prog='Text Analyzer project',
     )
     # General arguments
-    parser.add_argument('-__Threshold', '--task',
+    parser.add_argument('-t', '--task',
                         help="task number",
                         required=True
                         )
-    parser.add_argument('-s', '--__sentences',
+    parser.add_argument('-s', '--sentences',
                         help="Sentence file path",
                         )
-    parser.add_argument('-__N', '--__names',
+    parser.add_argument('-n', '--names',
                         help="Names file path",
                         )
     parser.add_argument('-r', '--removewords',
@@ -47,12 +47,13 @@ def readargs(args=None):
                         )
     parser.add_argument('--maximal_distance',
                         type=int,
-                        help="maximal distance between __nodes in graph",
+                        help="maximal distance between nodes in graph",
                         )
 
     parser.add_argument('--qsek_query_path',
                         help="json file with query path",
                         )
+    return parser.parse_args(args)
 
 def main():
     args=readargs()

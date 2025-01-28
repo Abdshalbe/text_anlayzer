@@ -3,9 +3,9 @@ import json
 import pytest
 from NamesCounter import NamesCounter
 
-NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/Q1_result1.json",preprocessed=True)
-NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/Q1_result2.json",preprocessed= True)
-NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/Q1_result3.json",preprocessed= True)
+NAMES_COUNTER1 = NamesCounter(3, json_input_path="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",preprocessed=True)
+NAMES_COUNTER2 = NamesCounter(3, json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",preprocessed= True)
+NAMES_COUNTER3 = NamesCounter(3, json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",preprocessed= True)
 NAMES_COUNTER4 = NamesCounter(3,
                               people_input_path="text_analyzer/2_examples/Q3_examples/example_1/people_small_1.csv",
                               remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
@@ -19,6 +19,28 @@ NAMES_COUNTER6 = NamesCounter(3,
                               remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
                               sentence_input_path="text_analyzer/2_examples/Q3_examples/example_3/sentences_small_3.csv")
 
+def load_json(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+# Function to compare two JSON files and return True if they are identical, False otherwise
+def compare_json(file1, file2):
+    """
+    Compares two json files after load them
+    :param file1: first json file
+    :param file2: second json file
+    :return: true if they are equal, false otherwise
+    """
+    try:
+        # Load both JSON files into dictionaries
+        data1 = load_json(file1)
+        data2 = load_json(file2)
+        # Compare the two dictionaries and return True if they are identical
+        return data1 == data2
+    except Exception as e:
+        print(f"Error comparing JSON files: {e}")
+        return False
 
 def test_equal_csr():
     """
@@ -147,41 +169,17 @@ def test_people_counter():
 def test_compare_json():
     import json
 
-    def test_compare_json():
-        # Write JSON files (assuming NAMES_COUNTER1 to NAMES_COUNTER6 have been defined earlier)
-        NAMES_COUNTER1.write_to_json("text_analyzer/namesCounter1.json")
-        NAMES_COUNTER2.write_to_json("text_analyzer/namesCounter2.json")
-        NAMES_COUNTER3.write_to_json("text_analyzer/namesCounter3.json")
-        NAMES_COUNTER4.write_to_json("text_analyzer/namesCounter4.json")
-        NAMES_COUNTER5.write_to_json("text_analyzer/namesCounter5.json")
-        NAMES_COUNTER6.write_to_json("text_analyzer/namesCounter6.json")
+    # Write JSON files (assuming NAMES_COUNTER1 to NAMES_COUNTER6 have been defined earlier)
+    NAMES_COUNTER1.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter1.json")
+    NAMES_COUNTER2.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter2.json")
+    NAMES_COUNTER3.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter3.json")
+    NAMES_COUNTER4.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter4.json")
+    NAMES_COUNTER5.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter5.json")
+    NAMES_COUNTER6.write_to_json("text_analyzer/2_examples/Q3_examples/namesCounter6.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter1.json","text_analyzer/2_examples/Q3_examples/example_1/Q3_result1.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter2.json","text_analyzer/2_examples/Q3_examples/example_2/Q3_result2.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter3.json","text_analyzer/2_examples/Q3_examples/example_3/Q3_result3.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter4.json","text_analyzer/2_examples/Q3_examples/example_1/Q3_result1.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter5.json","text_analyzer/2_examples/Q3_examples/example_2/Q3_result2.json")
+    assert compare_json("text_analyzer/2_examples/Q3_examples/namesCounter6.json","text_analyzer/2_examples/Q3_examples/example_3/Q3_result3.json")
 
-        # Open files to read JSON data
-        with open("text_analyzer/namesCounter1.json", "r") as f:
-            file1 = json.load(f)
-        with open("text_analyzer/namesCounter2.json", "r") as f:
-            file2 = json.load(f)
-        with open("text_analyzer/namesCounter3.json", "r") as f:
-            file3 = json.load(f)
-        with open("text_analyzer/namesCounter4.json", "r") as f:
-            file4 = json.load(f)
-        with open("text_analyzer/namesCounter5.json", "r") as f:
-            file5 = json.load(f)
-        with open("text_analyzer/namesCounter6.json", "r") as f:
-            file6 = json.load(f)
-
-        # Open comparison files
-        with open("text_analyzer/2_examples/Q3_examples/example_1/Q3_result1.json", "r") as f:
-            file1Comp = json.load(f)
-        with open("text_analyzer/2_examples/Q3_examples/example_2/Q3_result2.json", "r") as f:
-            file2Comp = json.load(f)
-        with open("text_analyzer/2_examples/Q3_examples/example_3/Q3_result3.json", "r") as f:
-            file3Comp = json.load(f)
-
-        # Assertions to compare the files
-        assert file1Comp == file1, f"Files 'namesCounter1.json' and 'Q3_result1.json' do not match."
-        assert file1Comp == file4, f"Files 'namesCounter4.json' and 'Q3_result1.json' do not match."
-        assert file2Comp == file2, f"Files 'namesCounter2.json' and 'Q3_result2.json' do not match."
-        assert file2Comp == file5, f"Files 'namesCounter5.json' and 'Q3_result2.json' do not match."
-        assert file3Comp == file3, f"Files 'namesCounter3.json' and 'Q3_result3.json' do not match."
-        assert file3Comp == file6, f"Files 'namesCounter6.json' and 'Q3_result3.json' do not match."

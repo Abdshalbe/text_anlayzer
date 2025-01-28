@@ -5,47 +5,47 @@ from PeopleKAssocions import PeopleKAssocions
 
 
 class Node:
-    def __init__(self, name: str):
+    def __init__(self, node_data: str | list[str]):
         """
         constructor to initialize the Node object
-        :param name: str representing the main __name
+        :param node_data: str representing the main __data
         """
-        self.__name = name
-        self.__connected_people = []
+        self.__data: str | list[str] = node_data
+        self.__connected_data: list["Node"] = []
 
-    def add_connected_person(self, person: "Node"):
+    def add_connected_data(self, data: "Node") -> None:
         """
         adds a person to the connected people
-        :param person: Node representing the person to add
+        :param data: Node representing the person to add
         """
-        if person not in self.__connected_people:
-            self.__connected_people.append(person)
+        if data not in self.__connected_data:
+            self.__connected_data.append(data)
 
-    def get_connected_people(self):
+    def get_connected_data(self) -> list["Node"]:
         """
-        returns the connected people that are connected to the __name
+        returns the connected people that are connected to the __data
         :return: list of Node objects representing the connected people
         """
-        return self.__connected_people
+        return self.__connected_data
 
-    def get_name(self):
+    def get_data(self) -> str | list[str]:
         """
-        get the main name of the Node
-        :return: str representing the main name
+        get the main node_data of the Node
+        :return: str representing the main node_data
         """
-        return self.__name
+        return self.__data
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         the way of printing the Node object
         """
-        return f'{self.__name}'
+        return f'{self.__data}'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         the way of representation of the Node object
         """
-        return f"{self.__name}"
+        return f"{self.__data}"
 
 
 class Graph:
@@ -53,29 +53,29 @@ class Graph:
         self.__nodes = {}
         self.__edges = []
 
-    def add_node(self, name: str):
-        if name not in self.__nodes:
-            self.__nodes[name] = Node(name)
+    def add_node(self, data: str | list[str]) -> None:
+        if data not in self.__nodes:
+            self.__nodes[data] = Node(data)
 
-    def add_edge(self, person1: str, person2: str):
-        if person1 in self.__nodes and person2 in self.__nodes:
-            self.__nodes[person1].add_connected_person(self.__nodes[person2])
-            self.__nodes[person2].add_connected_person(self.__nodes[person1])
-            sorted_names = sorted([self.__nodes[person1], self.__nodes[person2]], key=lambda person: person.get_name())
+    def add_edge(self, data1: str | list[str], data2: str | list[str]) -> None:
+        if data1 in self.__nodes and data2 in self.__nodes:
+            self.__nodes[data1].add_connected_data(self.__nodes[data2])
+            self.__nodes[data2].add_connected_data(self.__nodes[data1])
+            sorted_names = sorted([self.__nodes[data1], self.__nodes[data2]], key=lambda person: person.get_data())
             if (sorted_names[0], sorted_names[1]) not in self.__edges:
                 self.__edges.append((sorted_names[0], sorted_names[1]))
-            self.__edges = sorted(self.__edges, key=lambda edge: edge[0].get_name())
+            self.__edges = sorted(self.__edges, key=lambda edge: edge[0].get_data())
 
-    def get_node(self, name: str):
-        if name not in self.__nodes:
+    def get_node(self, data: str | list[str]) -> Node | None:
+        if data not in self.__nodes:
             return None
         else:
-            return self.__nodes.get(name)
+            return self.__nodes.get(data)
 
-    def get_edge(self):
+    def get_edge(self) -> list[Node]:
         return self.__edges
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self.__nodes)
 
 
@@ -93,7 +93,7 @@ class PeopleConnectionGraph(PeopleKAssocions):
         self.__question_number = QNum  # Initialize the question number attribute
         self.__graph = self.build_people_graph()
 
-    def get_graph(self):
+    def get_graph(self) -> Graph:
         """
         get the graph of the People Connection
         :return: the graph of the People Connection
@@ -106,12 +106,31 @@ class PeopleConnectionGraph(PeopleKAssocions):
         :param filePath: path to JSON file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
+
+        def format_edges(edges: list[Node]) -> list[str | list[str]]:
+            """
+            Converts the __edges from tuples of names to lists of names, formatted as required.
+            This method ensures that __edges are in a fixed order.
+            :param edges: List of tuples representing the __edges
+            :return: List of lists representing the __edges
+            """
+            formatted_edges = []
+            for edge in edges:
+                person1, person2 = edge
+                # Ensure the format is a list of individual words for each data in the edge
+                formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
+
+            # Sort __edges to ensure the order is as required in the question
+            formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
+
+            return formatted_edges
+
         try:
             with open(filePath, 'w', encoding='utf-8') as f:
                 res = False
                 data = {
-                    f"Question {self.__question_number}": {  # Use the corrected attribute name
-                        "Pair Matches": self.__format_edges(self.__graph.get_edge())
+                    f"Question {self.__question_number}": {  # Use the corrected attribute node_data
+                        "Pair Matches": format_edges(self.__graph.get_edge())
                     }
                 }
                 # Try to write the data to the file
@@ -128,69 +147,51 @@ class PeopleConnectionGraph(PeopleKAssocions):
             print(f"An unexpected error occurred: {str(e)}")
         return res
 
-    def count_people_in_window(self):
+    def count_people_in_window(self) -> dict[str, dict[str, int]]:
         """
-        Counts the number of distinct windows where each pair of people appear together.
-        :return: A dictionary that maps each person to other persons and the number of distinct windows they appeared together.
+        Counts the number of distinct windows where each pair of people appear together. :return: A dictionary that
+        maps each data to other persons and the number of distinct windows they appeared together.
         """
         personMetsCounter = {
             person: {otherPerson: 0 for otherPerson in self.get_names_apearances_idx().keys() if person != otherPerson}
             for person in self.get_names_apearances_idx().keys()}
-        # Get the appearance indices of each person
-        names_apearances_idx = self.get_names_apearances_idx()
+        # Get the appearance indices of each data
+        names_appearances_idx = self.get_names_apearances_idx()
         window_size = self.__windowSize  # Window size for counting occurrences
         total_lines = self.get_sentences_len()  # Loop through each possible window (startIndex)
         for startIndex in range(total_lines - window_size + 1):
             # Set to track unique people appearing in this window
             people_in_window = set()
-            # Check each person if they appear in the current window
-            for person, indices in names_apearances_idx.items():
-                # If any of person's indices fall within the current window, add them to the set
+            # Check each data if they appear in the current window
+            for person, indices in names_appearances_idx.items():
+                # If any of data's indices fall within the current window, add them to the set
                 if any(startIndex <= idx < startIndex + window_size for idx in indices):
                     people_in_window.add(person)
             # Count the "meetings" between people in the current window
             for person in people_in_window:
                 for otherPerson in people_in_window:
                     if person != otherPerson:
-                        # Increment the counter for the meeting between person and otherPerson
+                        # Increment the counter for the meeting between data and otherPerson
                         personMetsCounter[person][otherPerson] += 1
         return personMetsCounter
 
-    def __format_edges(self, edges):
+    def build_people_graph(self) -> Graph:
         """
-        Converts the __edges from tuples of names to lists of names, formatted as required.
-        This method ensures that __edges are in a fixed order.
-        :param edges: List of tuples representing the __edges
-        :return: List of lists representing the __edges
-        """
-        formatted_edges = []
-        for edge in edges:
-            person1, person2 = edge
-            # Ensure the format is a list of individual words for each person in the edge
-            formatted_edges.append([person1.get_name().split(), person2.get_name().split()])
-
-        # Sort __edges to ensure the order is as required in the question
-        formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
-
-        return formatted_edges
-
-    def build_people_graph(self):
-        """
-        Build a graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >= __Threshold.
-        :return: A Graph object with the constructed __nodes and __edges.
+        Build a graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >=
+        __Threshold. :return: A Graph object with the constructed __nodes and __edges.
         """
         main_dict = self.count_people_in_window()
-        graph = Graph()
+        people_graph = Graph()
         # Add __nodes for all persons in the main dictionary
         for person in main_dict:
-            graph.add_node(person)
-        # Iterate over all person pairs in the dictionary
+            people_graph.add_node(person)
+        # Iterate over all data pairs in the dictionary
         for person in main_dict:
             for other_person, meeting_count in main_dict[person].items():
                 if meeting_count >= self.__Threshold:
-                    # If the meeting frequency meets the threshold, add an edge between person and other_person
-                    graph.add_edge(person, other_person)
-        return graph
+                    # If the meeting frequency meets the threshold, add an edge between data and other_person
+                    people_graph.add_edge(person, other_person)
+        return people_graph
 
 
 if __name__ == '__main__':
@@ -199,7 +200,8 @@ if __name__ == '__main__':
     # ", remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv",Threshold=4, WindowSize=4)
     graph = PeopleConnectionGraph(6,
                                   people_input_path="text_analyzer/2_examples/Q6_examples/example_4/people_small_4.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q6_examples/example_4/sentences_small_4.csv",
+                                  sentence_input_path="text_analyzer/2_examples/Q6_examples/example_4"
+                                                      "/sentences_small_4.csv",
                                   remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv", Threshold=1,
                                   WindowSize=5)
     # graph.write_to_json("Q6_example_1.json")

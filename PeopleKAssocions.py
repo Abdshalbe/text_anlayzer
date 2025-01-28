@@ -96,8 +96,8 @@ class PeopleKAssocions:
         return res
     def get_names_apearances_idx(self) -> dict[str, list[int]]:
         """
-        Returns a dictionary mapping each __name to a lines were they appeared
-        :return: a dictionary mapping each __name to a lines were they appeared
+        Returns a dictionary mapping each __data to a lines were they appeared
+        :return: a dictionary mapping each __data to a lines were they appeared
         """
         try:
             name_counter = NamesCounter(5, preprocessed=self.__preprocessed,
