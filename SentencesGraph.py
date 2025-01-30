@@ -1,13 +1,13 @@
 import os
 import sys
 
-import Preprocesser
-from Preprocesser import Preprocessor
+import Parser
+from Parser import Parser
 from PeopleConnectionGraph import Graph, Node
 from SequinceCounter import load_Sentences_names
 import collections
 
-from Preprocesser import writeTojsonFile
+from Parser import writeTojsonFile
 class SentenceGraph:
     def __init__(self, question_number, threshold, remove_input_path: str | os.PathLike = None, json_input_path: str = None, sentence_input_path: str= None, preprocessed: bool = False):
         self.__question_number = question_number
@@ -15,7 +15,7 @@ class SentenceGraph:
             if preprocessed:
                 self.__sentences, _ = load_Sentences_names(json_input_path)
             else:
-                self.__sentences = Preprocesser.Preprocessor(1,sentenceInputPath=sentence_input_path,removeInputPath=remove_input_path).getSentences()
+                self.__sentences = Parser.Parser(1, sentenceInputPath=sentence_input_path, removeInputPath=remove_input_path).getSentences()
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e # Handle any file-related or other errors
         self.threshold = threshold  # Minimum number of shared words to form an edge

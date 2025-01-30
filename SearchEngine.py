@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import typing
-from Preprocesser import writeTojsonFile, process_sentence
+from Parser import writeTojsonFile, process_sentence
 from SequinceCounter import load_Sentences_names, load_data
 
 

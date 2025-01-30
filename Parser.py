@@ -72,8 +72,7 @@ def convert_to_nested_format(input_dict: dict[str:list[str]]) -> list[list[str]]
         for name in names:
             if name != "":
                 other_names.append(name.split())
-        if len(names) != 0:
-            subRes.append(other_names)
+        subRes.append(other_names)
         result.append(subRes)
     return result
 
@@ -118,16 +117,16 @@ def validate_file_path(file_path: str, description: str) -> str:
     return file_path
 
 
-class Preprocessor:
+class Parser:
     """
-    Preprocessor class to preprocess the text and return it as required.
+    Parser class to preprocess the text and return it as required.
     """
 
     def __init__(self, QuestionNumber: int, sentenceInputPath: typing.Union[str, os.PathLike],
                  removeInputPath: typing.Union[str, os.PathLike],
                  peopleInputPath: typing.Union[str, os.PathLike] = None):
         """
-        class constructor for Preprocessor
+        class constructor for Parser
         :param QuestionNumber: a number of the question being processed to print in the file
         :param sentenceInputPath:
         :param peopleInputPath:
@@ -157,7 +156,7 @@ class Preprocessor:
 
     def __removeUnwantedWords(self, sentence: str) -> str:
         """
-        Remove unwanted words from the sentence
+        Remove unwanted words from the sentence inout
         :param sentence: sentence to be processed
         :return: the processed sentence after removing unwanted words
         time complexity : O(len(sentence))
@@ -185,7 +184,6 @@ class Preprocessor:
             reader = csv.reader(file)
             for row in reader:
                 # Join the elements of the row into a single string and append it to the list
-
                 if rowCounter == 0:
                     rowCounter += 1
                 else:
@@ -205,13 +203,14 @@ class Preprocessor:
         peopleList = self.__readPeopleFile(self.__PeopleInputPath)
         for person in peopleList:
             mainName = self.__removeUnwantedWords(process_sentence(person[0]))
-            if mainName not in res and mainName != " ":
+            if mainName not in res and mainName != "":
                 res[mainName] = []
                 nickNames = person[1].split(",")
                 for nickName in nickNames:
                     if len(nickName) == 0:
-                        pass
-                    res[mainName].append(self.__removeUnwantedWords(process_sentence(nickName)))
+                        continue
+                    if self.__removeUnwantedWords(process_sentence(nickName)) != "":
+                        res[mainName].append(self.__removeUnwantedWords(process_sentence(nickName)))
             else:
                 continue
         return res
@@ -250,6 +249,20 @@ class Preprocessor:
         else:
             return False
 
+    def return_results(self) -> str:
+        """
+        returns a dictionary with all the results of the question 1
+        :return: string with all the results of the question 1 as needed
+        """
+        data = {
+            "Question 1": {
+                "Processed Sentences": self.__Sentences,
+                "Processed Names": convert_to_nested_format(self.__People)
+            }
+        }
+        json_data = json.dumps(data)
+        return json_data
+
     def getSentences(self) -> list[list[str]]:
         """
         Returns a list of lists every sublist represent
@@ -272,19 +285,3 @@ class Preprocessor:
         :return: a dictionary of the words to remove mapped to True
         """
         return self.__Removes
-
-
-if __name__ == '__main__':
-    preprocessor_1 = Preprocessor(1,
-                                  peopleInputPath="text_analyzer/2_examples/Q1_examples/example_1/people_small_1.csv",
-                                  sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_1/sentences_small_1.csv",
-                                  removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    preprocessor_2 = Preprocessor(1,
-                                  peopleInputPath="text_analyzer/2_examples/Q1_examples/example_2/people_small_2.csv",
-                                  sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_2/sentences_small_2.csv",
-                                  removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    preprocessor_3 = Preprocessor(1,
-                                  peopleInputPath="text_analyzer/2_examples/Q1_examples/example_3/people_small_3.csv",
-                                  sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_3/sentences_small_3.csv",
-                                  removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    print(preprocessor_3.getSentences())

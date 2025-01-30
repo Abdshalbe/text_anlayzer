@@ -3,7 +3,7 @@ import sys
 import typing
 
 from NamesCounter import NamesCounter
-from Preprocesser import writeTojsonFile
+from Parser import writeTojsonFile
 from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
 
 

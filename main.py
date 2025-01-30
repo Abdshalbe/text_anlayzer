@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Preprocesser import Preprocessor
+from Parser import Parser
 from NamesCounter import NamesCounter
 from PeopleKAssocions import PeopleKAssocions
 from PeopleConnectionGraph import PeopleConnectionGraph
@@ -70,10 +70,10 @@ def main():
         if args.task == 1:
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
-            preProcessor = Preprocessor(QuestionNumber=args.task,
-                                           sentenceInputPath=args.sentences,
-                                           removeInputPath=args.removewords,
-                                           peopleInputPath=args.names)
+            preProcessor = Parser(QuestionNumber=args.task,
+                                  sentenceInputPath=args.sentences,
+                                  removeInputPath=args.removewords,
+                                  peopleInputPath=args.names)
             # Call the write_result_to_json method and check the result
             if preProcessor.write_result_to_json(f"finalProject/Q{args.task}_result.json"):
                 print(f"Result successfully written to Q{args.task}_result.json")

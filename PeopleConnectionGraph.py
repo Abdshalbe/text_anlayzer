@@ -2,7 +2,7 @@ import json
 import os
 import typing
 from PeopleKAssocions import PeopleKAssocions
-from Preprocesser import writeTojsonFile
+from Parser import writeTojsonFile
 
 
 class Node:

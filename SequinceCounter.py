@@ -2,12 +2,12 @@ import sys
 import typing
 import os
 import json
-import Preprocesser
+import Parser
 
 
 # static method can be used for external use
 
-def generate_k_seqs(sentences, N):
+def generate_k_seqs(sentences: list[list[str]], N: int) -> dict[str, dict[tuple[str], int]]:
     """
     Generates k-sequences for each k from 1 to N and removes commas after the last word if
     the sequence contains only one word. Additionally, sorts the sequences lexicographically.
@@ -24,7 +24,6 @@ def generate_k_seqs(sentences, N):
     # Sort the sequences lexicographically by their tuple key
     for k in range(1, N + 1):
         seq_counts[f"{k}_seq"] = sorted(seq_counts[f"{k}_seq"].items(), key=lambda x: x[0])
-
     return seq_counts
 
 
@@ -55,7 +54,8 @@ def load_Sentences_names(json_file_path: typing.Union[str, os]) -> (list[list[st
     return Sentences, names
 
 
-def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typing.Union[str, os], people_input_path: typing.Union[str, os] = None) -> (list[list[str]],list[list[str]]):
+def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typing.Union[str, os],
+              people_input_path: typing.Union[str, os] = None) -> (list[list[str]], list[list[str]]):
     """
     Loads __sentences and removes unwanted words based on the provided files.
     :param sentence_input_path: Path to the sentence input file
@@ -64,11 +64,11 @@ def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typ
     """
     try:
         if people_input_path is None:
-            dataLoader = Preprocesser.Preprocessor(1, sentenceInputPath=sentence_input_path,
-                                               removeInputPath=remove_input_path)
+            dataLoader = Parser.Parser(1, sentenceInputPath=sentence_input_path,
+                                       removeInputPath=remove_input_path)
         else:
-            dataLoader = Preprocesser.Preprocessor(1, sentenceInputPath=sentence_input_path,
-                                               removeInputPath=remove_input_path, peopleInputPath=people_input_path)
+            dataLoader = Parser.Parser(1, sentenceInputPath=sentence_input_path,
+                                       removeInputPath=remove_input_path, peopleInputPath=people_input_path)
         sentences = dataLoader.getSentences()
         names = dataLoader.get_people()
     except ValueError as e:
@@ -106,14 +106,14 @@ class SequinceCounter:
                 self.__sentences, _ = load_Sentences_names(json_input_path)
             elif sentence_input_path and remove_input_path:
                 # If sentence and remove files are provided, load the raw data
-                self.__sentences,_ = load_data(sentence_input_path, remove_input_path)
+                self.__sentences, _ = load_data(sentence_input_path, remove_input_path)
             else:
                 raise ValueError("Either --preprocessed or both --sentence_input and --remove_input must be provided.")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             print(f"Error: {e}")  # Handle any file-related or other errors
             sys.exit(1)  # Exit program if there's an error
 
-    def count_sequences(self) -> list[list[str|list[list[str|int]]]]:
+    def count_sequences(self) -> list[list[str | list[list[str | int]]]]:
         """
         Generate k-sequences and count their occurrences.
         """
@@ -143,17 +143,25 @@ class SequinceCounter:
                 f"{self.__N}-Seq Counts": self.count_sequences()
             }
         }
-        if Preprocesser.writeTojsonFile(filePath, data):
+        if Parser.writeTojsonFile(filePath, data):
             return True
         else:
             return False
+
+    def return_results(self):
+        data = {
+            f"Question {self.__questionNum}": {
+                f"{self.__N}-Seq Counts": self.count_sequences()
+            }
+        }
+        return json.dumps(data)
 
 
 if __name__ == '__main__':
     SEQUENCE_COUNTER1 = SequinceCounter(2,
                                         sentence_input_path="text_analyzer/2_examples/Q2_examples/example_1"
                                                             "/sentences_small_1.csv",
-                                        people_input_path= "text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
+                                        people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
                                         remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
                                         N=3)
     SEQUENCE_COUNTER2 = SequinceCounter(2,

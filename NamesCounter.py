@@ -1,8 +1,8 @@
 import os
 import sys
 import typing
-from Preprocesser import writeTojsonFile
-from Preprocesser import Preprocessor
+from Parser import writeTojsonFile
+from Parser import Parser
 from SequinceCounter import load_Sentences_names, load_data
 
 
@@ -34,8 +34,8 @@ class NamesCounter:
                 raise ValueError(
                     "either json_input_path or remove_input_path and sentence_input_path or people_input_path must be provided")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)
+            raise e(f"Error: {e}")  # Handle any file-related or other errors
+
 
     def build_names_dictionary(self) -> (dict[str, str], dict[str, bool]):
         """
@@ -47,31 +47,25 @@ class NamesCounter:
         :time complexity: search = O(1), build = O(Len(names) * len(other names)).
         """
         mapToMain = {}
-        have_conutnue = {}
-        join_words = lambda words: ' '.join(words)  # lambda function
+        join_words = lambda words: ' '.join(words).strip()  # lambda function
+
         for names in self.__names:
-            value = join_words(names[0]).strip()  # creat the main __data sequence
+            value = join_words(names[0]).strip()  # create the main __data sequence
+
             for name in names[0]:
-                if name not in mapToMain:  # map every part of main to the __data mapper and add thim to a list
-                    mapToMain[name] = [value]
-                else:
-                    if value not in mapToMain[name]:
-                        mapToMain[name].append(value)
-                have_conutnue[name] = False  # there is no need to the __data to be continued to count
+                # Join the characters in name to form a single string (word)
+                word = ''.join(name)
+                mapToMain[word] = [value]  # Use the word string as the key
+
             for name in names[1]:  # add nicknames to dictionary
-                if join_words(name) in mapToMain:  # check membership of nick __data connected
-                    if value not in mapToMain[
-                        join_words(name)]:  # check if the main __data in the res so we didnt count twice
-                        mapToMain[join_words(name)].append(value)
+                word = ' '.join(name)  # Join the characters of the nickname
+                if word in mapToMain:  # check if the word exists in the dictionary
+                    if value not in mapToMain[word]:  # avoid adding duplicates
+                        mapToMain[word].append(value)
                 else:
-                    mapToMain[join_words(name)] = [value]
-                have_conutnue[join_words(name)] = False  # set as have no continue
-                res = ""
-                for word in name[:-1]:
-                    res += word
-                    have_conutnue[res] = True  # set every sub __data of the nick __data as have continue
-                    res += " "
-        return mapToMain, have_conutnue
+                    mapToMain[word] = [value]  # add the nickname as a new key
+
+        return mapToMain
 
     def count_names(self) -> (dict[str, int], dict[str, list[int]]):
         """
@@ -81,36 +75,19 @@ class NamesCounter:
         """
         counter = {}
         names_appear_lines = {}
-        join_words = lambda words: ' '.join(words).strip()  # lambda function
-        mapToMain, have_conutnue = self.build_names_dictionary()  # get the dictionary's that we have been built befor
+        mapToMain = self.build_names_dictionary()  # get the dictionary's that we have been built befor
         for index, sentence in enumerate(self.__sentences):  # pass over the lines
             sentence_len = len(sentence)
-            for pos in range(sentence_len):  # search in the lines
-                word = sentence[pos]
-                if word in have_conutnue:  # check if the word is member in the have continue
-                    if have_conutnue[str(word)]:  # if have a conitnue we search if the continue is the same
-                        endIdx = 1
-                        while endIdx + pos < sentence_len and join_words(
-                                sentence[pos:pos + endIdx]).strip() in have_conutnue and \
-                                have_conutnue[join_words(sentence[pos:pos + endIdx]).strip()]:
-                            if join_words(sentence[pos:pos + endIdx + 1]).strip() in mapToMain:
-                                for key in mapToMain[join_words(sentence[pos:pos + endIdx + 1])]:
-                                    counter[str(key)] = counter.get(str(key), 0) + 1
-                                    if key in names_appear_lines:
-                                        names_appear_lines[key].append(index)
-                                    else:
-                                        names_appear_lines[key] = [index]
-                                break
+            for startIdx in range(sentence_len):
+                for endIdx in range(startIdx+1,sentence_len+1):
+                    check_name = ' '.join(sentence[startIdx:endIdx])
+                    if check_name in mapToMain:
+                        for name in mapToMain[check_name]:
+                            counter[name] = counter.get(name,0)+1
+                            if name in names_appear_lines:
+                                names_appear_lines[name].append(index)
                             else:
-                                endIdx += 1
-                    else:
-                        if str(word) in mapToMain:
-                            for key in mapToMain[str(word)]:
-                                counter[str(key)] = counter.get(str(key), 0) + 1
-                                if key in names_appear_lines:
-                                    names_appear_lines[key].append(index)
-                                else:
-                                    names_appear_lines[key] = [index]
+                                names_appear_lines[name] = [index]
         return counter, names_appear_lines
 
     def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
@@ -167,4 +144,4 @@ if __name__ == '__main__':
                                   remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
                                   sentence_input_path="text_analyzer/2_examples/Q3_examples/example_4/sentences_small_4.csv")
 
-    print(NAMES_COUNTER7.get_names())
+    print(NAMES_COUNTER4.count_names())

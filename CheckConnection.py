@@ -64,21 +64,17 @@ class CheckConnection:
         # Edge case: If start and target are the same
         if start_name == target_name:
             return [start_name]
-
         # Initialize visited set to keep track of visited nodes
         visited = set()
         # Queue to store nodes to be explored, initialized with the start node
         queue = deque([(start_name, [start_name])])  # (current_node, path_so_far)
         while queue:
             current_node, path = queue.popleft()
-
             # If we find the target node, return the path taken
             if current_node == target_name:
                 return path
-
             # Mark the current node as visited
             visited.add(current_node)
-
             # Explore neighbors (connected people) of the current node
             if graph.get_node(current_node) is not None:
                 for neighbor in graph.get_node(current_node).get_connected_data():
@@ -87,7 +83,6 @@ class CheckConnection:
                         # Append the neighbor to the path and enqueue it
                         queue.append((neighbor_name, path + [neighbor_name]))
                         visited.add(neighbor_name)
-
         # If no path is found, return an empty list
         return []
 
