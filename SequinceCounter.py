@@ -154,7 +154,8 @@ class SequinceCounter:
                 f"{self.__N}-Seq Counts": self.count_sequences()
             }
         }
-        return json.dumps(data)
+        json_data = json.dumps(data)
+        return json_data
 
 
 if __name__ == '__main__':

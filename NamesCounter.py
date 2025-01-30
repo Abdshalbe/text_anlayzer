@@ -1,8 +1,7 @@
+import json
 import os
-import sys
 import typing
-from Parser import writeTojsonFile
-from Parser import Parser
+
 from SequinceCounter import load_Sentences_names, load_data
 
 
@@ -35,7 +34,6 @@ class NamesCounter:
                     "either json_input_path or remove_input_path and sentence_input_path or people_input_path must be provided")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e(f"Error: {e}")  # Handle any file-related or other errors
-
 
     def build_names_dictionary(self) -> (dict[str, str], dict[str, bool]):
         """
@@ -79,18 +77,18 @@ class NamesCounter:
         for index, sentence in enumerate(self.__sentences):  # pass over the lines
             sentence_len = len(sentence)
             for startIdx in range(sentence_len):
-                for endIdx in range(startIdx+1,sentence_len+1):
+                for endIdx in range(startIdx + 1, sentence_len + 1):
                     check_name = ' '.join(sentence[startIdx:endIdx])
                     if check_name in mapToMain:
                         for name in mapToMain[check_name]:
-                            counter[name] = counter.get(name,0)+1
+                            counter[name] = counter.get(name, 0) + 1
                             if name in names_appear_lines:
                                 names_appear_lines[name].append(index)
                             else:
                                 names_appear_lines[name] = [index]
         return counter, names_appear_lines
 
-    def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
+    def write_to_json(self, filePath: typing.Union[os, str]) -> str:
         """
         try to write to a json file the results of the class NamesCounter
         :param filePath: path to json file to save the results to
@@ -102,7 +100,8 @@ class NamesCounter:
                 "Name Mentions": sorted([[key, names_counter[key]] for key in names_counter.keys()])
             }
         }
-        return writeTojsonFile(filePath, data)
+        json_data = json.dumps(data)
+        return json_data
 
     def get_names(self) -> list[list[str]]:
         """
