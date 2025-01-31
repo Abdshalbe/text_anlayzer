@@ -52,7 +52,6 @@ class PeopleKAssociations:
                 Then it sorts them lexicographically while maintaining their structure as a list of lists.
                 """
                 result = []
-
                 # Loop through each sequence type ('1_seq', '2_seq', etc.)
                 for key in sorted(seq_counts.keys(),
                                   key=lambda x: int(x.split('_')[0])):  # Sort keys like '1_seq', '2_seq', etc.
@@ -64,9 +63,7 @@ class PeopleKAssociations:
 
                 # Sort all sequences lexicographically
                 result.sort()  # This sorts the sequences in lexicographical order
-
                 return result
-
             idx_people = self.get_names_appearances_idx()
             for person in sorted(idx_people.keys()):
                 sentences = [line for index, line in enumerate(self.__sentences) if index in idx_people[person]]  # add
@@ -82,7 +79,6 @@ class PeopleKAssociations:
         :param filePath: path to json file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
-
         data = {
             f"Question {self.__question_number}": {
                 "Person Contexts and K-Seqs": self.create_k_seqs()
@@ -101,7 +97,6 @@ class PeopleKAssociations:
                     "Person Contexts and K-Seqs": self.create_k_seqs()
                 }
             }
-
             json_data = json.dumps(data, indent=4)
             return json_data
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:

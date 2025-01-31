@@ -39,7 +39,7 @@ class SearchEngine:
 
     def __buildGenralDataBase(self):
         """"
-        Builds the data base from a the supplied sentence
+        Builds the database from the supplied sentence
         time complexity : build O(lines_number * line_length**2)
         for search it tack O(1) in average case cause the data structure we use
         is hash dictionary

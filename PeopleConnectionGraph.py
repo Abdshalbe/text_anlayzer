@@ -50,6 +50,10 @@ class Node:
 
 
 class Graph:
+    """
+    Graph class to represent the graph structure
+    nodes is ether a list of str or str
+    """
     def __init__(self):
         self.__nodes = {}
         self.__edges = []
@@ -86,20 +90,14 @@ class PeopleConnectionGraph(PeopleKAssociations):
                  remove_input_path: typing.Union[str, os.PathLike] = None,
                  people_input_path: typing.Union[str, os.PathLike] = None,
                  jsonInputFile: typing.Union[str, os.PathLike] = None, preprocessed: bool = False):
+        #  inherits from PeopleKAssociations class to not duplicate codes
         super().__init__(QNum, sentence_input_path=sentence_input_path, people_input_path=people_input_path,
                          remove_input_path=remove_input_path, json_input_path=jsonInputFile, preprocessed=preprocessed,
-                         N=100000)
+                         N=1000000000)
         self.__windowSize = WindowSize
         self.__Threshold = Threshold
         self.__question_number = QNum  # Initialize the question number attribute
         self.__graph = self.build_people_graph()
-
-    def get_graph(self) -> Graph:
-        """
-        get the __graph of the People Connection
-        :return: the __graph of the People Connection
-        """
-        return self.__graph
 
     def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
         """
@@ -129,62 +127,85 @@ class PeopleConnectionGraph(PeopleKAssociations):
         }
         return writeTojsonFile(filePath, data)
 
+    def return_results(self) -> str:
+        """
+        Return the results of the connection graph to json file
+        :return: string represent the results of the connection graph  in json format
+        """
+        def format_edges(edges: list[Node]) -> list[str | list[str]]:
+            """
+            Converts the __edges from tuples of names to lists of names, formatted as required.
+            This method ensures that __edges are in a fixed order.
+            :param edges: List of tuples representing the __edges
+            :return: List of lists representing the __edges
+            """
+            formatted_edges = []
+            for edge in edges:
+                person1, person2 = edge
+                # Ensure the format is a list of individual words for each data in the edge
+                formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
+            # Sort __edges to ensure the order is as required in the question
+            formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
+            return formatted_edges
 
-    def count_people_in_window(self) -> dict[str, dict[str, int]]:
+        data = {
+            f"Question {self.__question_number}": {  # Use the corrected attribute node_data
+                "Pair Matches": format_edges(self.__graph.get_edge())
+            }
+        }
+
+        json_data = json.dumps(data, indent=4)
+        return json_data
+
+    def __count_people_in_windows(self) -> dict[str, dict[str, int]]:
         """
         Counts the number of distinct windows where each pair of people appear together. :return: A dictionary that
         maps each data to other persons and the number of distinct windows they appeared together.
+        returns: A dictionary that maps each data to other persons and
         """
-        personMetsCounter = {
-            person: {otherPerson: 0 for otherPerson in self.get_names_appearances_idx().keys() if person != otherPerson}
-            for person in self.get_names_appearances_idx().keys()}
-        # Get the appearance indices of each data
-        names_appearances_idx = self.get_names_appearances_idx()
-        window_size = self.__windowSize  # Window size for counting occurrences
-        total_lines = self.get_sentences_len()  # Loop through each possible window (startIndex)
-        for startIndex in range(total_lines - window_size + 1):
-            # Set to track unique people appearing in this window
-            people_in_window = set()
-            # Check each data if they appear in the current window
-            for person, indices in names_appearances_idx.items():
-                # If any of data's indices fall within the current window, add them to the set
-                if any(startIndex <= idx < startIndex + window_size for idx in indices):
-                    people_in_window.add(person)
-            # Count the "meetings" between people in the current window
-            for person in people_in_window:
-                for otherPerson in people_in_window:
-                    if person != otherPerson:
-                        # Increment the counter for the meeting between data and otherPerson
-                        personMetsCounter[person][otherPerson] += 1
-        return personMetsCounter
+        try:
+            personMetsCounter = {
+                person: {otherPerson: 0 for otherPerson in self.get_names_appearances_idx().keys() if person != otherPerson}
+                for person in self.get_names_appearances_idx().keys()}
+            # Get the appearance indices of each data
+            names_appearances_idx = self.get_names_appearances_idx()
+            window_size = self.__windowSize  # Window size for counting occurrences
+            total_lines = self.get_sentences_len()  # Loop through each possible window (startIndex)
+            for startIndex in range(total_lines - window_size + 1):
+                # Set to track unique people appearing in this window
+                people_in_window = set()
+                # Check each data if they appear in the current window
+                for person, indices in names_appearances_idx.items():
+                    # If any of data's indices fall within the current window, add them to the set
+                    if any(startIndex <= idx < startIndex + window_size for idx in indices):
+                        people_in_window.add(person)
+                # Count the "meetings" between people in the current window
+                for person in people_in_window:
+                    for otherPerson in people_in_window:
+                        if person != otherPerson:
+                            # Increment the counter for the meeting between data and otherPerson
+                            personMetsCounter[person][otherPerson] += 1
+            return personMetsCounter
+        except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
+            raise e("error")
 
     def build_people_graph(self) -> Graph:
         """
         Build a __graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >=
         __Threshold. :return: A Graph object with the constructed __nodes and __edges.
         """
-        main_dict = self.count_people_in_window()
-        people_graph = Graph()
-        # Add __nodes for all persons in the main dictionary
-        for person in main_dict:
-            people_graph.add_node(person)
-        # Iterate over all data pairs in the dictionary
-        for person in main_dict:
-            for other_person, meeting_count in main_dict[person].items():
-                if meeting_count >= self.__Threshold:
-                    # If the meeting frequency meets the threshold, add an edge between data and other_person
-                    people_graph.add_edge(person, other_person)
-        return people_graph
-
-
-if __name__ == '__main__':
-    # __graph = PeopleConnectionGraph(6, people_input_path=r"text_analyzer/2_examples/Q5_examples/example_1
-    # /people_small_1.csv", sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv
-    # ", remove_input_path="text_analyzer/1_data/data/REMOVE-WORDS.csv",Threshold=4, WindowSize=4)
-    graph = PeopleConnectionGraph(6,
-                                  people_input_path="text_analyzer/2_examples/Q6_examples/example_1/people_small_1.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q6_examples/example_1/sentences_small_1.csv",
-                                  remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv", Threshold=4,
-                                  WindowSize=4)
-    graph.write_to_json("Q6_example_1.json")
-    # print(graph.build_people_graph())
+        try:
+            main_dict = self.__count_people_in_windows()
+            people_graph = Graph()
+            # Add __nodes for all persons in the main dictionary
+            for person in main_dict:
+                people_graph.add_node(person)
+            # Iterate over all data pairs in the dictionary
+            for person in main_dict:
+                for other_person, meeting_count in main_dict[person].items():
+                    if meeting_count >= self.__Threshold:
+                        # If the meeting frequency meets the threshold, add an edge between data and other_person
+                        people_graph.add_edge(person, other_person)
+            return people_graph
+        except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
+            raise e("error")

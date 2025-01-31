@@ -208,23 +208,23 @@ class Parser:
         time complexity : O(lineNumbers * numberOfNicknames)
         :note : this is a private function that is not contained in the class API
         """
-        res = {}
+        namesDict = {}
         if self.__PeopleInputPath is None:
             return {}
         peopleList = self.__readPeopleFile(self.__PeopleInputPath)
         for person in peopleList:
             mainName = self.__removeUnwantedWords(process_sentence(person[0]))
-            if mainName not in res and mainName != "":
-                res[mainName] = []
+            if mainName not in namesDict and mainName != "":
+                namesDict[mainName] = []
                 nickNames = person[1].split(",")
                 for nickName in nickNames:
                     if len(nickName) == 0:
                         continue
                     if self.__removeUnwantedWords(process_sentence(nickName)) != "":
-                        res[mainName].append(self.__removeUnwantedWords(process_sentence(nickName)))
+                        namesDict[mainName].append(self.__removeUnwantedWords(process_sentence(nickName)))
             else:
                 continue
-        return res
+        return namesDict
 
     @staticmethod
     def __readPeopleFile(filePath: str) -> list:
