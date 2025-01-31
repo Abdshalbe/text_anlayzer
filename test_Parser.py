@@ -96,31 +96,6 @@ def create_temp_csv(data, start):
         return tmp_file.name
 
 
-# Function to load a JSON file into a Python dictionary
-def load_json(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-
-# Function to compare two JSON files and return True if they are identical, False otherwise
-def compare_json(file1, file2):
-    """
-    Compares two json files after load them
-    :param file1: first json file
-    :param file2: second json file
-    :return: true if they are equal, false otherwise
-    """
-    try:
-        # Load both JSON files into dictionaries
-        data1 = load_json(file1)
-        data2 = load_json(file2)
-        # Compare the two dictionaries and return True if they are identical
-        return data1 == data2
-    except Exception as e:
-        print(f"Error comparing JSON files: {e}")
-        return False
-
-
 # examine geeven example
 text1 = [["Harry rode on a silver chariot"],
          ["It shined!    like a star of platinum"],
@@ -355,125 +330,127 @@ parser4 = Parser(1, sentenceInputPath=csv_sentence3, removeInputPath=csv_remved1
 parser5 = Parser(1, sentenceInputPath=csv_sentence4, removeInputPath=csv_remved1, peopleInputPath=people_names5_path)
 parser6 = Parser(1, sentenceInputPath=csv_sentence5, removeInputPath=csv_remved1, peopleInputPath=people_names6_path)
 
-res1 = [[['over', 'attentive', 'wizard'], []],
-        [['bertram', 'aubrey'], []],
-        [['audrey', 'weasley'], []],
-        [['augusta', 'gran', 'longbottom'], []],
-        [['augustus', 'pye'], []],
-        [['augustus', 'rookwood'], []],
-        [['augustus', 'worme'], []],
-        [['auntie', 'muriel'], []],
-        [['aunt', 'marge', 'dursley'], []],
-        [['aurelius', 'dumbledore'], []],
-        [['aurora', 'sinistra'], []],
-        [['avery'], []],
-        [['babajide', 'akingbade'], []],
-        [['babayaga'], []],
-        [['babbitty', 'rabbitty'], []],
-        [['bagman', 'sr'], []],
-        [['ludo', 'bagman'], []],
-        [['otto', 'bagman'], []],
-        [['millicent', 'bagnold'], []],
-        [['bathilda', 'bagshot'], [['batty']]],
-        [['kquewanda', 'bailey'], []],
-        [['ballyfumble', 'stranger'],
+name_res1 = [[['over', 'attentive', 'wizard'], []],
+             [['bertram', 'aubrey'], []],
+             [['audrey', 'weasley'], []],
+             [['augusta', 'gran', 'longbottom'], []],
+             [['augustus', 'pye'], []],
+             [['augustus', 'rookwood'], []],
+             [['augustus', 'worme'], []],
+             [['auntie', 'muriel'], []],
+             [['aunt', 'marge', 'dursley'], []],
+             [['aurelius', 'dumbledore'], []],
+             [['aurora', 'sinistra'], []],
+             [['avery'], []],
+             [['babajide', 'akingbade'], []],
+             [['babayaga'], []],
+             [['babbitty', 'rabbitty'], []],
+             [['bagman', 'sr'], []],
+             [['ludo', 'bagman'], []],
+             [['otto', 'bagman'], []],
+             [['millicent', 'bagnold'], []],
+             [['bathilda', 'bagshot'], [['batty']]],
+             [['kquewanda', 'bailey'], []],
+             [['ballyfumble', 'stranger'],
          [['quin'], ['quivering', 'quintus'], ['quintusofthesillyname']]]]
-res2 = [[['attentive', 'wizard'], []],
-        [['bertram', 'aubrey'], []],
-        [['audrey', 'weasley'], []],
-        [['augusta', 'gran', 'longbottom'], []],
-        [['augustus', 'pye'], []],
-        [['augustus', 'rookwood'], []],
-        [['augustus', 'worme'], []],
-        [['auntie', 'muriel'], []],
-        [['aunt', 'marge', 'dursley'], []],
-        [['aurelius', 'dumbledore'], []],
-        [['aurora', 'sinistra'], []],
-        [['avery'], []],
-        [['babajide', 'akingbade'], []],
-        [['babayaga'], []],
-        [['babbitty', 'rabbitty'], []],
-        [['bagman', 'sr'], []],
-        [['ludo', 'bagman'], []],
-        [['otto', 'bagman'], []],
-        [['millicent', 'bagnold'], []],
-        [['bathilda', 'bagshot'], [['batty']]],
-        [['kquewanda', 'bailey'], []],
-        [['ballyfumble', 'stranger'],
+name_res2 = [[['attentive', 'wizard'], []],
+             [['bertram', 'aubrey'], []],
+             [['audrey', 'weasley'], []],
+             [['augusta', 'gran', 'longbottom'], []],
+             [['augustus', 'pye'], []],
+             [['augustus', 'rookwood'], []],
+             [['augustus', 'worme'], []],
+             [['auntie', 'muriel'], []],
+             [['aunt', 'marge', 'dursley'], []],
+             [['aurelius', 'dumbledore'], []],
+             [['aurora', 'sinistra'], []],
+             [['avery'], []],
+             [['babajide', 'akingbade'], []],
+             [['babayaga'], []],
+             [['babbitty', 'rabbitty'], []],
+             [['bagman', 'sr'], []],
+             [['ludo', 'bagman'], []],
+             [['otto', 'bagman'], []],
+             [['millicent', 'bagnold'], []],
+             [['bathilda', 'bagshot'], [['batty']]],
+             [['kquewanda', 'bailey'], []],
+             [['ballyfumble', 'stranger'],
          [['quin'], ['quivering', 'quintus'], ['quintusofthesillyname']]]]
-res3 = [[['attentive', 'wizard'], []],
-        [['bertram', 'aubrey'], []],
-        [['audrey', 'weasley'], []],
-        [['augusta', 'gran', 'longbottom'], []],
-        [['augustus', 'pye'], []],
-        [['augustus', 'rookwood'], []],
-        [['augustus', 'worme'], []],
-        [['auntie', 'muriel'], []],
-        [['aunt', 'marge', 'dursley'], []],
-        [['aurelius', 'dumbledore'], []],
-        [['aurora', 'sinistra'], []],
-        [['avery'], []],
-        [['babajide', 'akingbade'], []],
-        [['babayaga'], []],
-        [['babbitty', 'rabbitty'], []],
-        [['bagman', 'sr'], []],
-        [['ludo', 'bagman'], []],
-        [['otto', 'bagman'], []],
-        [['millicent', 'bagnold'], []],
-        [['bathilda', 'bagshot'], [['batty']]],
-        [['kquewanda', 'bailey'], []]]
+name_res3 = [[['attentive', 'wizard'], []],
+             [['bertram', 'aubrey'], []],
+             [['audrey', 'weasley'], []],
+             [['augusta', 'gran', 'longbottom'], []],
+             [['augustus', 'pye'], []],
+             [['augustus', 'rookwood'], []],
+             [['augustus', 'worme'], []],
+             [['auntie', 'muriel'], []],
+             [['aunt', 'marge', 'dursley'], []],
+             [['aurelius', 'dumbledore'], []],
+             [['aurora', 'sinistra'], []],
+             [['avery'], []],
+             [['babajide', 'akingbade'], []],
+             [['babayaga'], []],
+             [['babbitty', 'rabbitty'], []],
+             [['bagman', 'sr'], []],
+             [['ludo', 'bagman'], []],
+             [['otto', 'bagman'], []],
+             [['millicent', 'bagnold'], []],
+             [['bathilda', 'bagshot'], [['batty']]],
+             [['kquewanda', 'bailey'], []]]
 
-res5 = [[['bertram', 'aubrey'], []],
-        [['audrey', 'weasley'], []],
-        [['augusta', 'gran', 'longbottom'], []],
-        [['augustus', 'pye'], []],
-        [['augustus', 'rookwood'], []],
-        [['augustus', 'worme'], []],
-        [['auntie', 'muriel'], []],
-        [['aunt', 'marge', 'dursley'], []],
-        [['aurelius', 'dumbledore'], []],
-        [['aurora', 'sinistra'], []],
-        [['avery'], []],
-        [['babajide', 'akingbade'], []],
-        [['babayaga'], []],
-        [['babbitty', 'rabbitty'], []],
-        [['bagman', 'sr'], []],
-        [['ludo', 'bagman'], []],
-        [['otto', 'bagman'], []],
-        [['millicent', 'bagnold'], []],
-        [['bathilda', 'bagshot'], [['batty']]],
-        [['kquewanda', 'bailey'], []]]
+name_res5 = [[['bertram', 'aubrey'], []],
+             [['audrey', 'weasley'], []],
+             [['augusta', 'gran', 'longbottom'], []],
+             [['augustus', 'pye'], []],
+             [['augustus', 'rookwood'], []],
+             [['augustus', 'worme'], []],
+             [['auntie', 'muriel'], []],
+             [['aunt', 'marge', 'dursley'], []],
+             [['aurelius', 'dumbledore'], []],
+             [['aurora', 'sinistra'], []],
+             [['avery'], []],
+             [['babajide', 'akingbade'], []],
+             [['babayaga'], []],
+             [['babbitty', 'rabbitty'], []],
+             [['bagman', 'sr'], []],
+             [['ludo', 'bagman'], []],
+             [['otto', 'bagman'], []],
+             [['millicent', 'bagnold'], []],
+             [['bathilda', 'bagshot'], [['batty']]],
+             [['kquewanda', 'bailey'], []]]
 
-res6 = [[['attentive', 'wizard'], []],
-        [['bertram', 'aubrey'], []],
-        [['audrey', 'weasley'], []],
-        [['augusta', 'gran', 'longbottom'], []],
-        [['augustus', 'pye'], []],
-        [['augustus', 'rookwood'], []],
-        [['augustus', 'worme'], []],
-        [['auntie', 'muriel'], []],
-        [['aunt', 'marge', 'dursley'], []],
-        [['aurelius', 'dumbledore'], []],
-        [['aurora', 'sinistra'], []],
-        [['avery'], []],
-        [['babajide', 'akingbade'], []],
-        [['babayaga'], []],
-        [['babbitty', 'rabbitty'], []],
-        [['bagman', 'sr'], []],
-        [['ludo', 'bagman'], []],
-        [['otto', 'bagman'], []],
-        [['millicent', 'bagnold'], []],
-        [['bathilda', 'bagshot'], [['batty']]],
-        [['kquewanda', 'bailey'], []]]
+name_res4 = []
+
+name_res6 = [[['attentive', 'wizard'], []],
+             [['bertram', 'aubrey'], []],
+             [['audrey', 'weasley'], []],
+             [['augusta', 'gran', 'longbottom'], []],
+             [['augustus', 'pye'], []],
+             [['augustus', 'rookwood'], []],
+             [['augustus', 'worme'], []],
+             [['auntie', 'muriel'], []],
+             [['aunt', 'marge', 'dursley'], []],
+             [['aurelius', 'dumbledore'], []],
+             [['aurora', 'sinistra'], []],
+             [['avery'], []],
+             [['babajide', 'akingbade'], []],
+             [['babayaga'], []],
+             [['babbitty', 'rabbitty'], []],
+             [['bagman', 'sr'], []],
+             [['ludo', 'bagman'], []],
+             [['otto', 'bagman'], []],
+             [['millicent', 'bagnold'], []],
+             [['bathilda', 'bagshot'], [['batty']]],
+             [['kquewanda', 'bailey'], []]]
 
 
 def test_name_Parser():
-    assert parser1.get_people() == res1
-    assert parser2.get_people() == res2
-    assert parser3.get_people() == res3
+    assert parser1.get_people() == name_res1
+    assert parser2.get_people() == name_res2
+    assert parser3.get_people() == name_res3
     assert parser4.get_people() == []
-    assert parser5.get_people() == res5
-    assert parser6.get_people() == res6
+    assert parser5.get_people() == name_res5
+    assert parser6.get_people() == name_res6
 
 
 sentence1 = [['harry', 'rode', 'silver', 'chariot'], ['shined', 'like', 'star', 'platinum'],
@@ -519,77 +496,982 @@ def test_parser_words_to_remove():
                                           'over': True, 'the': True, 'was': True}
 
 
-data_str = ('{"Question 1": {"Processed Sentences": [["harry", "rode", "silver", '
-            '"chariot"], ["shined", "like", "star", "platinum"], ["known", "red", '
-            '"magician"]], "Processed Names": [[["over", "attentive", "wizard"], []], '
-            '[["bertram", "aubrey"], []], [["audrey", "weasley"], []], [["augusta", '
-            '"gran", "longbottom"], []], [["augustus", "pye"], []], [["augustus", '
-            '"rookwood"], []], [["augustus", "worme"], []], [["auntie", "muriel"], []], '
-            '[["aunt", "marge", "dursley"], []], [["aurelius", "dumbledore"], []], '
-            '[["aurora", "sinistra"], []], [["avery"], []], [["babajide", "akingbade"], '
-            '[]], [["babayaga"], []], [["babbitty", "rabbitty"], []], [["bagman", "sr"], '
-            '[]], [["ludo", "bagman"], []], [["otto", "bagman"], []], [["millicent", '
-            '"bagnold"], []], [["bathilda", "bagshot"], [["batty"]]], [["kquewanda", '
-            '"bailey"], []], [["ballyfumble", "stranger"], [["quin"], ["quivering", '
-            '"quintus"], ["quintusofthesillyname"]]]]}}')
+data_str = ('{\n'
+            '    "Question 1": {\n'
+            '        "Processed Sentences": [\n'
+            '            [\n'
+            '                "harry",\n'
+            '                "rode",\n'
+            '                "silver",\n'
+            '                "chariot"\n'
+            '            ],\n'
+            '            [\n'
+            '                "shined",\n'
+            '                "like",\n'
+            '                "star",\n'
+            '                "platinum"\n'
+            '            ],\n'
+            '            [\n'
+            '                "known",\n'
+            '                "red",\n'
+            '                "magician"\n'
+            '            ]\n'
+            '        ],\n'
+            '        "Processed Names": [\n'
+            '            [\n'
+            '                [\n'
+            '                    "over",\n'
+            '                    "attentive",\n'
+            '                    "wizard"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "bertram",\n'
+            '                    "aubrey"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "audrey",\n'
+            '                    "weasley"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "augusta",\n'
+            '                    "gran",\n'
+            '                    "longbottom"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "augustus",\n'
+            '                    "pye"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "augustus",\n'
+            '                    "rookwood"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "augustus",\n'
+            '                    "worme"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "auntie",\n'
+            '                    "muriel"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aunt",\n'
+            '                    "marge",\n'
+            '                    "dursley"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aurora",\n'
+            '                    "sinistra"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "avery"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "babajide",\n'
+            '                    "akingbade"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "babayaga"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "babbitty",\n'
+            '                    "rabbitty"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "bagman",\n'
+            '                    "sr"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "ludo",\n'
+            '                    "bagman"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "otto",\n'
+            '                    "bagman"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "millicent",\n'
+            '                    "bagnold"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "bathilda",\n'
+            '                    "bagshot"\n'
+            '                ],\n'
+            '                [\n'
+            '                    [\n'
+            '                        "batty"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "kquewanda",\n'
+            '                    "bailey"\n'
+            '                ],\n'
+            '                []\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "ballyfumble",\n'
+            '                    "stranger"\n'
+            '                ],\n'
+            '                [\n'
+            '                    [\n'
+            '                        "quin"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "quivering",\n'
+            '                        "quintus"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "quintusofthesillyname"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
 
-data_str2 = ('{"Question 1": {"Processed Sentences": [], "Processed Names": '
-             '[[["attentive", "wizard"], []], [["bertram", "aubrey"], []], [["audrey", '
-             '"weasley"], []], [["augusta", "gran", "longbottom"], []], [["augustus", '
-             '"pye"], []], [["augustus", "rookwood"], []], [["augustus", "worme"], []], '
-             '[["auntie", "muriel"], []], [["aunt", "marge", "dursley"], []], '
-             '[["aurelius", "dumbledore"], []], [["aurora", "sinistra"], []], [["avery"], '
-             '[]], [["babajide", "akingbade"], []], [["babayaga"], []], [["babbitty", '
-             '"rabbitty"], []], [["bagman", "sr"], []], [["ludo", "bagman"], []], '
-             '[["otto", "bagman"], []], [["millicent", "bagnold"], []], [["bathilda", '
-             '"bagshot"], [["batty"]]], [["kquewanda", "bailey"], []], [["ballyfumble", '
-             '"stranger"], [["quin"], ["quivering", "quintus"], '
-             '["quintusofthesillyname"]]]]}}')
-data_str3 = ('{"Question 1": {"Processed Sentences": [["under", "tuft", "jet", "black", '
-             '"hair", "boy", "forehead", "dumbledore", "and", "mcgonagall", "could", '
-             '"see", "curiously", "shaped", "cut", "like", "bolt", "lightning"], ["is", '
-             '"that", "where", "whispered", "professor", "mcgonagall"], ["yes", "said", '
-             '"dumbledore", "dumbledore", "ll", "have", "that", "scar", "forever", '
-             '"couldn", "t", "you", "do", "something", "about", "scar", "dumbledore", '
-             '"even", "if", "i", "could", "i", "wouldn", "t"]], "Processed Names": '
-             '[[["attentive", "wizard"], []], [["bertram", "aubrey"], []], [["audrey", '
-             '"weasley"], []], [["augusta", "gran", "longbottom"], []], [["augustus", '
-             '"pye"], []], [["augustus", "rookwood"], []], [["augustus", "worme"], []], '
-             '[["auntie", "muriel"], []], [["aunt", "marge", "dursley"], []], '
-             '[["aurelius", "dumbledore"], []], [["aurora", "sinistra"], []], [["avery"], '
-             '[]], [["babajide", "akingbade"], []], [["babayaga"], []], [["babbitty", '
-             '"rabbitty"], []], [["bagman", "sr"], []], [["ludo", "bagman"], []], '
-             '[["otto", "bagman"], []], [["millicent", "bagnold"], []], [["bathilda", '
-             '"bagshot"], [["batty"]]], [["kquewanda", "bailey"], []]]}}')
+data_str2 = ('{\n'
+             '    "Question 1": {\n'
+             '        "Processed Sentences": [],\n'
+             '        "Processed Names": [\n'
+             '            [\n'
+             '                [\n'
+             '                    "attentive",\n'
+             '                    "wizard"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bertram",\n'
+             '                    "aubrey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "audrey",\n'
+             '                    "weasley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augusta",\n'
+             '                    "gran",\n'
+             '                    "longbottom"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "pye"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "rookwood"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "worme"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "auntie",\n'
+             '                    "muriel"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aunt",\n'
+             '                    "marge",\n'
+             '                    "dursley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurelius",\n'
+             '                    "dumbledore"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurora",\n'
+             '                    "sinistra"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "avery"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babajide",\n'
+             '                    "akingbade"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babayaga"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babbitty",\n'
+             '                    "rabbitty"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bagman",\n'
+             '                    "sr"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "ludo",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "otto",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "millicent",\n'
+             '                    "bagnold"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bathilda",\n'
+             '                    "bagshot"\n'
+             '                ],\n'
+             '                [\n'
+             '                    [\n'
+             '                        "batty"\n'
+             '                    ]\n'
+             '                ]\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "kquewanda",\n'
+             '                    "bailey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "ballyfumble",\n'
+             '                    "stranger"\n'
+             '                ],\n'
+             '                [\n'
+             '                    [\n'
+             '                        "quin"\n'
+             '                    ],\n'
+             '                    [\n'
+             '                        "quivering",\n'
+             '                        "quintus"\n'
+             '                    ],\n'
+             '                    [\n'
+             '                        "quintusofthesillyname"\n'
+             '                    ]\n'
+             '                ]\n'
+             '            ]\n'
+             '        ]\n'
+             '    }\n'
+             '}')
+data_str3 = ('{\n'
+             '    "Question 1": {\n'
+             '        "Processed Sentences": [\n'
+             '            [\n'
+             '                "under",\n'
+             '                "tuft",\n'
+             '                "jet",\n'
+             '                "black",\n'
+             '                "hair",\n'
+             '                "boy",\n'
+             '                "forehead",\n'
+             '                "dumbledore",\n'
+             '                "and",\n'
+             '                "mcgonagall",\n'
+             '                "could",\n'
+             '                "see",\n'
+             '                "curiously",\n'
+             '                "shaped",\n'
+             '                "cut",\n'
+             '                "like",\n'
+             '                "bolt",\n'
+             '                "lightning"\n'
+             '            ],\n'
+             '            [\n'
+             '                "is",\n'
+             '                "that",\n'
+             '                "where",\n'
+             '                "whispered",\n'
+             '                "professor",\n'
+             '                "mcgonagall"\n'
+             '            ],\n'
+             '            [\n'
+             '                "yes",\n'
+             '                "said",\n'
+             '                "dumbledore",\n'
+             '                "dumbledore",\n'
+             '                "ll",\n'
+             '                "have",\n'
+             '                "that",\n'
+             '                "scar",\n'
+             '                "forever",\n'
+             '                "couldn",\n'
+             '                "t",\n'
+             '                "you",\n'
+             '                "do",\n'
+             '                "something",\n'
+             '                "about",\n'
+             '                "scar",\n'
+             '                "dumbledore",\n'
+             '                "even",\n'
+             '                "if",\n'
+             '                "i",\n'
+             '                "could",\n'
+             '                "i",\n'
+             '                "wouldn",\n'
+             '                "t"\n'
+             '            ]\n'
+             '        ],\n'
+             '        "Processed Names": [\n'
+             '            [\n'
+             '                [\n'
+             '                    "attentive",\n'
+             '                    "wizard"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bertram",\n'
+             '                    "aubrey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "audrey",\n'
+             '                    "weasley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augusta",\n'
+             '                    "gran",\n'
+             '                    "longbottom"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "pye"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "rookwood"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "worme"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "auntie",\n'
+             '                    "muriel"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aunt",\n'
+             '                    "marge",\n'
+             '                    "dursley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurelius",\n'
+             '                    "dumbledore"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurora",\n'
+             '                    "sinistra"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "avery"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babajide",\n'
+             '                    "akingbade"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babayaga"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babbitty",\n'
+             '                    "rabbitty"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bagman",\n'
+             '                    "sr"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "ludo",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "otto",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "millicent",\n'
+             '                    "bagnold"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bathilda",\n'
+             '                    "bagshot"\n'
+             '                ],\n'
+             '                [\n'
+             '                    [\n'
+             '                        "batty"\n'
+             '                    ]\n'
+             '                ]\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "kquewanda",\n'
+             '                    "bailey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ]\n'
+             '        ]\n'
+             '    }\n'
+             '}')
 
-data_str4 = ('{"Question 1": {"Processed Sentences": [["under", "tuft", "jet", "black", '
-             '"hair", "boy", "forehead", "dumbledore", "and", "mcgonagall", "could", '
-             '"see", "curiously", "shaped", "cut", "like", "bolt", "lightning"], ["is", '
-             '"that", "where", "whispered", "professor", "mcgonagall"], ["yes", "said", '
-             '"dumbledore", "dumbledore", "ll", "have", "that", "scar", "forever", '
-             '"couldn", "t", "you", "do", "something", "about", "scar", "dumbledore", '
-             '"even", "if", "i", "could", "i", "wouldn", "t"]], "Processed Names": []}}')
-data_str5 = ('{"Question 1": {"Processed Sentences": [["marry", "called", "his", "name"], '
-             '["max"]], "Processed Names": [[["bertram", "aubrey"], []], [["audrey", '
-             '"weasley"], []], [["augusta", "gran", "longbottom"], []], [["augustus", '
-             '"pye"], []], [["augustus", "rookwood"], []], [["augustus", "worme"], []], '
-             '[["auntie", "muriel"], []], [["aunt", "marge", "dursley"], []], '
-             '[["aurelius", "dumbledore"], []], [["aurora", "sinistra"], []], [["avery"], '
-             '[]], [["babajide", "akingbade"], []], [["babayaga"], []], [["babbitty", '
-             '"rabbitty"], []], [["bagman", "sr"], []], [["ludo", "bagman"], []], '
-             '[["otto", "bagman"], []], [["millicent", "bagnold"], []], [["bathilda", '
-             '"bagshot"], [["batty"]]], [["kquewanda", "bailey"], []]]}}')
-data_str6 = ('{"Question 1": {"Processed Sentences": [["marry", "called", "his", "name"], '
-             '["max"]], "Processed Names": [[["attentive", "wizard"], []], [["bertram", '
-             '"aubrey"], []], [["audrey", "weasley"], []], [["augusta", "gran", '
-             '"longbottom"], []], [["augustus", "pye"], []], [["augustus", "rookwood"], '
-             '[]], [["augustus", "worme"], []], [["auntie", "muriel"], []], [["aunt", '
-             '"marge", "dursley"], []], [["aurelius", "dumbledore"], []], [["aurora", '
-             '"sinistra"], []], [["avery"], []], [["babajide", "akingbade"], []], '
-             '[["babayaga"], []], [["babbitty", "rabbitty"], []], [["bagman", "sr"], []], '
-             '[["ludo", "bagman"], []], [["otto", "bagman"], []], [["millicent", '
-             '"bagnold"], []], [["bathilda", "bagshot"], [["batty"]]], [["kquewanda", '
-             '"bailey"], []]]}}')
+data_str4 = ('{\n'
+             '    "Question 1": {\n'
+             '        "Processed Sentences": [\n'
+             '            [\n'
+             '                "under",\n'
+             '                "tuft",\n'
+             '                "jet",\n'
+             '                "black",\n'
+             '                "hair",\n'
+             '                "boy",\n'
+             '                "forehead",\n'
+             '                "dumbledore",\n'
+             '                "and",\n'
+             '                "mcgonagall",\n'
+             '                "could",\n'
+             '                "see",\n'
+             '                "curiously",\n'
+             '                "shaped",\n'
+             '                "cut",\n'
+             '                "like",\n'
+             '                "bolt",\n'
+             '                "lightning"\n'
+             '            ],\n'
+             '            [\n'
+             '                "is",\n'
+             '                "that",\n'
+             '                "where",\n'
+             '                "whispered",\n'
+             '                "professor",\n'
+             '                "mcgonagall"\n'
+             '            ],\n'
+             '            [\n'
+             '                "yes",\n'
+             '                "said",\n'
+             '                "dumbledore",\n'
+             '                "dumbledore",\n'
+             '                "ll",\n'
+             '                "have",\n'
+             '                "that",\n'
+             '                "scar",\n'
+             '                "forever",\n'
+             '                "couldn",\n'
+             '                "t",\n'
+             '                "you",\n'
+             '                "do",\n'
+             '                "something",\n'
+             '                "about",\n'
+             '                "scar",\n'
+             '                "dumbledore",\n'
+             '                "even",\n'
+             '                "if",\n'
+             '                "i",\n'
+             '                "could",\n'
+             '                "i",\n'
+             '                "wouldn",\n'
+             '                "t"\n'
+             '            ]\n'
+             '        ],\n'
+             '        "Processed Names": []\n'
+             '    }\n'
+             '}')
+data_str5 = ('{\n'
+             '    "Question 1": {\n'
+             '        "Processed Sentences": [\n'
+             '            [\n'
+             '                "marry",\n'
+             '                "called",\n'
+             '                "his",\n'
+             '                "name"\n'
+             '            ],\n'
+             '            [\n'
+             '                "max"\n'
+             '            ]\n'
+             '        ],\n'
+             '        "Processed Names": [\n'
+             '            [\n'
+             '                [\n'
+             '                    "bertram",\n'
+             '                    "aubrey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "audrey",\n'
+             '                    "weasley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augusta",\n'
+             '                    "gran",\n'
+             '                    "longbottom"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "pye"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "rookwood"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "worme"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "auntie",\n'
+             '                    "muriel"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aunt",\n'
+             '                    "marge",\n'
+             '                    "dursley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurelius",\n'
+             '                    "dumbledore"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurora",\n'
+             '                    "sinistra"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "avery"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babajide",\n'
+             '                    "akingbade"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babayaga"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babbitty",\n'
+             '                    "rabbitty"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bagman",\n'
+             '                    "sr"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "ludo",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "otto",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "millicent",\n'
+             '                    "bagnold"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bathilda",\n'
+             '                    "bagshot"\n'
+             '                ],\n'
+             '                [\n'
+             '                    [\n'
+             '                        "batty"\n'
+             '                    ]\n'
+             '                ]\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "kquewanda",\n'
+             '                    "bailey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ]\n'
+             '        ]\n'
+             '    }\n'
+             '}')
+data_str6 = ('{\n'
+             '    "Question 1": {\n'
+             '        "Processed Sentences": [\n'
+             '            [\n'
+             '                "marry",\n'
+             '                "called",\n'
+             '                "his",\n'
+             '                "name"\n'
+             '            ],\n'
+             '            [\n'
+             '                "max"\n'
+             '            ]\n'
+             '        ],\n'
+             '        "Processed Names": [\n'
+             '            [\n'
+             '                [\n'
+             '                    "attentive",\n'
+             '                    "wizard"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bertram",\n'
+             '                    "aubrey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "audrey",\n'
+             '                    "weasley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augusta",\n'
+             '                    "gran",\n'
+             '                    "longbottom"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "pye"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "rookwood"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "augustus",\n'
+             '                    "worme"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "auntie",\n'
+             '                    "muriel"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aunt",\n'
+             '                    "marge",\n'
+             '                    "dursley"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurelius",\n'
+             '                    "dumbledore"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "aurora",\n'
+             '                    "sinistra"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "avery"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babajide",\n'
+             '                    "akingbade"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babayaga"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "babbitty",\n'
+             '                    "rabbitty"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bagman",\n'
+             '                    "sr"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "ludo",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "otto",\n'
+             '                    "bagman"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "millicent",\n'
+             '                    "bagnold"\n'
+             '                ],\n'
+             '                []\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "bathilda",\n'
+             '                    "bagshot"\n'
+             '                ],\n'
+             '                [\n'
+             '                    [\n'
+             '                        "batty"\n'
+             '                    ]\n'
+             '                ]\n'
+             '            ],\n'
+             '            [\n'
+             '                [\n'
+             '                    "kquewanda",\n'
+             '                    "bailey"\n'
+             '                ],\n'
+             '                []\n'
+             '            ]\n'
+             '        ]\n'
+             '    }\n'
+             '}')
 
 
 def test_results():

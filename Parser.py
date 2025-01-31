@@ -2,7 +2,6 @@ import csv
 import json
 import os
 import string
-import sys
 import typing
 
 
@@ -15,42 +14,55 @@ def hash_dict_for_punctuation() -> typing.Dict[str, str]:
     """
     # starting hash map
     mapping_hash_map = {}
-    # Map all punctuation characters to single white space
-    for punctuation in string.punctuation:
-        mapping_hash_map[punctuation] = " "
-    # For letters and digits, map them to their lowercase equivalents
-    for char in string.ascii_letters + string.digits:
-        mapping_hash_map[char] = char.lower()
-    # handle spaces, newlines, tabs, etc.
-    mapping_hash_map[' '] = ' '  # Space remains a space
-    mapping_hash_map['\n'] = '\n'  # Newline remains a newline
-    mapping_hash_map['\t'] = '\t'  # Tab remains a tab
-    # Handle other characters that may not have been included
-    all_chars = ''.join(chr(i) for i in range(32, 127))  # Printable ASCII characters
-    for char in all_chars:
-        if char not in mapping_hash_map:
-            mapping_hash_map[char] = char.lower()  # Convert to lowercase
+    for char in range(ord('a'), ord('z') + 1):
+        mapping_hash_map[chr(char)] = chr(char)
+    for char in range(ord('A'), ord('Z') + 1):
+        mapping_hash_map[chr(char)] = chr(char).lower()
+    for char in range(ord('A')):
+        mapping_hash_map[chr(char)] = ' '
+    for char in range(ord('Z') + 1, ord('a')):
+        mapping_hash_map[chr(char)] = ' '
+    for char in range(ord('z') + 1, 256):
+        mapping_hash_map[chr(char)] = ' '
+    for char in range(ord('0'), ord('9') + 1):
+        mapping_hash_map[chr(char)] = chr(char)
+    mapping_hash_map['\n'] = '\n'
+    mapping_hash_map['\t'] = '\t'
     return mapping_hash_map
 
 
 def process_sentence(sentence: str) -> str:
     """
-    Process the sentence and replace capitalized words with lower words and remove punctuation
-    by replacing them with a white space
-    :param sentence: the sentence to be processed
-    :return: the processed sentence
-    time complexity : O(len(sentence))
+    Process the sentence by converting it to lowercase, removing punctuation,
+    and replacing punctuation with whitespace.
+
+    :param sentence: The sentence to be processed
+    :return: The processed sentence
+    Time complexity: O(len(sentence))
     """
-    if sentence == "":
+
+    # Early return for empty string
+    if not sentence:
         return sentence
-    helperDict = hash_dict_for_punctuation()  # Creating a hash dictionary to replace the values
-    new_sentence = helperDict[sentence[0]]
-    for i in range(1, len(sentence)):
-        newChar = helperDict[sentence[i]]  # Set the hashed value instead of the char / O(1) operation
-        if newChar == " " and helperDict[sentence[i - 1]] == " ":  # Prevent double white space /O(1) operation
-            pass
+
+    # Dictionary for punctuation replacement (you can adjust this if needed)
+    helperDict = {punc: ' ' for punc in string.punctuation}  # Map punctuation to whitespace
+
+    # Initialize the new sentence with the first character
+    new_sentence = ''
+
+    # Process each character in the sentence
+    for i, char in enumerate(sentence):
+        # Convert uppercase to lowercase and handle punctuation
+        if char in helperDict:
+            newChar = helperDict[char]  # Replace punctuation with space
         else:
-            new_sentence += newChar
+            newChar = char.lower()  # Convert the character to lowercase
+        # Prevent consecutive spaces in the sentence
+        if newChar == ' ' and (new_sentence.endswith(' ') or not new_sentence):
+            continue
+        new_sentence += newChar
+
     return new_sentence.strip()
 
 
@@ -139,8 +151,7 @@ class Parser:
                 self.__PeopleInputPath = validate_file_path(peopleInputPath, "People Input Path")
             self.__RemoveInputPath = validate_file_path(removeInputPath, "Remove Input Path")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)
+            raise e(f"Error: {e}")  # Handle any file-related or other errors
         self.__QuestionNumber = QuestionNumber
         # Initialize Removals dictionary before processing __sentences
         processedWords = [sentence for sentence in
@@ -260,7 +271,7 @@ class Parser:
                 "Processed Names": convert_to_nested_format(self.__People)
             }
         }
-        json_data = json.dumps(data)
+        json_data = json.dumps(data, indent=4)
         return json_data
 
     def getSentences(self) -> list[list[str]]:
@@ -285,3 +296,24 @@ class Parser:
         :return: a dictionary of the words to remove mapped to True
         """
         return self.__Removes
+
+
+if __name__ == '__main__':
+    preprocessor_1 = Parser(1,
+                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_1/people_small_1.csv",
+                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_1/sentences_small_1.csv",
+                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+    preprocessor_2 = Parser(1,
+                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_2/people_small_2.csv",
+                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_2/sentences_small_2.csv",
+                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+    preprocessor_3 = Parser(1,
+                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_3/people_small_3.csv",
+                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_3/sentences_small_3.csv",
+                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
+    # print(preprocessor_2.write_result_to_json("11.json"))
+    print(preprocessor_3.write_result_to_json("1.json"))
+
+
+
+

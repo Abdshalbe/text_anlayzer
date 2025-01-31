@@ -1,13 +1,15 @@
+import json
+import os
 import sys
 import typing
-import os
-import json
+from typing import Any
+
 import Parser
 
 
 # static method can be used for external use
 
-def generate_k_seqs(sentences: list[list[str]], N: int) -> dict[str, dict[tuple[str], int]]:
+def generate_k_seqs(sentences: list[list[str]], N: int) -> dict[str, list[Any]]:
     """
     Generates k-sequences for each k from 1 to N and removes commas after the last word if
     the sequence contains only one word. Additionally, sorts the sequences lexicographically.
@@ -58,6 +60,7 @@ def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typ
               people_input_path: typing.Union[str, os] = None) -> (list[list[str]], list[list[str]]):
     """
     Loads __sentences and removes unwanted words based on the provided files.
+    :param people_input_path: path to people input file
     :param sentence_input_path: Path to the sentence input file
     :param remove_input_path: Path to the file with words to remove
     :time complexity: O(n)
@@ -119,7 +122,7 @@ class SequinceCounter:
         """
         return self.__convert_to_json_style(generate_k_seqs(self.__sentences, self.__N))
 
-    def __convert_to_json_style(self, seq_counts: dict[str, list[tuple[tuple[str], int]]]) -> list[
+    def __convert_to_json_style(self, seq_counts: dict[str, dict[tuple[tuple[str], int]]]) -> list[
         list[str | list[list[str, int]]]]:
         """
         Convert the sequences to json-style and return it
@@ -148,16 +151,14 @@ class SequinceCounter:
         else:
             return False
 
-    def return_results(self):
+    def return_results(self) -> str:
         data = {
             f"Question {self.__questionNum}": {
                 f"{self.__N}-Seq Counts": self.count_sequences()
             }
         }
-        json_data = json.dumps(data)
+        json_data = json.dumps(data, indent=4)
         return json_data
-
-
 if __name__ == '__main__':
     SEQUENCE_COUNTER1 = SequinceCounter(2,
                                         sentence_input_path="text_analyzer/2_examples/Q2_examples/example_1"
@@ -184,3 +185,5 @@ if __name__ == '__main__':
     SEQUENCE_COUNTER6 = SequinceCounter(2,
                                         json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
                                         preprocessed=True, N=5)
+
+    SEQUENCE_COUNTER3.write_result_to_json('1.json')
