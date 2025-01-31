@@ -127,6 +127,9 @@ def test_equal_csr():
 
 
 def test_count_names():
+    """
+    test count_names function returns correct number of names and ther line appear
+    """
     assert NamesCounter(QNum=3, json_input_path=json1, preprocessed=True).count_names() == (
         {'alix dan': 3, 'bagman sr': 1, 'ludo bagman': 1, 'otto bagman': 1},
         {'alix dan': [0, 2, 3], 'bagman sr': [3], 'ludo bagman': [3], 'otto bagman': [3]})
@@ -145,6 +148,10 @@ def test_count_names():
 
 
 def test_result():
+    """
+    Test the result of NamesCounter is returend as should and name that are not
+    appeard will not be showed
+    """
     result1 = ('{\n'
                '    "Question 3": {\n'
                '        "Name Mentions": [\n'

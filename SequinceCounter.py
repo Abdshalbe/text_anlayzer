@@ -141,6 +141,11 @@ class SequinceCounter:
         return result_list
 
     def write_result_to_json(self, filePath: str) -> bool:
+        """
+        Write the result of the sequences to json file
+        :param filePath: path to the json file
+        :return: true if the file was successfully created else false
+        """
         data = {
             f"Question {self.__questionNum}": {
                 f"{self.__N}-Seq Counts": self.count_sequences()
@@ -152,6 +157,10 @@ class SequinceCounter:
             return False
 
     def return_results(self) -> str:
+        """
+        Return the results of the sequences to json file
+        :return: string represent the results of the sequences in json format
+        """
         data = {
             f"Question {self.__questionNum}": {
                 f"{self.__N}-Seq Counts": self.count_sequences()

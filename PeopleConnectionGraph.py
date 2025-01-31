@@ -1,7 +1,7 @@
 import json
 import os
 import typing
-from PeopleKAssocions import PeopleKAssocions
+from PeopleKAssociations import PeopleKAssociations
 from Parser import writeTojsonFile
 
 
@@ -80,7 +80,7 @@ class Graph:
         return str(self.__nodes)
 
 
-class PeopleConnectionGraph(PeopleKAssocions):
+class PeopleConnectionGraph(PeopleKAssociations):
     def __init__(self, QNum: int, WindowSize: int, Threshold: int,
                  sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,

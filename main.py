@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from Parser import Parser
 from NamesCounter import NamesCounter
-from PeopleKAssocions import PeopleKAssocions
+from PeopleKAssociations import PeopleKAssociations
 from PeopleConnectionGraph import PeopleConnectionGraph
 from CheckConnection import CheckConnection
 from SearchEngine import SearchEngine
@@ -124,9 +124,9 @@ def main():
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
-                people_ascions = PeopleKAssocions(QNum=args.task,json_input_path=args.preprocessed,preprocessed=True,N=args.maxk)
+                people_ascions = PeopleKAssociations(QNum=args.task, json_input_path=args.preprocessed, preprocessed=True, N=args.maxk)
             else:
-                people_ascions = PeopleKAssocions(QNum=args.task,sentence_input_path=args.sentences,remove_input_path=args.removewords,N=args.maxk)
+                people_ascions = PeopleKAssociations(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, N=args.maxk)
             if people_ascions.write_to_json(f"finalProject/Q{args.task}_result.json"):
                 print(f"Result successfully written to Q{args.task}_result.json")
             else:

@@ -1,108 +1,594 @@
-import json
+from PeopleKAssociations import PeopleKAssociations
+from test_SearchEngine import *
 
-from PeopleKAssocions import PeopleKAssocions
-
-PeopleKAssocions1 = PeopleKAssocions(5,
-                                         people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
-                                         sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv",
-                                         remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=3)
-PeopleKAssocions2 = PeopleKAssocions(5,
-                                     people_input_path="text_analyzer/2_examples/Q5_examples/example_2/people_small_2.csv",
-                                     sentence_input_path="text_analyzer/2_examples/Q5_examples/example_2/sentences_small_2.csv",
-                                     remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=4)
-PeopleKAssocions3 = PeopleKAssocions(5,
-                                     people_input_path="text_analyzer/2_examples/Q5_examples/example_3/people_small_3.csv",
-                                     sentence_input_path="text_analyzer/2_examples/Q5_examples/example_3/sentences_small_3.csv",
-                                     remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=5)
-PeopleKAssocions4 = PeopleKAssocions(5,
-                                     people_input_path="text_analyzer/2_examples/Q5_examples/example_4/people_small_4.csv",
-                                     sentence_input_path="text_analyzer/2_examples/Q5_examples/example_4/sentences_small_4.csv",
-                                     remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=6)
-PeopleKAssocions5 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",preprocessed=True, N=3)
-PeopleKAssocions6 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",preprocessed=True, N=4)
-PeopleKAssocions7 = PeopleKAssocions(5,json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",preprocessed=True, N=5)
-
+peopleK1 = PeopleKAssociations(4, json_input_path=json1, preprocessed=True, N=4)
+peopleK1_json = PeopleKAssociations(4, sentence_input_path=csv_sentence1, remove_input_path=csv_remved, N=4,
+                                    people_input_path=people_names1_file)
+peopleK2 = PeopleKAssociations(4, json_input_path=json2, preprocessed=True, N=3)
+peopleK2_json = PeopleKAssociations(4, sentence_input_path=csv_sentence1, remove_input_path=csv_remved, N=3,
+                                    people_input_path=people_names2_file)
+peopleK3 = PeopleKAssociations(4, json_input_path=json3, preprocessed=True, N=2)
+peopleK3_json = PeopleKAssociations(4, sentence_input_path=csv_sentence1, remove_input_path=csv_remved, N=2,
+                                    people_input_path=people_names3_file)
+peopleK4 = PeopleKAssociations(4, json_input_path=json4, preprocessed=True, N=6)
+peopleK4_json = PeopleKAssociations(4, sentence_input_path=csv_sentence2, remove_input_path=csv_remved, N=6,
+                                    people_input_path=people_names1_file)
+peopleK5 = PeopleKAssociations(4, json_input_path=json5, preprocessed=True, N=1)
+peopleK5_json = PeopleKAssociations(4, sentence_input_path=csv_sentence2, remove_input_path=csv_remved, N=1,
+                                    people_input_path=people_names2_file)
+peopleK6 = PeopleKAssociations(4, json_input_path=json6, preprocessed=True, N=2)
+peopleK6_json = PeopleKAssociations(4, sentence_input_path=csv_sentence2, remove_input_path=csv_remved, N=2,
+                                    people_input_path=people_names3_file)
+peopleK7 = PeopleKAssociations(4, json_input_path=json7, preprocessed=True, N=5)
+peopleK7_json = PeopleKAssociations(4, sentence_input_path=csv_sentence3, remove_input_path=csv_remved, N=5,
+                                    people_input_path=people_names1_file)
+peopleK8 = PeopleKAssociations(4, json_input_path=json8, preprocessed=True, N=1)
+peopleK8_json = PeopleKAssociations(4, sentence_input_path=csv_sentence3, remove_input_path=csv_remved, N=1,
+                                    people_input_path=people_names2_file)
+peopleK9 = PeopleKAssociations(4, json_input_path=json9, preprocessed=True, N=4)
+peopleK9_json = PeopleKAssociations(4, sentence_input_path=csv_sentence3, remove_input_path=csv_remved, N=4,
+                                    people_input_path=people_names3_file)
 
 
 def check_different_csr_same_res():
-    assert PeopleKAssocions1.create_k_seqs() == PeopleKAssocions5.create_k_seqs()
-    assert PeopleKAssocions1.get_names_appearances_idx() == PeopleKAssocions5.get_names_appearances_idx()
-    assert PeopleKAssocions1.get_sentences_len() == PeopleKAssocions5.get_sentences_len()
-    assert PeopleKAssocions2.create_k_seqs() == PeopleKAssocions6.create_k_seqs()
-    assert PeopleKAssocions2.get_names_appearances_idx() == PeopleKAssocions6.get_names_appearances_idx()
-    assert PeopleKAssocions2.get_sentences_len() == PeopleKAssocions6.get_sentences_len()
-    assert PeopleKAssocions3.create_k_seqs() == PeopleKAssocions7.create_k_seqs()
-    assert PeopleKAssocions3.get_names_appearances_idx() == PeopleKAssocions7.get_names_appearances_idx()
-    assert PeopleKAssocions3.get_sentences_len() == PeopleKAssocions7.get_sentences_len()
+    """
+    Checks if the different cstr format will not result different values
+    """
+    assert peopleK1.create_k_seqs() == peopleK1_json.create_k_seqs()
+    assert peopleK2.create_k_seqs() == peopleK2_json.create_k_seqs()
+    assert peopleK3.create_k_seqs() == peopleK3_json.create_k_seqs()
+    assert peopleK4.create_k_seqs() == peopleK4_json.create_k_seqs()
+    assert peopleK5.create_k_seqs() == peopleK5_json.create_k_seqs()
+    assert peopleK6.create_k_seqs() == peopleK6_json.create_k_seqs()
+    assert peopleK7.create_k_seqs() == peopleK7_json.create_k_seqs()
+    assert peopleK8.create_k_seqs() == peopleK8_json.create_k_seqs()
+    assert peopleK9.create_k_seqs() == peopleK9_json.create_k_seqs()
+    assert peopleK1.get_sentences_len() == peopleK1_json.get_sentences_len()
+    assert peopleK2.get_sentences_len() == peopleK2_json.get_sentences_len()
+    assert peopleK3.get_sentences_len() == peopleK3_json.get_sentences_len()
+    assert peopleK4.get_sentences_len() == peopleK4_json.get_sentences_len()
+    assert peopleK5.get_sentences_len() == peopleK5_json.get_sentences_len()
+    assert peopleK6.get_sentences_len() == peopleK6_json.get_sentences_len()
+    assert peopleK7.get_sentences_len() == peopleK7_json.get_sentences_len()
+    assert peopleK8.get_sentences_len() == peopleK8_json.get_sentences_len()
+    assert peopleK9.get_sentences_len() == peopleK9_json.get_sentences_len()
+    assert peopleK1.return_results() == peopleK1_json.return_results()
+    assert peopleK2.return_results() == peopleK2_json.return_results()
+    assert peopleK3.return_results() == peopleK3_json.return_results()
+    assert peopleK4.return_results() == peopleK4_json.return_results()
+    assert peopleK5.return_results() == peopleK5_json.return_results()
+    assert peopleK6.return_results() == peopleK6_json.return_results()
+    assert peopleK7.return_results() == peopleK7_json.return_results()
+    assert peopleK8.return_results() == peopleK8_json.return_results()
+    assert peopleK9.return_results() == peopleK9_json.return_results()
 
-def test_create_seq():
-    res1 = [['albus dumbledore', [['air'], ['arm'], ['arm', 'dumbledore'], ['arm', 'dumbledore', 'stepped'], ['arms'], ['arms', 'turned'], ['arms', 'turned', 'toward'], ['balls'], ['balls', 'light'], ['balls', 'light', 'sped'], ['balls', 'street'], ['balls', 'street', 'lamps'], ['beside'], ['beside', 'dumbledore'], ['beside', 'dumbledore', 'dumbledore'], ['better'], ['better', 'dumbledore'], ['better', 'dumbledore', 'took'], ['bike'], ['bike', 'professor'], ['bike', 'professor', 'mcgonagall'], ['black'], ['black', 'forehead'], ['black', 'forehead', 'dumbledore'], ['blankets'], ['blankets', 'came'], ['blankets', 'step'], ['blankets', 'step', 'number'], ['blankets', 'without'], ['blankets', 'without', 'waking'], ['blinked'], ['blinked', 'furiously'], ['blinked', 'furiously', 'twinkling'], ['bolt'], ['bolt', 'lightning'], ['bottles'], ['bottles', 'dumbledore'], ['bottles', 'dumbledore', 'spend'], ['bundle'], ['bundle', 'blankets'], ['bundle', 'blankets', 'step'], ['bundle', 'hagrid'], ['bundle', 'hagrid', 'shoulders'], ['burying'], ['burying', 'hagrid'], ['burying', 'hagrid', 'face'], ['came'], ['cat'], ['cat', 'slinking'], ['cat', 'slinking', 'corner'], ['celebrations'], ['celebrations', 'hagrid'], ['celebrations', 'hagrid', 'muffled'], ['clicked'], ['clicked', 'outer'], ['clicked', 'outer', 'twelve'], ['cloak'], ['cloak', 'dumbledore'], ['cloak', 'tucked'], ['cloak', 'tucked', 'letter'], ['closed'], ['closed', 'letter'], ['closed', 'letter', 'beside'], ['corner'], ['corner', 'dumbledore'], ['corner', 'dumbledore', 'stopped'], ['corner', 'street'], ['couldn'], ['couldn', 'moment'], ['couldn', 'moment', 'people'], ['couldn', 'something'], ['couldn', 'something', 'scar'], ['country'], ['country', 'holding'], ['country', 'holding', 'people'], ['cousin'], ['cousin', 'dudley'], ['cousin', 'dudley', 'dumbledore'], ['curiously'], ['curiously', 'shaped'], ['curiously', 'shaped', 'cut'], ['cut'], ['cut', 'like'], ['cut', 'like', 'bolt'], ['dead'], ['dead', 'poor'], ['dead', 'poor', 'little'], ['door'], ['door', 'milk'], ['door', 'milk', 'bottles'], ['doorstep'], ['doorstep', 'took'], ['doorstep', 'took', 'letter'], ['drive'], ['drive', 'glowed'], ['drive', 'glowed', 'suddenly'], ['dudley'], ['dudley', 'dumbledore'], ['dudley', 'dumbledore', 'couldn'], ['dudley', 'dursley'], ['dudley', 'dursley', 'house'], ['dumbledore'], ['dumbledore', 'blankets'], ['dumbledore', 'blankets', 'without'], ['dumbledore', 'bundle'], ['dumbledore', 'bundle', 'blankets'], ['dumbledore', 'clicked'], ['dumbledore', 'clicked', 'outer'], ['dumbledore', 'cloak'], ['dumbledore', 'cloak', 'dumbledore'], ['dumbledore', 'cloak', 'tucked'], ['dumbledore', 'couldn'], ['dumbledore', 'couldn', 'moment'], ['dumbledore', 'cousin'], ['dumbledore', 'cousin', 'dudley'], ['dumbledore', 'dumbledore'], ['dumbledore', 'dumbledore', 'll'], ['dumbledore', 'dumbledore', 'slept'], ['dumbledore', 'eyes'], ['dumbledore', 'eyes', 'seemed'], ['dumbledore', 'famous'], ['dumbledore', 'famous', 'knowing'], ['dumbledore', 'finally'], ['dumbledore', 'hagrid'], ['dumbledore', 'hagrid', 'better'], ['dumbledore', 'heel'], ['dumbledore', 'heel', 'swish'], ['dumbledore', 'laid'], ['dumbledore', 'laid', 'harry'], ['dumbledore', 'll'], ['dumbledore', 'll', 'scar'], ['dumbledore', 'mcgonagall'], ['dumbledore', 'mcgonagall', 'curiously'], ['dumbledore', 'murmured'], ['dumbledore', 'nodding'], ['dumbledore', 'nodding', 'voice'], ['dumbledore', 'sir'], ['dumbledore', 'sir', 'wiping'], ['dumbledore', 'slept'], ['dumbledore', 'slept', 'knowing'], ['dumbledore', 'special'], ['dumbledore', 'special', 'knowing'], ['dumbledore', 'spend'], ['dumbledore', 'spend', 'next'], ['dumbledore', 'stepped'], ['dumbledore', 'stepped', 'low'], ['dumbledore', 'stopped'], ['dumbledore', 'stopped', 'took'], ['dumbledore', 'tabby'], ['dumbledore', 'tabby', 'cat'], ['dumbledore', 'took'], ['dumbledore', 'took', 'harry'], ['dumbledore', 'turned'], ['dumbledore', 'turned', 'dumbledore'], ['dumbledore', 'turned', 'walked'], ['dumbledore', 'woken'], ['dumbledore', 'woken', 'hours'], ['dumbledore', 'wouldn'], ['dursley'], ['dursley', 'dudley'], ['dursley', 'dudley', 'dursley'], ['dursley', 'dursley'], ['dursley', 'dursley', 'dudley'], ['dursley', 'house'], ['dursley', 'opened'], ['dursley', 'opened', 'front'], ['dursley', 'scream'], ['dursley', 'scream', 'dursley'], ['engine'], ['engine', 'roar'], ['engine', 'roar', 'engine'], ['engine', 'rose'], ['engine', 'rose', 'air'], ['expect'], ['expect', 'professor'], ['expect', 'professor', 'mcgonagall'], ['eyes'], ['eyes', 'seemed'], ['eyes', 'sirius'], ['eyes', 'sirius', 'jacket'], ['face'], ['face', 'handkerchief'], ['face', 'handkerchief', 'stand'], ['famous'], ['famous', 'knowing'], ['famous', 'knowing', 'dumbledore'], ['finally'], ['forehead'], ['forehead', 'dumbledore'], ['forehead', 'dumbledore', 'mcgonagall'], ['forever'], ['forever', 'couldn'], ['forever', 'couldn', 'something'], ['four'], ['front'], ['front', 'door'], ['front', 'door', 'milk'], ['full'], ['full', 'minute'], ['full', 'minute', 'three'], ['furiously'], ['furiously', 'twinkling'], ['furiously', 'twinkling', 'light'], ['garden'], ['garden', 'wall'], ['garden', 'wall', 'walked'], ['gently'], ['gently', 'doorstep'], ['gently', 'doorstep', 'took'], ['gingerly'], ['gingerly', 'arm'], ['gingerly', 'arm', 'dumbledore'], ['glasses'], ['glasses', 'saying'], ['glasses', 'saying', 'hushed'], ['glowed'], ['glowed', 'suddenly'], ['glowed', 'suddenly', 'orange'], ['go'], ['go', 'join'], ['go', 'join', 'celebrations'], ['good'], ['good', 'luck'], ['good', 'luck', 'harry'], ['grip'], ['grip', 'hagrid'], ['grip', 'hagrid', 'll'], ['hagrid'], ['hagrid', 'better'], ['hagrid', 'better', 'dumbledore'], ['hagrid', 'face'], ['hagrid', 'face', 'handkerchief'], ['hagrid', 'gingerly'], ['hagrid', 'gingerly', 'arm'], ['hagrid', 'll'], ['hagrid', 'll', 'professor'], ['hagrid', 'muffled'], ['hagrid', 'muffled', 'voice'], ['hagrid', 'onto'], ['hagrid', 'onto', 'motorcycle'], ['hagrid', 'shoulders'], ['hagrid', 'shoulders', 'shook'], ['hagrid', 'swung'], ['hagrid', 'swung', 'hagrid'], ['hagrid', 'taking'], ['hagrid', 'taking', 'large'], ['hand'], ['hand', 'closed'], ['hand', 'closed', 'letter'], ['handkerchief'], ['handkerchief', 'burying'], ['handkerchief', 'burying', 'hagrid'], ['handkerchief', 'lily'], ['handkerchief', 'lily', 'james'], ['handkerchief', 'sad'], ['handkerchief', 'sad', 'grip'], ['handkerchief', 'stand'], ['handkerchief', 'stand', 'handkerchief'], ['harry'], ['harry', 'arms'], ['harry', 'arms', 'turned'], ['harry', 'blankets'], ['harry', 'blankets', 'came'], ['harry', 'dumbledore'], ['harry', 'dumbledore', 'murmured'], ['harry', 'gently'], ['harry', 'gently', 'doorstep'], ['harry', 'harry'], ['harry', 'harry', 'arms'], ['harry', 'potter'], ['harry', 'potter', 'lived'], ['harry', 'potter', 'rolled'], ['harry', 'ter'], ['harry', 'ter', 'muggles'], ['heel'], ['heel', 'swish'], ['heel', 'swish', 'dumbledore'], ['hissed'], ['hissed', 'professor'], ['hissed', 'professor', 'mcgonagall'], ['holding'], ['holding', 'people'], ['holding', 'people', 'glasses'], ['hours'], ['hours', 'dursley'], ['hours', 'dursley', 'scream'], ['house'], ['hushed'], ['hushed', 'voices'], ['hushed', 'voices', 'harry'], ['inside'], ['inside', 'dumbledore'], ['inside', 'dumbledore', 'blankets'], ['inside', 'harry'], ['inside', 'harry', 'blankets'], ['jacket'], ['jacket', 'sleeve'], ['jacket', 'sleeve', 'hagrid'], ['james'], ['james', 'dead'], ['james', 'dead', 'poor'], ['jet'], ['jet', 'black'], ['jet', 'black', 'forehead'], ['join'], ['join', 'celebrations'], ['join', 'celebrations', 'hagrid'], ['kicked'], ['kicked', 'engine'], ['kicked', 'engine', 'roar'], ['knowing'], ['knowing', 'dumbledore'], ['knowing', 'dumbledore', 'famous'], ['knowing', 'dumbledore', 'special'], ['knowing', 'dumbledore', 'woken'], ['laid'], ['laid', 'harry'], ['laid', 'harry', 'gently'], ['lamps'], ['lamps', 'privet'], ['lamps', 'privet', 'drive'], ['large'], ['large', 'spotted'], ['large', 'spotted', 'handkerchief'], ['letter'], ['letter', 'beside'], ['letter', 'beside', 'dumbledore'], ['letter', 'dumbledore'], ['letter', 'dumbledore', 'cloak'], ['letter', 'inside'], ['letter', 'inside', 'harry'], ['light'], ['light', 'sped'], ['light', 'sped', 'balls'], ['light', 'usually'], ['light', 'usually', 'shone'], ['lightning'], ['like'], ['like', 'bolt'], ['like', 'bolt', 'lightning'], ['lily'], ['lily', 'james'], ['lily', 'james', 'dead'], ['little'], ['little', 'bundle'], ['little', 'bundle', 'hagrid'], ['little', 'harry'], ['little', 'harry', 'ter'], ['lived'], ['ll'], ['ll', 'professor'], ['ll', 'professor', 'mcgonagall'], ['ll', 'scar'], ['ll', 'scar', 'forever'], ['ll', 'takin'], ['ll', 'takin', 'sirius'], ['ll', 'wake'], ['ll', 'wake', 'muggles'], ['looked'], ['looked', 'little'], ['looked', 'little', 'bundle'], ['low'], ['low', 'garden'], ['low', 'garden', 'wall'], ['luck'], ['luck', 'harry'], ['luck', 'harry', 'dumbledore'], ['mcgonagall'], ['mcgonagall', 'blinked'], ['mcgonagall', 'blinked', 'furiously'], ['mcgonagall', 'curiously'], ['mcgonagall', 'curiously', 'shaped'], ['mcgonagall', 'dumbledore'], ['mcgonagall', 'dumbledore', 'nodding'], ['mcgonagall', 'll'], ['mcgonagall', 'll', 'wake'], ['mcgonagall', 'professor'], ['mcgonagall', 'professor', 'dumbledore'], ['mcgonagall', 'whispered'], ['mcgonagall', 'whispered', 'patting'], ['meeting'], ['meeting', 'secret'], ['meeting', 'secret', 'country'], ['milk'], ['milk', 'bottles'], ['milk', 'bottles', 'dumbledore'], ['minute'], ['minute', 'three'], ['minute', 'three', 'stood'], ['moment'], ['moment', 'people'], ['moment', 'people', 'meeting'], ['motorcycle'], ['motorcycle', 'kicked'], ['motorcycle', 'kicked', 'engine'], ['muffled'], ['muffled', 'voice'], ['muffled', 'voice', 'll'], ['muggles'], ['muggles', 'handkerchief'], ['muggles', 'handkerchief', 'sad'], ['muggles', 'sorry'], ['muggles', 'sorry', 'sobbed'], ['murmured'], ['next'], ['next', 'weeks'], ['next', 'weeks', 'prodded'], ['nodding'], ['nodding', 'voice'], ['number'], ['number', 'four'], ['onto'], ['onto', 'motorcycle'], ['onto', 'motorcycle', 'kicked'], ['opened'], ['opened', 'front'], ['opened', 'front', 'door'], ['orange'], ['orange', 'dumbledore'], ['orange', 'dumbledore', 'tabby'], ['outer'], ['outer', 'twelve'], ['outer', 'twelve', 'balls'], ['patting'], ['patting', 'hagrid'], ['patting', 'hagrid', 'gingerly'], ['people'], ['people', 'glasses'], ['people', 'glasses', 'saying'], ['people', 'meeting'], ['people', 'meeting', 'secret'], ['pinched'], ['pinched', 'dumbledore'], ['pinched', 'dumbledore', 'cousin'], ['poor'], ['poor', 'little'], ['poor', 'little', 'harry'], ['potter'], ['potter', 'lived'], ['potter', 'rolled'], ['potter', 'rolled', 'inside'], ['privet'], ['privet', 'drive'], ['privet', 'drive', 'glowed'], ['prodded'], ['prodded', 'pinched'], ['prodded', 'pinched', 'dumbledore'], ['professor'], ['professor', 'dumbledore'], ['professor', 'dumbledore', 'sir'], ['professor', 'mcgonagall'], ['professor', 'mcgonagall', 'blinked'], ['professor', 'mcgonagall', 'dumbledore'], ['professor', 'mcgonagall', 'll'], ['professor', 'mcgonagall', 'professor'], ['professor', 'mcgonagall', 'whispered'], ['roar'], ['roar', 'engine'], ['roar', 'engine', 'rose'], ['rolled'], ['rolled', 'inside'], ['rolled', 'inside', 'dumbledore'], ['rose'], ['rose', 'air'], ['sad'], ['sad', 'grip'], ['sad', 'grip', 'hagrid'], ['saying'], ['saying', 'hushed'], ['saying', 'hushed', 'voices'], ['scar'], ['scar', 'dumbledore'], ['scar', 'dumbledore', 'wouldn'], ['scar', 'forever'], ['scar', 'forever', 'couldn'], ['scream'], ['scream', 'dursley'], ['scream', 'dursley', 'opened'], ['secret'], ['secret', 'country'], ['secret', 'country', 'holding'], ['seemed'], ['shall'], ['shall', 'expect'], ['shall', 'expect', 'professor'], ['shaped'], ['shaped', 'cut'], ['shaped', 'cut', 'like'], ['shhh'], ['shhh', 'hissed'], ['shhh', 'hissed', 'professor'], ['shone'], ['shone', 'dumbledore'], ['shone', 'dumbledore', 'eyes'], ['shook'], ['shook', 'professor'], ['shook', 'professor', 'mcgonagall'], ['shoulders'], ['shoulders', 'shook'], ['shoulders', 'shook', 'professor'], ['silver'], ['silver', 'outer'], ['sir'], ['sir', 'wiping'], ['sir', 'wiping', 'sirius'], ['sirius'], ['sirius', 'bike'], ['sirius', 'bike', 'professor'], ['sirius', 'jacket'], ['sirius', 'jacket', 'sleeve'], ['sirius', 'sirius'], ['sirius', 'sirius', 'bike'], ['sirius', 'streaming'], ['sirius', 'streaming', 'eyes'], ['sleeve'], ['sleeve', 'hagrid'], ['sleeve', 'hagrid', 'swung'], ['slept'], ['slept', 'knowing'], ['slept', 'knowing', 'dumbledore'], ['slinking'], ['slinking', 'corner'], ['slinking', 'corner', 'street'], ['small'], ['small', 'hand'], ['small', 'hand', 'closed'], ['sobbed'], ['sobbed', 'hagrid'], ['sobbed', 'hagrid', 'taking'], ['something'], ['something', 'scar'], ['something', 'scar', 'dumbledore'], ['sorry'], ['sorry', 'sobbed'], ['sorry', 'sobbed', 'hagrid'], ['special'], ['special', 'knowing'], ['special', 'knowing', 'dumbledore'], ['sped'], ['sped', 'balls'], ['sped', 'balls', 'street'], ['spend'], ['spend', 'next'], ['spend', 'next', 'weeks'], ['spotted'], ['spotted', 'handkerchief'], ['spotted', 'handkerchief', 'burying'], ['stand'], ['stand', 'handkerchief'], ['stand', 'handkerchief', 'lily'], ['step'], ['step', 'number'], ['step', 'number', 'four'], ['stepped'], ['stepped', 'low'], ['stepped', 'low', 'garden'], ['stood'], ['stood', 'looked'], ['stood', 'looked', 'little'], ['stopped'], ['stopped', 'took'], ['stopped', 'took', 'silver'], ['streaming'], ['streaming', 'eyes'], ['streaming', 'eyes', 'sirius'], ['street'], ['street', 'lamps'], ['street', 'lamps', 'privet'], ['suddenly'], ['suddenly', 'orange'], ['suddenly', 'orange', 'dumbledore'], ['swish'], ['swish', 'dumbledore'], ['swish', 'dumbledore', 'cloak'], ['swung'], ['swung', 'hagrid'], ['swung', 'hagrid', 'onto'], ['tabby'], ['tabby', 'cat'], ['tabby', 'cat', 'slinking'], ['takin'], ['takin', 'sirius'], ['takin', 'sirius', 'sirius'], ['taking'], ['taking', 'large'], ['taking', 'large', 'spotted'], ['ter'], ['ter', 'muggles'], ['ter', 'muggles', 'handkerchief'], ['three'], ['three', 'stood'], ['three', 'stood', 'looked'], ['took'], ['took', 'harry'], ['took', 'harry', 'harry'], ['took', 'letter'], ['took', 'letter', 'dumbledore'], ['took', 'silver'], ['took', 'silver', 'outer'], ['toward'], ['toward', 'dursley'], ['toward', 'dursley', 'dursley'], ['tucked'], ['tucked', 'letter'], ['tucked', 'letter', 'inside'], ['tuft'], ['tuft', 'jet'], ['tuft', 'jet', 'black'], ['turned'], ['turned', 'dumbledore'], ['turned', 'dumbledore', 'heel'], ['turned', 'toward'], ['turned', 'toward', 'dursley'], ['turned', 'walked'], ['turned', 'walked', 'street'], ['twelve'], ['twelve', 'balls'], ['twelve', 'balls', 'light'], ['twinkling'], ['twinkling', 'light'], ['twinkling', 'light', 'usually'], ['usually'], ['usually', 'shone'], ['usually', 'shone', 'dumbledore'], ['voice'], ['voice', 'll'], ['voice', 'll', 'takin'], ['voices'], ['voices', 'harry'], ['voices', 'harry', 'potter'], ['wake'], ['wake', 'muggles'], ['wake', 'muggles', 'sorry'], ['waking'], ['walked'], ['walked', 'front'], ['walked', 'front', 'door'], ['walked', 'street'], ['wall'], ['wall', 'walked'], ['wall', 'walked', 'front'], ['weeks'], ['weeks', 'prodded'], ['weeks', 'prodded', 'pinched'], ['well'], ['well', 'dumbledore'], ['well', 'dumbledore', 'finally'], ['well', 'dumbledore', 'hagrid'], ['well', 'go'], ['well', 'go', 'join'], ['whispered'], ['whispered', 'patting'], ['whispered', 'patting', 'hagrid'], ['wiping'], ['wiping', 'sirius'], ['wiping', 'sirius', 'streaming'], ['without'], ['without', 'waking'], ['woken'], ['woken', 'hours'], ['woken', 'hours', 'dursley'], ['wouldn']]], ['aunt marge dursley', [['ago'], ['ago', 'lots'], ['ago', 'lots', 'pictures'], ['almost'], ['almost', 'exactly'], ['almost', 'exactly', 'dursley'], ['arms'], ['arms', 'turned'], ['arms', 'turned', 'toward'], ['baby'], ['baby', 'photographs'], ['baby', 'photographs', 'showed'], ['ball'], ['ball', 'wearing'], ['ball', 'wearing', 'different'], ['beach'], ['beach', 'ball'], ['beach', 'ball', 'wearing'], ['beside'], ['beside', 'dumbledore'], ['beside', 'dumbledore', 'dumbledore'], ['better'], ['better', 'dumbledore'], ['better', 'dumbledore', 'took'], ['bicycle'], ['bicycle', 'carousel'], ['bicycle', 'carousel', 'fair'], ['blond'], ['blond', 'riding'], ['blond', 'riding', 'bicycle'], ['bonnets'], ['bonnets', 'dudley'], ['bonnets', 'dudley', 'dursley'], ['bottles'], ['bottles', 'dumbledore'], ['bottles', 'dumbledore', 'spend'], ['brass'], ['brass', 'number'], ['brass', 'number', 'four'], ['carousel'], ['carousel', 'fair'], ['carousel', 'fair', 'playing'], ['changed'], ['closed'], ['closed', 'letter'], ['closed', 'letter', 'beside'], ['colored'], ['colored', 'bonnets'], ['colored', 'bonnets', 'dudley'], ['computer'], ['computer', 'father'], ['computer', 'father', 'hugged'], ['couldn'], ['couldn', 'moment'], ['couldn', 'moment', 'people'], ['country'], ['country', 'holding'], ['country', 'holding', 'people'], ['cousin'], ['cousin', 'dudley'], ['cousin', 'dudley', 'dumbledore'], ['crept'], ['crept', 'dursley'], ['crept', 'dursley', 'dursley'], ['different'], ['different', 'colored'], ['different', 'colored', 'bonnets'], ['door'], ['door', 'milk'], ['door', 'milk', 'bottles'], ['door', 'number'], ['door', 'number', 'crept'], ['drive'], ['drive', 'hardly'], ['drive', 'hardly', 'changed'], ['dudley'], ['dudley', 'dumbledore'], ['dudley', 'dumbledore', 'couldn'], ['dudley', 'dursley'], ['dudley', 'dursley', 'front'], ['dudley', 'dursley', 'house'], ['dudley', 'dursley', 'living'], ['dudley', 'dursley', 'longer'], ['dudley', 'dursley', 'nephew'], ['dudley', 'dursley', 'woken'], ['dumbledore'], ['dumbledore', 'couldn'], ['dumbledore', 'couldn', 'moment'], ['dumbledore', 'cousin'], ['dumbledore', 'cousin', 'dudley'], ['dumbledore', 'dumbledore'], ['dumbledore', 'dumbledore', 'slept'], ['dumbledore', 'famous'], ['dumbledore', 'famous', 'knowing'], ['dumbledore', 'hagrid'], ['dumbledore', 'hagrid', 'better'], ['dumbledore', 'slept'], ['dumbledore', 'slept', 'knowing'], ['dumbledore', 'special'], ['dumbledore', 'special', 'knowing'], ['dumbledore', 'spend'], ['dumbledore', 'spend', 'next'], ['dumbledore', 'took'], ['dumbledore', 'took', 'harry'], ['dumbledore', 'woken'], ['dumbledore', 'woken', 'hours'], ['dursley'], ['dursley', 'dudley'], ['dursley', 'dudley', 'dursley'], ['dursley', 'dursley'], ['dursley', 'dursley', 'dudley'], ['dursley', 'front'], ['dursley', 'front', 'door'], ['dursley', 'house'], ['dursley', 'living'], ['dursley', 'living', 'room'], ['dursley', 'longer'], ['dursley', 'longer', 'baby'], ['dursley', 'nephew'], ['dursley', 'nephew', 'front'], ['dursley', 'opened'], ['dursley', 'opened', 'front'], ['dursley', 'scream'], ['dursley', 'scream', 'dursley'], ['dursley', 'seen'], ['dursley', 'seen', 'fateful'], ['dursley', 'woken'], ['dursley', 'woken', 'dursley'], ['exactly'], ['exactly', 'dursley'], ['exactly', 'dursley', 'seen'], ['fair'], ['fair', 'playing'], ['fair', 'playing', 'computer'], ['famous'], ['famous', 'knowing'], ['famous', 'knowing', 'dumbledore'], ['fateful'], ['fateful', 'news'], ['fateful', 'news', 'report'], ['father'], ['father', 'hugged'], ['father', 'hugged', 'kissed'], ['four'], ['four', 'dursley'], ['four', 'dursley', 'dursley'], ['front'], ['front', 'door'], ['front', 'door', 'milk'], ['front', 'door', 'number'], ['front', 'gardens'], ['front', 'gardens', 'lit'], ['front', 'step'], ['front', 'step', 'privet'], ['gardens'], ['gardens', 'lit'], ['gardens', 'lit', 'brass'], ['glass'], ['glass', 'nearly'], ['glass', 'nearly', 'ten'], ['glasses'], ['glasses', 'saying'], ['glasses', 'saying', 'hushed'], ['hagrid'], ['hagrid', 'better'], ['hagrid', 'better', 'dumbledore'], ['hand'], ['hand', 'closed'], ['hand', 'closed', 'letter'], ['hardly'], ['hardly', 'changed'], ['harry'], ['harry', 'arms'], ['harry', 'arms', 'turned'], ['harry', 'harry'], ['harry', 'harry', 'arms'], ['harry', 'potter'], ['harry', 'potter', 'lived'], ['holding'], ['holding', 'people'], ['holding', 'people', 'glasses'], ['hours'], ['hours', 'dursley'], ['hours', 'dursley', 'scream'], ['house'], ['hugged'], ['hugged', 'kissed'], ['hugged', 'kissed', 'mother'], ['hushed'], ['hushed', 'voices'], ['hushed', 'voices', 'harry'], ['kissed'], ['kissed', 'mother'], ['knowing'], ['knowing', 'dumbledore'], ['knowing', 'dumbledore', 'famous'], ['knowing', 'dumbledore', 'special'], ['knowing', 'dumbledore', 'woken'], ['large'], ['large', 'blond'], ['large', 'blond', 'riding'], ['large', 'pink'], ['large', 'pink', 'beach'], ['letter'], ['letter', 'beside'], ['letter', 'beside', 'dumbledore'], ['like'], ['like', 'large'], ['like', 'large', 'pink'], ['lit'], ['lit', 'brass'], ['lit', 'brass', 'number'], ['lived'], ['living'], ['living', 'room'], ['living', 'room', 'almost'], ['longer'], ['longer', 'baby'], ['longer', 'baby', 'photographs'], ['looked'], ['looked', 'like'], ['looked', 'like', 'large'], ['lots'], ['lots', 'pictures'], ['lots', 'pictures', 'looked'], ['meeting'], ['meeting', 'secret'], ['meeting', 'secret', 'country'], ['milk'], ['milk', 'bottles'], ['milk', 'bottles', 'dumbledore'], ['moment'], ['moment', 'people'], ['moment', 'people', 'meeting'], ['mother'], ['nearly'], ['nearly', 'ten'], ['nearly', 'ten', 'years'], ['nephew'], ['nephew', 'front'], ['nephew', 'front', 'step'], ['news'], ['news', 'report'], ['news', 'report', 'owls'], ['next'], ['next', 'weeks'], ['next', 'weeks', 'prodded'], ['number'], ['number', 'crept'], ['number', 'crept', 'dursley'], ['number', 'four'], ['number', 'four', 'dursley'], ['opened'], ['opened', 'front'], ['opened', 'front', 'door'], ['owls'], ['passed'], ['passed', 'since'], ['passed', 'since', 'dursley'], ['people'], ['people', 'glasses'], ['people', 'glasses', 'saying'], ['people', 'meeting'], ['people', 'meeting', 'secret'], ['photographs'], ['photographs', 'showed'], ['photographs', 'showed', 'large'], ['pictures'], ['pictures', 'looked'], ['pictures', 'looked', 'like'], ['pinched'], ['pinched', 'dumbledore'], ['pinched', 'dumbledore', 'cousin'], ['pink'], ['pink', 'beach'], ['pink', 'beach', 'ball'], ['playing'], ['playing', 'computer'], ['playing', 'computer', 'father'], ['potter'], ['potter', 'lived'], ['privet'], ['privet', 'drive'], ['privet', 'drive', 'hardly'], ['prodded'], ['prodded', 'pinched'], ['prodded', 'pinched', 'dumbledore'], ['report'], ['report', 'owls'], ['riding'], ['riding', 'bicycle'], ['riding', 'bicycle', 'carousel'], ['room'], ['room', 'almost'], ['room', 'almost', 'exactly'], ['rose'], ['rose', 'tidy'], ['rose', 'tidy', 'front'], ['saying'], ['saying', 'hushed'], ['saying', 'hushed', 'voices'], ['scream'], ['scream', 'dursley'], ['scream', 'dursley', 'opened'], ['secret'], ['secret', 'country'], ['secret', 'country', 'holding'], ['seen'], ['seen', 'fateful'], ['seen', 'fateful', 'news'], ['showed'], ['showed', 'large'], ['showed', 'large', 'blond'], ['since'], ['since', 'dursley'], ['since', 'dursley', 'dursley'], ['slept'], ['slept', 'knowing'], ['slept', 'knowing', 'dumbledore'], ['small'], ['small', 'hand'], ['small', 'hand', 'closed'], ['special'], ['special', 'knowing'], ['special', 'knowing', 'dumbledore'], ['spend'], ['spend', 'next'], ['spend', 'next', 'weeks'], ['step'], ['step', 'privet'], ['step', 'privet', 'drive'], ['sun'], ['sun', 'rose'], ['sun', 'rose', 'tidy'], ['ten'], ['ten', 'years'], ['ten', 'years', 'ago'], ['ten', 'years', 'passed'], ['tidy'], ['tidy', 'front'], ['tidy', 'front', 'gardens'], ['took'], ['took', 'harry'], ['took', 'harry', 'harry'], ['toward'], ['toward', 'dursley'], ['toward', 'dursley', 'dursley'], ['turned'], ['turned', 'toward'], ['turned', 'toward', 'dursley'], ['vanishing'], ['vanishing', 'glass'], ['vanishing', 'glass', 'nearly'], ['voices'], ['voices', 'harry'], ['voices', 'harry', 'potter'], ['wearing'], ['wearing', 'different'], ['wearing', 'different', 'colored'], ['weeks'], ['weeks', 'prodded'], ['weeks', 'prodded', 'pinched'], ['well'], ['well', 'dumbledore'], ['well', 'dumbledore', 'hagrid'], ['woken'], ['woken', 'dursley'], ['woken', 'dursley', 'dursley'], ['woken', 'hours'], ['woken', 'hours', 'dursley'], ['years'], ['years', 'ago'], ['years', 'ago', 'lots'], ['years', 'passed'], ['years', 'passed', 'since']]], ['aurelius dumbledore', [['air'], ['arm'], ['arm', 'dumbledore'], ['arm', 'dumbledore', 'stepped'], ['arms'], ['arms', 'turned'], ['arms', 'turned', 'toward'], ['balls'], ['balls', 'light'], ['balls', 'light', 'sped'], ['balls', 'street'], ['balls', 'street', 'lamps'], ['beside'], ['beside', 'dumbledore'], ['beside', 'dumbledore', 'dumbledore'], ['better'], ['better', 'dumbledore'], ['better', 'dumbledore', 'took'], ['bike'], ['bike', 'professor'], ['bike', 'professor', 'mcgonagall'], ['black'], ['black', 'forehead'], ['black', 'forehead', 'dumbledore'], ['blankets'], ['blankets', 'came'], ['blankets', 'step'], ['blankets', 'step', 'number'], ['blankets', 'without'], ['blankets', 'without', 'waking'], ['blinked'], ['blinked', 'furiously'], ['blinked', 'furiously', 'twinkling'], ['bolt'], ['bolt', 'lightning'], ['bottles'], ['bottles', 'dumbledore'], ['bottles', 'dumbledore', 'spend'], ['bundle'], ['bundle', 'blankets'], ['bundle', 'blankets', 'step'], ['bundle', 'hagrid'], ['bundle', 'hagrid', 'shoulders'], ['burying'], ['burying', 'hagrid'], ['burying', 'hagrid', 'face'], ['came'], ['cat'], ['cat', 'slinking'], ['cat', 'slinking', 'corner'], ['celebrations'], ['celebrations', 'hagrid'], ['celebrations', 'hagrid', 'muffled'], ['clicked'], ['clicked', 'outer'], ['clicked', 'outer', 'twelve'], ['cloak'], ['cloak', 'dumbledore'], ['cloak', 'tucked'], ['cloak', 'tucked', 'letter'], ['closed'], ['closed', 'letter'], ['closed', 'letter', 'beside'], ['corner'], ['corner', 'dumbledore'], ['corner', 'dumbledore', 'stopped'], ['corner', 'street'], ['couldn'], ['couldn', 'moment'], ['couldn', 'moment', 'people'], ['couldn', 'something'], ['couldn', 'something', 'scar'], ['country'], ['country', 'holding'], ['country', 'holding', 'people'], ['cousin'], ['cousin', 'dudley'], ['cousin', 'dudley', 'dumbledore'], ['curiously'], ['curiously', 'shaped'], ['curiously', 'shaped', 'cut'], ['cut'], ['cut', 'like'], ['cut', 'like', 'bolt'], ['dead'], ['dead', 'poor'], ['dead', 'poor', 'little'], ['door'], ['door', 'milk'], ['door', 'milk', 'bottles'], ['doorstep'], ['doorstep', 'took'], ['doorstep', 'took', 'letter'], ['drive'], ['drive', 'glowed'], ['drive', 'glowed', 'suddenly'], ['dudley'], ['dudley', 'dumbledore'], ['dudley', 'dumbledore', 'couldn'], ['dudley', 'dursley'], ['dudley', 'dursley', 'house'], ['dumbledore'], ['dumbledore', 'blankets'], ['dumbledore', 'blankets', 'without'], ['dumbledore', 'bundle'], ['dumbledore', 'bundle', 'blankets'], ['dumbledore', 'clicked'], ['dumbledore', 'clicked', 'outer'], ['dumbledore', 'cloak'], ['dumbledore', 'cloak', 'dumbledore'], ['dumbledore', 'cloak', 'tucked'], ['dumbledore', 'couldn'], ['dumbledore', 'couldn', 'moment'], ['dumbledore', 'cousin'], ['dumbledore', 'cousin', 'dudley'], ['dumbledore', 'dumbledore'], ['dumbledore', 'dumbledore', 'll'], ['dumbledore', 'dumbledore', 'slept'], ['dumbledore', 'eyes'], ['dumbledore', 'eyes', 'seemed'], ['dumbledore', 'famous'], ['dumbledore', 'famous', 'knowing'], ['dumbledore', 'finally'], ['dumbledore', 'hagrid'], ['dumbledore', 'hagrid', 'better'], ['dumbledore', 'heel'], ['dumbledore', 'heel', 'swish'], ['dumbledore', 'laid'], ['dumbledore', 'laid', 'harry'], ['dumbledore', 'll'], ['dumbledore', 'll', 'scar'], ['dumbledore', 'mcgonagall'], ['dumbledore', 'mcgonagall', 'curiously'], ['dumbledore', 'murmured'], ['dumbledore', 'nodding'], ['dumbledore', 'nodding', 'voice'], ['dumbledore', 'sir'], ['dumbledore', 'sir', 'wiping'], ['dumbledore', 'slept'], ['dumbledore', 'slept', 'knowing'], ['dumbledore', 'special'], ['dumbledore', 'special', 'knowing'], ['dumbledore', 'spend'], ['dumbledore', 'spend', 'next'], ['dumbledore', 'stepped'], ['dumbledore', 'stepped', 'low'], ['dumbledore', 'stopped'], ['dumbledore', 'stopped', 'took'], ['dumbledore', 'tabby'], ['dumbledore', 'tabby', 'cat'], ['dumbledore', 'took'], ['dumbledore', 'took', 'harry'], ['dumbledore', 'turned'], ['dumbledore', 'turned', 'dumbledore'], ['dumbledore', 'turned', 'walked'], ['dumbledore', 'woken'], ['dumbledore', 'woken', 'hours'], ['dumbledore', 'wouldn'], ['dursley'], ['dursley', 'dudley'], ['dursley', 'dudley', 'dursley'], ['dursley', 'dursley'], ['dursley', 'dursley', 'dudley'], ['dursley', 'house'], ['dursley', 'opened'], ['dursley', 'opened', 'front'], ['dursley', 'scream'], ['dursley', 'scream', 'dursley'], ['engine'], ['engine', 'roar'], ['engine', 'roar', 'engine'], ['engine', 'rose'], ['engine', 'rose', 'air'], ['expect'], ['expect', 'professor'], ['expect', 'professor', 'mcgonagall'], ['eyes'], ['eyes', 'seemed'], ['eyes', 'sirius'], ['eyes', 'sirius', 'jacket'], ['face'], ['face', 'handkerchief'], ['face', 'handkerchief', 'stand'], ['famous'], ['famous', 'knowing'], ['famous', 'knowing', 'dumbledore'], ['finally'], ['forehead'], ['forehead', 'dumbledore'], ['forehead', 'dumbledore', 'mcgonagall'], ['forever'], ['forever', 'couldn'], ['forever', 'couldn', 'something'], ['four'], ['front'], ['front', 'door'], ['front', 'door', 'milk'], ['full'], ['full', 'minute'], ['full', 'minute', 'three'], ['furiously'], ['furiously', 'twinkling'], ['furiously', 'twinkling', 'light'], ['garden'], ['garden', 'wall'], ['garden', 'wall', 'walked'], ['gently'], ['gently', 'doorstep'], ['gently', 'doorstep', 'took'], ['gingerly'], ['gingerly', 'arm'], ['gingerly', 'arm', 'dumbledore'], ['glasses'], ['glasses', 'saying'], ['glasses', 'saying', 'hushed'], ['glowed'], ['glowed', 'suddenly'], ['glowed', 'suddenly', 'orange'], ['go'], ['go', 'join'], ['go', 'join', 'celebrations'], ['good'], ['good', 'luck'], ['good', 'luck', 'harry'], ['grip'], ['grip', 'hagrid'], ['grip', 'hagrid', 'll'], ['hagrid'], ['hagrid', 'better'], ['hagrid', 'better', 'dumbledore'], ['hagrid', 'face'], ['hagrid', 'face', 'handkerchief'], ['hagrid', 'gingerly'], ['hagrid', 'gingerly', 'arm'], ['hagrid', 'll'], ['hagrid', 'll', 'professor'], ['hagrid', 'muffled'], ['hagrid', 'muffled', 'voice'], ['hagrid', 'onto'], ['hagrid', 'onto', 'motorcycle'], ['hagrid', 'shoulders'], ['hagrid', 'shoulders', 'shook'], ['hagrid', 'swung'], ['hagrid', 'swung', 'hagrid'], ['hagrid', 'taking'], ['hagrid', 'taking', 'large'], ['hand'], ['hand', 'closed'], ['hand', 'closed', 'letter'], ['handkerchief'], ['handkerchief', 'burying'], ['handkerchief', 'burying', 'hagrid'], ['handkerchief', 'lily'], ['handkerchief', 'lily', 'james'], ['handkerchief', 'sad'], ['handkerchief', 'sad', 'grip'], ['handkerchief', 'stand'], ['handkerchief', 'stand', 'handkerchief'], ['harry'], ['harry', 'arms'], ['harry', 'arms', 'turned'], ['harry', 'blankets'], ['harry', 'blankets', 'came'], ['harry', 'dumbledore'], ['harry', 'dumbledore', 'murmured'], ['harry', 'gently'], ['harry', 'gently', 'doorstep'], ['harry', 'harry'], ['harry', 'harry', 'arms'], ['harry', 'potter'], ['harry', 'potter', 'lived'], ['harry', 'potter', 'rolled'], ['harry', 'ter'], ['harry', 'ter', 'muggles'], ['heel'], ['heel', 'swish'], ['heel', 'swish', 'dumbledore'], ['hissed'], ['hissed', 'professor'], ['hissed', 'professor', 'mcgonagall'], ['holding'], ['holding', 'people'], ['holding', 'people', 'glasses'], ['hours'], ['hours', 'dursley'], ['hours', 'dursley', 'scream'], ['house'], ['hushed'], ['hushed', 'voices'], ['hushed', 'voices', 'harry'], ['inside'], ['inside', 'dumbledore'], ['inside', 'dumbledore', 'blankets'], ['inside', 'harry'], ['inside', 'harry', 'blankets'], ['jacket'], ['jacket', 'sleeve'], ['jacket', 'sleeve', 'hagrid'], ['james'], ['james', 'dead'], ['james', 'dead', 'poor'], ['jet'], ['jet', 'black'], ['jet', 'black', 'forehead'], ['join'], ['join', 'celebrations'], ['join', 'celebrations', 'hagrid'], ['kicked'], ['kicked', 'engine'], ['kicked', 'engine', 'roar'], ['knowing'], ['knowing', 'dumbledore'], ['knowing', 'dumbledore', 'famous'], ['knowing', 'dumbledore', 'special'], ['knowing', 'dumbledore', 'woken'], ['laid'], ['laid', 'harry'], ['laid', 'harry', 'gently'], ['lamps'], ['lamps', 'privet'], ['lamps', 'privet', 'drive'], ['large'], ['large', 'spotted'], ['large', 'spotted', 'handkerchief'], ['letter'], ['letter', 'beside'], ['letter', 'beside', 'dumbledore'], ['letter', 'dumbledore'], ['letter', 'dumbledore', 'cloak'], ['letter', 'inside'], ['letter', 'inside', 'harry'], ['light'], ['light', 'sped'], ['light', 'sped', 'balls'], ['light', 'usually'], ['light', 'usually', 'shone'], ['lightning'], ['like'], ['like', 'bolt'], ['like', 'bolt', 'lightning'], ['lily'], ['lily', 'james'], ['lily', 'james', 'dead'], ['little'], ['little', 'bundle'], ['little', 'bundle', 'hagrid'], ['little', 'harry'], ['little', 'harry', 'ter'], ['lived'], ['ll'], ['ll', 'professor'], ['ll', 'professor', 'mcgonagall'], ['ll', 'scar'], ['ll', 'scar', 'forever'], ['ll', 'takin'], ['ll', 'takin', 'sirius'], ['ll', 'wake'], ['ll', 'wake', 'muggles'], ['looked'], ['looked', 'little'], ['looked', 'little', 'bundle'], ['low'], ['low', 'garden'], ['low', 'garden', 'wall'], ['luck'], ['luck', 'harry'], ['luck', 'harry', 'dumbledore'], ['mcgonagall'], ['mcgonagall', 'blinked'], ['mcgonagall', 'blinked', 'furiously'], ['mcgonagall', 'curiously'], ['mcgonagall', 'curiously', 'shaped'], ['mcgonagall', 'dumbledore'], ['mcgonagall', 'dumbledore', 'nodding'], ['mcgonagall', 'll'], ['mcgonagall', 'll', 'wake'], ['mcgonagall', 'professor'], ['mcgonagall', 'professor', 'dumbledore'], ['mcgonagall', 'whispered'], ['mcgonagall', 'whispered', 'patting'], ['meeting'], ['meeting', 'secret'], ['meeting', 'secret', 'country'], ['milk'], ['milk', 'bottles'], ['milk', 'bottles', 'dumbledore'], ['minute'], ['minute', 'three'], ['minute', 'three', 'stood'], ['moment'], ['moment', 'people'], ['moment', 'people', 'meeting'], ['motorcycle'], ['motorcycle', 'kicked'], ['motorcycle', 'kicked', 'engine'], ['muffled'], ['muffled', 'voice'], ['muffled', 'voice', 'll'], ['muggles'], ['muggles', 'handkerchief'], ['muggles', 'handkerchief', 'sad'], ['muggles', 'sorry'], ['muggles', 'sorry', 'sobbed'], ['murmured'], ['next'], ['next', 'weeks'], ['next', 'weeks', 'prodded'], ['nodding'], ['nodding', 'voice'], ['number'], ['number', 'four'], ['onto'], ['onto', 'motorcycle'], ['onto', 'motorcycle', 'kicked'], ['opened'], ['opened', 'front'], ['opened', 'front', 'door'], ['orange'], ['orange', 'dumbledore'], ['orange', 'dumbledore', 'tabby'], ['outer'], ['outer', 'twelve'], ['outer', 'twelve', 'balls'], ['patting'], ['patting', 'hagrid'], ['patting', 'hagrid', 'gingerly'], ['people'], ['people', 'glasses'], ['people', 'glasses', 'saying'], ['people', 'meeting'], ['people', 'meeting', 'secret'], ['pinched'], ['pinched', 'dumbledore'], ['pinched', 'dumbledore', 'cousin'], ['poor'], ['poor', 'little'], ['poor', 'little', 'harry'], ['potter'], ['potter', 'lived'], ['potter', 'rolled'], ['potter', 'rolled', 'inside'], ['privet'], ['privet', 'drive'], ['privet', 'drive', 'glowed'], ['prodded'], ['prodded', 'pinched'], ['prodded', 'pinched', 'dumbledore'], ['professor'], ['professor', 'dumbledore'], ['professor', 'dumbledore', 'sir'], ['professor', 'mcgonagall'], ['professor', 'mcgonagall', 'blinked'], ['professor', 'mcgonagall', 'dumbledore'], ['professor', 'mcgonagall', 'll'], ['professor', 'mcgonagall', 'professor'], ['professor', 'mcgonagall', 'whispered'], ['roar'], ['roar', 'engine'], ['roar', 'engine', 'rose'], ['rolled'], ['rolled', 'inside'], ['rolled', 'inside', 'dumbledore'], ['rose'], ['rose', 'air'], ['sad'], ['sad', 'grip'], ['sad', 'grip', 'hagrid'], ['saying'], ['saying', 'hushed'], ['saying', 'hushed', 'voices'], ['scar'], ['scar', 'dumbledore'], ['scar', 'dumbledore', 'wouldn'], ['scar', 'forever'], ['scar', 'forever', 'couldn'], ['scream'], ['scream', 'dursley'], ['scream', 'dursley', 'opened'], ['secret'], ['secret', 'country'], ['secret', 'country', 'holding'], ['seemed'], ['shall'], ['shall', 'expect'], ['shall', 'expect', 'professor'], ['shaped'], ['shaped', 'cut'], ['shaped', 'cut', 'like'], ['shhh'], ['shhh', 'hissed'], ['shhh', 'hissed', 'professor'], ['shone'], ['shone', 'dumbledore'], ['shone', 'dumbledore', 'eyes'], ['shook'], ['shook', 'professor'], ['shook', 'professor', 'mcgonagall'], ['shoulders'], ['shoulders', 'shook'], ['shoulders', 'shook', 'professor'], ['silver'], ['silver', 'outer'], ['sir'], ['sir', 'wiping'], ['sir', 'wiping', 'sirius'], ['sirius'], ['sirius', 'bike'], ['sirius', 'bike', 'professor'], ['sirius', 'jacket'], ['sirius', 'jacket', 'sleeve'], ['sirius', 'sirius'], ['sirius', 'sirius', 'bike'], ['sirius', 'streaming'], ['sirius', 'streaming', 'eyes'], ['sleeve'], ['sleeve', 'hagrid'], ['sleeve', 'hagrid', 'swung'], ['slept'], ['slept', 'knowing'], ['slept', 'knowing', 'dumbledore'], ['slinking'], ['slinking', 'corner'], ['slinking', 'corner', 'street'], ['small'], ['small', 'hand'], ['small', 'hand', 'closed'], ['sobbed'], ['sobbed', 'hagrid'], ['sobbed', 'hagrid', 'taking'], ['something'], ['something', 'scar'], ['something', 'scar', 'dumbledore'], ['sorry'], ['sorry', 'sobbed'], ['sorry', 'sobbed', 'hagrid'], ['special'], ['special', 'knowing'], ['special', 'knowing', 'dumbledore'], ['sped'], ['sped', 'balls'], ['sped', 'balls', 'street'], ['spend'], ['spend', 'next'], ['spend', 'next', 'weeks'], ['spotted'], ['spotted', 'handkerchief'], ['spotted', 'handkerchief', 'burying'], ['stand'], ['stand', 'handkerchief'], ['stand', 'handkerchief', 'lily'], ['step'], ['step', 'number'], ['step', 'number', 'four'], ['stepped'], ['stepped', 'low'], ['stepped', 'low', 'garden'], ['stood'], ['stood', 'looked'], ['stood', 'looked', 'little'], ['stopped'], ['stopped', 'took'], ['stopped', 'took', 'silver'], ['streaming'], ['streaming', 'eyes'], ['streaming', 'eyes', 'sirius'], ['street'], ['street', 'lamps'], ['street', 'lamps', 'privet'], ['suddenly'], ['suddenly', 'orange'], ['suddenly', 'orange', 'dumbledore'], ['swish'], ['swish', 'dumbledore'], ['swish', 'dumbledore', 'cloak'], ['swung'], ['swung', 'hagrid'], ['swung', 'hagrid', 'onto'], ['tabby'], ['tabby', 'cat'], ['tabby', 'cat', 'slinking'], ['takin'], ['takin', 'sirius'], ['takin', 'sirius', 'sirius'], ['taking'], ['taking', 'large'], ['taking', 'large', 'spotted'], ['ter'], ['ter', 'muggles'], ['ter', 'muggles', 'handkerchief'], ['three'], ['three', 'stood'], ['three', 'stood', 'looked'], ['took'], ['took', 'harry'], ['took', 'harry', 'harry'], ['took', 'letter'], ['took', 'letter', 'dumbledore'], ['took', 'silver'], ['took', 'silver', 'outer'], ['toward'], ['toward', 'dursley'], ['toward', 'dursley', 'dursley'], ['tucked'], ['tucked', 'letter'], ['tucked', 'letter', 'inside'], ['tuft'], ['tuft', 'jet'], ['tuft', 'jet', 'black'], ['turned'], ['turned', 'dumbledore'], ['turned', 'dumbledore', 'heel'], ['turned', 'toward'], ['turned', 'toward', 'dursley'], ['turned', 'walked'], ['turned', 'walked', 'street'], ['twelve'], ['twelve', 'balls'], ['twelve', 'balls', 'light'], ['twinkling'], ['twinkling', 'light'], ['twinkling', 'light', 'usually'], ['usually'], ['usually', 'shone'], ['usually', 'shone', 'dumbledore'], ['voice'], ['voice', 'll'], ['voice', 'll', 'takin'], ['voices'], ['voices', 'harry'], ['voices', 'harry', 'potter'], ['wake'], ['wake', 'muggles'], ['wake', 'muggles', 'sorry'], ['waking'], ['walked'], ['walked', 'front'], ['walked', 'front', 'door'], ['walked', 'street'], ['wall'], ['wall', 'walked'], ['wall', 'walked', 'front'], ['weeks'], ['weeks', 'prodded'], ['weeks', 'prodded', 'pinched'], ['well'], ['well', 'dumbledore'], ['well', 'dumbledore', 'finally'], ['well', 'dumbledore', 'hagrid'], ['well', 'go'], ['well', 'go', 'join'], ['whispered'], ['whispered', 'patting'], ['whispered', 'patting', 'hagrid'], ['wiping'], ['wiping', 'sirius'], ['wiping', 'sirius', 'streaming'], ['without'], ['without', 'waking'], ['woken'], ['woken', 'hours'], ['woken', 'hours', 'dursley'], ['wouldn']]], ['harry potter', [['another'], ['another', 'lived'], ['another', 'lived', 'house'], ['arm'], ['arm', 'dumbledore'], ['arm', 'dumbledore', 'stepped'], ['arms'], ['arms', 'turned'], ['arms', 'turned', 'toward'], ['asked'], ['asked', 'hagrid'], ['bent'], ['bent', 'harry'], ['bent', 'harry', 'great'], ['beside'], ['beside', 'dumbledore'], ['beside', 'dumbledore', 'dumbledore'], ['better'], ['better', 'dumbledore'], ['better', 'dumbledore', 'took'], ['blankets'], ['blankets', 'came'], ['blankets', 'without'], ['blankets', 'without', 'waking'], ['bottles'], ['bottles', 'dumbledore'], ['bottles', 'dumbledore', 'spend'], ['burying'], ['burying', 'hagrid'], ['burying', 'hagrid', 'face'], ['bye'], ['bye', 'harry'], ['bye', 'harry', 'sir'], ['came'], ['cloak'], ['cloak', 'tucked'], ['cloak', 'tucked', 'letter'], ['closed'], ['closed', 'letter'], ['closed', 'letter', 'beside'], ['couldn'], ['couldn', 'moment'], ['couldn', 'moment', 'people'], ['country'], ['country', 'holding'], ['country', 'holding', 'people'], ['cousin'], ['cousin', 'dudley'], ['cousin', 'dudley', 'dumbledore'], ['dead'], ['dead', 'poor'], ['dead', 'poor', 'little'], ['door'], ['door', 'milk'], ['door', 'milk', 'bottles'], ['doorstep'], ['doorstep', 'took'], ['doorstep', 'took', 'letter'], ['dudley'], ['dudley', 'dumbledore'], ['dudley', 'dumbledore', 'couldn'], ['dudley', 'dursley'], ['dudley', 'dursley', 'house'], ['dumbledore'], ['dumbledore', 'blankets'], ['dumbledore', 'blankets', 'without'], ['dumbledore', 'cloak'], ['dumbledore', 'cloak', 'tucked'], ['dumbledore', 'couldn'], ['dumbledore', 'couldn', 'moment'], ['dumbledore', 'cousin'], ['dumbledore', 'cousin', 'dudley'], ['dumbledore', 'dumbledore'], ['dumbledore', 'dumbledore', 'slept'], ['dumbledore', 'famous'], ['dumbledore', 'famous', 'knowing'], ['dumbledore', 'hagrid'], ['dumbledore', 'hagrid', 'better'], ['dumbledore', 'laid'], ['dumbledore', 'laid', 'harry'], ['dumbledore', 'murmured'], ['dumbledore', 'slept'], ['dumbledore', 'slept', 'knowing'], ['dumbledore', 'special'], ['dumbledore', 'special', 'knowing'], ['dumbledore', 'spend'], ['dumbledore', 'spend', 'next'], ['dumbledore', 'stepped'], ['dumbledore', 'stepped', 'low'], ['dumbledore', 'took'], ['dumbledore', 'took', 'harry'], ['dumbledore', 'woken'], ['dumbledore', 'woken', 'hours'], ['dursley'], ['dursley', 'dudley'], ['dursley', 'dudley', 'dursley'], ['dursley', 'dursley'], ['dursley', 'dursley', 'dudley'], ['dursley', 'house'], ['dursley', 'opened'], ['dursley', 'opened', 'front'], ['dursley', 'scream'], ['dursley', 'scream', 'dursley'], ['face'], ['face', 'handkerchief'], ['face', 'handkerchief', 'stand'], ['famous'], ['famous', 'knowing'], ['famous', 'knowing', 'dumbledore'], ['front'], ['front', 'door'], ['front', 'door', 'milk'], ['garden'], ['garden', 'wall'], ['garden', 'wall', 'walked'], ['gave'], ['gave', 'scratchy'], ['gave', 'scratchy', 'whiskery'], ['gently'], ['gently', 'doorstep'], ['gently', 'doorstep', 'took'], ['gingerly'], ['gingerly', 'arm'], ['gingerly', 'arm', 'dumbledore'], ['glasses'], ['glasses', 'saying'], ['glasses', 'saying', 'hushed'], ['good'], ['good', 'bye'], ['good', 'bye', 'harry'], ['good', 'luck'], ['good', 'luck', 'harry'], ['great'], ['great', 'shaggy'], ['great', 'shaggy', 'harry'], ['grip'], ['grip', 'hagrid'], ['grip', 'hagrid', 'll'], ['hagrid'], ['hagrid', 'better'], ['hagrid', 'better', 'dumbledore'], ['hagrid', 'face'], ['hagrid', 'face', 'handkerchief'], ['hagrid', 'gingerly'], ['hagrid', 'gingerly', 'arm'], ['hagrid', 'll'], ['hagrid', 'll', 'professor'], ['hagrid', 'taking'], ['hagrid', 'taking', 'large'], ['hand'], ['hand', 'closed'], ['hand', 'closed', 'letter'], ['handkerchief'], ['handkerchief', 'burying'], ['handkerchief', 'burying', 'hagrid'], ['handkerchief', 'lily'], ['handkerchief', 'lily', 'james'], ['handkerchief', 'sad'], ['handkerchief', 'sad', 'grip'], ['handkerchief', 'stand'], ['handkerchief', 'stand', 'handkerchief'], ['harry'], ['harry', 'arms'], ['harry', 'arms', 'turned'], ['harry', 'bent'], ['harry', 'bent', 'harry'], ['harry', 'blankets'], ['harry', 'blankets', 'came'], ['harry', 'dumbledore'], ['harry', 'dumbledore', 'murmured'], ['harry', 'gave'], ['harry', 'gave', 'scratchy'], ['harry', 'gently'], ['harry', 'gently', 'doorstep'], ['harry', 'great'], ['harry', 'great', 'shaggy'], ['harry', 'harry'], ['harry', 'harry', 'arms'], ['harry', 'potter'], ['harry', 'potter', 'lived'], ['harry', 'potter', 'rolled'], ['harry', 'sir'], ['harry', 'sir', 'asked'], ['harry', 'ter'], ['harry', 'ter', 'muggles'], ['held'], ['held', 'sign'], ['held', 'sign', 'another'], ['hissed'], ['hissed', 'professor'], ['hissed', 'professor', 'mcgonagall'], ['holding'], ['holding', 'people'], ['holding', 'people', 'glasses'], ['hours'], ['hours', 'dursley'], ['hours', 'dursley', 'scream'], ['house'], ['hushed'], ['hushed', 'voices'], ['hushed', 'voices', 'harry'], ['inside'], ['inside', 'dumbledore'], ['inside', 'dumbledore', 'blankets'], ['inside', 'harry'], ['inside', 'harry', 'blankets'], ['james'], ['james', 'dead'], ['james', 'dead', 'poor'], ['kiss'], ['knowing'], ['knowing', 'dumbledore'], ['knowing', 'dumbledore', 'famous'], ['knowing', 'dumbledore', 'special'], ['knowing', 'dumbledore', 'woken'], ['laid'], ['laid', 'harry'], ['laid', 'harry', 'gently'], ['large'], ['large', 'spotted'], ['large', 'spotted', 'handkerchief'], ['letter'], ['letter', 'beside'], ['letter', 'beside', 'dumbledore'], ['letter', 'dumbledore'], ['letter', 'dumbledore', 'cloak'], ['letter', 'inside'], ['letter', 'inside', 'harry'], ['lily'], ['lily', 'james'], ['lily', 'james', 'dead'], ['little'], ['little', 'harry'], ['little', 'harry', 'ter'], ['lived'], ['lived', 'house'], ['ll'], ['ll', 'professor'], ['ll', 'professor', 'mcgonagall'], ['ll', 'wake'], ['ll', 'wake', 'muggles'], ['low'], ['low', 'garden'], ['low', 'garden', 'wall'], ['luck'], ['luck', 'harry'], ['luck', 'harry', 'dumbledore'], ['mcgonagall'], ['mcgonagall', 'll'], ['mcgonagall', 'll', 'wake'], ['mcgonagall', 'whispered'], ['mcgonagall', 'whispered', 'patting'], ['meeting'], ['meeting', 'secret'], ['meeting', 'secret', 'country'], ['milk'], ['milk', 'bottles'], ['milk', 'bottles', 'dumbledore'], ['moment'], ['moment', 'people'], ['moment', 'people', 'meeting'], ['muggles'], ['muggles', 'handkerchief'], ['muggles', 'handkerchief', 'sad'], ['muggles', 'sorry'], ['muggles', 'sorry', 'sobbed'], ['murmured'], ['next'], ['next', 'weeks'], ['next', 'weeks', 'prodded'], ['opened'], ['opened', 'front'], ['opened', 'front', 'door'], ['patting'], ['patting', 'hagrid'], ['patting', 'hagrid', 'gingerly'], ['people'], ['people', 'glasses'], ['people', 'glasses', 'saying'], ['people', 'meeting'], ['people', 'meeting', 'secret'], ['pinched'], ['pinched', 'dumbledore'], ['pinched', 'dumbledore', 'cousin'], ['poor'], ['poor', 'little'], ['poor', 'little', 'harry'], ['potter'], ['potter', 'lived'], ['potter', 'rolled'], ['potter', 'rolled', 'inside'], ['prodded'], ['prodded', 'pinched'], ['prodded', 'pinched', 'dumbledore'], ['professor'], ['professor', 'mcgonagall'], ['professor', 'mcgonagall', 'll'], ['professor', 'mcgonagall', 'whispered'], ['rolled'], ['rolled', 'inside'], ['rolled', 'inside', 'dumbledore'], ['room'], ['room', 'held'], ['room', 'held', 'sign'], ['sad'], ['sad', 'grip'], ['sad', 'grip', 'hagrid'], ['saying'], ['saying', 'hushed'], ['saying', 'hushed', 'voices'], ['scratchy'], ['scratchy', 'whiskery'], ['scratchy', 'whiskery', 'kiss'], ['scream'], ['scream', 'dursley'], ['scream', 'dursley', 'opened'], ['secret'], ['secret', 'country'], ['secret', 'country', 'holding'], ['shaggy'], ['shaggy', 'harry'], ['shaggy', 'harry', 'gave'], ['shhh'], ['shhh', 'hissed'], ['shhh', 'hissed', 'professor'], ['sign'], ['sign', 'another'], ['sign', 'another', 'lived'], ['sir'], ['sir', 'asked'], ['sir', 'asked', 'hagrid'], ['slept'], ['slept', 'knowing'], ['slept', 'knowing', 'dumbledore'], ['small'], ['small', 'hand'], ['small', 'hand', 'closed'], ['sobbed'], ['sobbed', 'hagrid'], ['sobbed', 'hagrid', 'taking'], ['sorry'], ['sorry', 'sobbed'], ['sorry', 'sobbed', 'hagrid'], ['special'], ['special', 'knowing'], ['special', 'knowing', 'dumbledore'], ['spend'], ['spend', 'next'], ['spend', 'next', 'weeks'], ['spotted'], ['spotted', 'handkerchief'], ['spotted', 'handkerchief', 'burying'], ['stand'], ['stand', 'handkerchief'], ['stand', 'handkerchief', 'lily'], ['stepped'], ['stepped', 'low'], ['stepped', 'low', 'garden'], ['taking'], ['taking', 'large'], ['taking', 'large', 'spotted'], ['ter'], ['ter', 'muggles'], ['ter', 'muggles', 'handkerchief'], ['took'], ['took', 'harry'], ['took', 'harry', 'harry'], ['took', 'letter'], ['took', 'letter', 'dumbledore'], ['toward'], ['toward', 'dursley'], ['toward', 'dursley', 'dursley'], ['tucked'], ['tucked', 'letter'], ['tucked', 'letter', 'inside'], ['turned'], ['turned', 'toward'], ['turned', 'toward', 'dursley'], ['voices'], ['voices', 'harry'], ['voices', 'harry', 'potter'], ['wake'], ['wake', 'muggles'], ['wake', 'muggles', 'sorry'], ['waking'], ['walked'], ['walked', 'front'], ['walked', 'front', 'door'], ['wall'], ['wall', 'walked'], ['wall', 'walked', 'front'], ['weeks'], ['weeks', 'prodded'], ['weeks', 'prodded', 'pinched'], ['well'], ['well', 'dumbledore'], ['well', 'dumbledore', 'hagrid'], ['whiskery'], ['whiskery', 'kiss'], ['whispered'], ['whispered', 'patting'], ['whispered', 'patting', 'hagrid'], ['without'], ['without', 'waking'], ['woken'], ['woken', 'hours'], ['woken', 'hours', 'dursley']]]]
-    res2 = [['igor karkaroff', [['angry'], ['armadillo'], ['armadillo', 'bile'], ['armadillo', 'bile', 'minutes'], ['armadillo', 'bile', 'minutes', 'go'], ['away'], ['away', 'class'], ['behind'], ['behind', 'harry'], ['behind', 'harry', 'cauldron'], ['behind', 'harry', 'cauldron', 'mop'], ['behind', 'snape'], ['behind', 'snape', 'desk'], ['behind', 'snape', 'desk', 'rest'], ['bell'], ['bell', 'gave'], ['bell', 'gave', 'harry'], ['bell', 'gave', 'harry', 'excuse'], ['bile'], ['bile', 'minutes'], ['bile', 'minutes', 'go'], ['bile', 'minutes', 'go', 'bell'], ['bottle'], ['bottle', 'armadillo'], ['bottle', 'armadillo', 'bile'], ['bottle', 'armadillo', 'bile', 'minutes'], ['cauldron'], ['cauldron', 'karkaroff'], ['cauldron', 'karkaroff', 'pull'], ['cauldron', 'karkaroff', 'pull', 'left'], ['cauldron', 'mop'], ['cauldron', 'mop', 'rest'], ['cauldron', 'mop', 'rest', 'class'], ['class'], ['class', 'moved'], ['class', 'moved', 'noisily'], ['class', 'moved', 'noisily', 'toward'], ['deliberately'], ['deliberately', 'knocked'], ['deliberately', 'knocked', 'harry'], ['deliberately', 'knocked', 'harry', 'bottle'], ['desk'], ['desk', 'rest'], ['desk', 'rest', 'double'], ['desk', 'rest', 'double', 'period'], ['door'], ['double'], ['double', 'period'], ['duck'], ['duck', 'behind'], ['duck', 'behind', 'harry'], ['duck', 'behind', 'harry', 'cauldron'], ['edge'], ['edge', 'harry'], ['edge', 'harry', 'cauldron'], ['edge', 'harry', 'cauldron', 'karkaroff'], ['effort'], ['effort', 'harry'], ['effort', 'harry', 'lips'], ['every'], ['every', 'effort'], ['every', 'effort', 'harry'], ['every', 'effort', 'harry', 'lips'], ['excuse'], ['excuse', 'duck'], ['excuse', 'duck', 'behind'], ['excuse', 'duck', 'behind', 'harry'], ['extremely'], ['extremely', 'worried'], ['extremely', 'worried', 'snape'], ['extremely', 'worried', 'snape', 'looked'], ['forearm'], ['gave'], ['gave', 'harry'], ['gave', 'harry', 'excuse'], ['gave', 'harry', 'excuse', 'duck'], ['go'], ['go', 'bell'], ['go', 'bell', 'gave'], ['go', 'bell', 'gave', 'harry'], ['hand'], ['hand', 'sleeve'], ['hand', 'sleeve', 'harry'], ['hand', 'sleeve', 'harry', 'robe'], ['harry'], ['harry', 'bottle'], ['harry', 'bottle', 'armadillo'], ['harry', 'bottle', 'armadillo', 'bile'], ['harry', 'cauldron'], ['harry', 'cauldron', 'karkaroff'], ['harry', 'cauldron', 'karkaroff', 'pull'], ['harry', 'cauldron', 'mop'], ['harry', 'cauldron', 'mop', 'rest'], ['harry', 'deliberately'], ['harry', 'deliberately', 'knocked'], ['harry', 'deliberately', 'knocked', 'harry'], ['harry', 'excuse'], ['harry', 'excuse', 'duck'], ['harry', 'excuse', 'duck', 'behind'], ['harry', 'heard'], ['harry', 'heard', 'snape'], ['harry', 'heard', 'snape', 'hiss'], ['harry', 'inner'], ['harry', 'inner', 'forearm'], ['harry', 'lips'], ['harry', 'peering'], ['harry', 'peering', 'edge'], ['harry', 'peering', 'edge', 'harry'], ['harry', 'robe'], ['harry', 'robe', 'snape'], ['harry', 'robe', 'snape', 'something'], ['heard'], ['heard', 'snape'], ['heard', 'snape', 'hiss'], ['heard', 'snape', 'hiss', 'karkaroff'], ['hiss'], ['hiss', 'karkaroff'], ['hovered'], ['hovered', 'behind'], ['hovered', 'behind', 'snape'], ['hovered', 'behind', 'snape', 'desk'], ['inner'], ['inner', 'forearm'], ['intent'], ['intent', 'preventing'], ['intent', 'preventing', 'snape'], ['intent', 'preventing', 'snape', 'slipping'], ['karkaroff'], ['karkaroff', 'harry'], ['karkaroff', 'harry', 'peering'], ['karkaroff', 'harry', 'peering', 'edge'], ['karkaroff', 'hovered'], ['karkaroff', 'hovered', 'behind'], ['karkaroff', 'hovered', 'behind', 'snape'], ['karkaroff', 'looked'], ['karkaroff', 'looked', 'extremely'], ['karkaroff', 'looked', 'extremely', 'worried'], ['karkaroff', 'making'], ['karkaroff', 'making', 'every'], ['karkaroff', 'making', 'every', 'effort'], ['karkaroff', 'pull'], ['karkaroff', 'pull', 'left'], ['karkaroff', 'pull', 'left', 'hand'], ['karkaroff', 'seemed'], ['karkaroff', 'seemed', 'intent'], ['karkaroff', 'seemed', 'intent', 'preventing'], ['karkaroff', 'wanted'], ['karkaroff', 'wanted', 'harry'], ['karkaroff', 'wanted', 'harry', 'deliberately'], ['keen'], ['keen', 'karkaroff'], ['keen', 'karkaroff', 'wanted'], ['keen', 'karkaroff', 'wanted', 'harry'], ['knocked'], ['knocked', 'harry'], ['knocked', 'harry', 'bottle'], ['knocked', 'harry', 'bottle', 'armadillo'], ['left'], ['left', 'hand'], ['left', 'hand', 'sleeve'], ['left', 'hand', 'sleeve', 'harry'], ['lips'], ['looked'], ['looked', 'angry'], ['looked', 'extremely'], ['looked', 'extremely', 'worried'], ['looked', 'extremely', 'worried', 'snape'], ['making'], ['making', 'every'], ['making', 'every', 'effort'], ['making', 'every', 'effort', 'harry'], ['minutes'], ['minutes', 'go'], ['minutes', 'go', 'bell'], ['minutes', 'go', 'bell', 'gave'], ['mop'], ['mop', 'rest'], ['mop', 'rest', 'class'], ['mop', 'rest', 'class', 'moved'], ['moved'], ['moved', 'noisily'], ['moved', 'noisily', 'toward'], ['moved', 'noisily', 'toward', 'door'], ['noisily'], ['noisily', 'toward'], ['noisily', 'toward', 'door'], ['peering'], ['peering', 'edge'], ['peering', 'edge', 'harry'], ['peering', 'edge', 'harry', 'cauldron'], ['period'], ['preventing'], ['preventing', 'snape'], ['preventing', 'snape', 'slipping'], ['preventing', 'snape', 'slipping', 'away'], ['pull'], ['pull', 'left'], ['pull', 'left', 'hand'], ['pull', 'left', 'hand', 'sleeve'], ['rest'], ['rest', 'class'], ['rest', 'class', 'moved'], ['rest', 'class', 'moved', 'noisily'], ['rest', 'double'], ['rest', 'double', 'period'], ['robe'], ['robe', 'snape'], ['robe', 'snape', 'something'], ['robe', 'snape', 'something', 'harry'], ['seemed'], ['seemed', 'intent'], ['seemed', 'intent', 'preventing'], ['seemed', 'intent', 'preventing', 'snape'], ['sleeve'], ['sleeve', 'harry'], ['sleeve', 'harry', 'robe'], ['sleeve', 'harry', 'robe', 'snape'], ['slipping'], ['slipping', 'away'], ['slipping', 'away', 'class'], ['snape'], ['snape', 'desk'], ['snape', 'desk', 'rest'], ['snape', 'desk', 'rest', 'double'], ['snape', 'hiss'], ['snape', 'hiss', 'karkaroff'], ['snape', 'looked'], ['snape', 'looked', 'angry'], ['snape', 'slipping'], ['snape', 'slipping', 'away'], ['snape', 'slipping', 'away', 'class'], ['snape', 'something'], ['snape', 'something', 'harry'], ['snape', 'something', 'harry', 'inner'], ['something'], ['something', 'harry'], ['something', 'harry', 'inner'], ['something', 'harry', 'inner', 'forearm'], ['toward'], ['toward', 'door'], ['urgent'], ['urgent', 'harry'], ['urgent', 'harry', 'heard'], ['urgent', 'harry', 'heard', 'snape'], ['wanted'], ['wanted', 'harry'], ['wanted', 'harry', 'deliberately'], ['wanted', 'harry', 'deliberately', 'knocked'], ['well'], ['well', 'karkaroff'], ['well', 'karkaroff', 'making'], ['well', 'karkaroff', 'making', 'every'], ['worried'], ['worried', 'snape'], ['worried', 'snape', 'looked'], ['worried', 'snape', 'looked', 'angry']]]]
-    res3 = [['harry potter', [['curtly'], ['door'], ['door', 'opened'], ['door', 'opened', 'harry'], ['door', 'opened', 'harry', 'harry'], ['door', 'opened', 'harry', 'harry', 'face'], ['face'], ['face', 'face'], ['face', 'face', 'professor'], ['face', 'face', 'professor', 'mcgonagall'], ['face', 'professor'], ['face', 'professor', 'mcgonagall'], ['footsteps'], ['footsteps', 'door'], ['footsteps', 'door', 'opened'], ['footsteps', 'door', 'opened', 'harry'], ['footsteps', 'door', 'opened', 'harry', 'harry'], ['harry'], ['harry', 'curtly'], ['harry', 'face'], ['harry', 'face', 'face'], ['harry', 'face', 'face', 'professor'], ['harry', 'face', 'face', 'professor', 'mcgonagall'], ['harry', 'harry'], ['harry', 'harry', 'face'], ['harry', 'harry', 'face', 'face'], ['harry', 'harry', 'face', 'face', 'professor'], ['harry', 'heard'], ['harry', 'heard', 'footsteps'], ['harry', 'heard', 'footsteps', 'door'], ['harry', 'heard', 'footsteps', 'door', 'opened'], ['harry', 'knocked'], ['heard'], ['heard', 'footsteps'], ['heard', 'footsteps', 'door'], ['heard', 'footsteps', 'door', 'opened'], ['heard', 'footsteps', 'door', 'opened', 'harry'], ['knocked'], ['mcgonagall'], ['opened'], ['opened', 'harry'], ['opened', 'harry', 'harry'], ['opened', 'harry', 'harry', 'face'], ['opened', 'harry', 'harry', 'face', 'face'], ['professor'], ['professor', 'mcgonagall'], ['urgent'], ['urgent', 'harry'], ['urgent', 'harry', 'curtly']]], ['malcolm mcgonagall', [['alarmingly'], ['door'], ['door', 'opened'], ['door', 'opened', 'harry'], ['door', 'opened', 'harry', 'harry'], ['door', 'opened', 'harry', 'harry', 'face'], ['face'], ['face', 'face'], ['face', 'face', 'professor'], ['face', 'face', 'professor', 'mcgonagall'], ['face', 'professor'], ['face', 'professor', 'mcgonagall'], ['flashing'], ['flashing', 'alarmingly'], ['footsteps'], ['footsteps', 'door'], ['footsteps', 'door', 'opened'], ['footsteps', 'door', 'opened', 'harry'], ['footsteps', 'door', 'opened', 'harry', 'harry'], ['harry'], ['harry', 'face'], ['harry', 'face', 'face'], ['harry', 'face', 'face', 'professor'], ['harry', 'face', 'face', 'professor', 'mcgonagall'], ['harry', 'harry'], ['harry', 'harry', 'face'], ['harry', 'harry', 'face', 'face'], ['harry', 'harry', 'face', 'face', 'professor'], ['harry', 'heard'], ['harry', 'heard', 'footsteps'], ['harry', 'heard', 'footsteps', 'door'], ['harry', 'heard', 'footsteps', 'door', 'opened'], ['heard'], ['heard', 'footsteps'], ['heard', 'footsteps', 'door'], ['heard', 'footsteps', 'door', 'opened'], ['heard', 'footsteps', 'door', 'opened', 'harry'], ['mcgonagall'], ['mcgonagall', 'mcgonagall'], ['mcgonagall', 'mcgonagall', 'square'], ['mcgonagall', 'mcgonagall', 'square', 'spectacles'], ['mcgonagall', 'mcgonagall', 'square', 'spectacles', 'flashing'], ['mcgonagall', 'square'], ['mcgonagall', 'square', 'spectacles'], ['mcgonagall', 'square', 'spectacles', 'flashing'], ['mcgonagall', 'square', 'spectacles', 'flashing', 'alarmingly'], ['opened'], ['opened', 'harry'], ['opened', 'harry', 'harry'], ['opened', 'harry', 'harry', 'face'], ['opened', 'harry', 'harry', 'face', 'face'], ['professor'], ['professor', 'mcgonagall'], ['spectacles'], ['spectacles', 'flashing'], ['spectacles', 'flashing', 'alarmingly'], ['square'], ['square', 'spectacles'], ['square', 'spectacles', 'flashing'], ['square', 'spectacles', 'flashing', 'alarmingly']]]]
-    res4 = []
-    assert PeopleKAssocions1.create_k_seqs() == res1
-    assert PeopleKAssocions2.create_k_seqs() == res2
-    assert PeopleKAssocions3.create_k_seqs() == res3
-    assert PeopleKAssocions4.create_k_seqs() == res4
-    assert PeopleKAssocions6.create_k_seqs() == res2
-    assert PeopleKAssocions7.create_k_seqs() == res3
+
+def test_get_length():
+        """
+        Test the get_length function
+        :return:
+        """
+        assert peopleK1.get_sentences_len() == 5
+        assert peopleK2.get_sentences_len() == 5
+        assert peopleK3.get_sentences_len() == 5
+        assert peopleK4.get_sentences_len() == 0
+        assert peopleK5.get_sentences_len() == 0
+        assert peopleK6.get_sentences_len() == 0
+        assert peopleK7.get_sentences_len() == 2
+        assert peopleK8.get_sentences_len() == 2
+        assert peopleK9.get_sentences_len() == 2
+
 
 def test_get_names_appearances_idx():
-    res1 = {'aurelius dumbledore': [0, 2, 5, 9, 10, 11, 12, 14, 15, 17, 18, 19, 20, 21, 22, 24, 25], 'albus dumbledore': [0, 2, 5, 9, 10, 11, 12, 14, 15, 17, 18, 19, 20, 21, 22, 24, 25], 'harry potter': [5, 6, 7, 9, 10, 21, 24, 25, 30], 'aunt marge dursley': [5, 25, 26, 27, 29]}
-    res2 = {'igor karkaroff': [0, 1, 2, 3, 4, 5, 6]}
-    res3 = {'harry potter': [0, 4, 5], 'malcolm mcgonagall': [5, 7]}
-    res4 = {}
-
-    assert PeopleKAssocions1.get_names_appearances_idx() == res1
-    assert PeopleKAssocions2.get_names_appearances_idx() == res2
-    assert PeopleKAssocions3.get_names_appearances_idx() == res3
-    assert PeopleKAssocions4.get_names_appearances_idx() == res4
-    assert PeopleKAssocions6.get_names_appearances_idx() == res2
-    assert PeopleKAssocions7.get_names_appearances_idx() == res3
-
-def test_getLen():
-    assert PeopleKAssocions1.get_sentences_len() == 31
-    assert PeopleKAssocions2.get_sentences_len() == 7
-    assert PeopleKAssocions3.get_sentences_len() == 8
-    assert PeopleKAssocions4.get_sentences_len() == 8
-    assert PeopleKAssocions5.get_sentences_len() == 31
-    assert PeopleKAssocions6.get_sentences_len() == 7
-    assert PeopleKAssocions7.get_sentences_len() == 8
+    """
+    Tests whether get_names_appearances_idx returns the correct index
+    """
+    assert peopleK1.get_names_appearances_idx() == {'alix dan': [0, 2, 3], 'bagman sr': [3], 'ludo bagman': [3],
+                                                    'otto bagman': [3]}
+    assert peopleK2.get_names_appearances_idx() == {'malcolm baddock': [1], 'malcolm mcgonagall': [1]}
+    assert peopleK3.get_names_appearances_idx() == {}
+    assert peopleK4.get_names_appearances_idx() == {}
+    assert peopleK5.get_names_appearances_idx() == {}
+    assert peopleK6.get_names_appearances_idx() == {}
+    assert peopleK7.get_names_appearances_idx() == {}
+    assert peopleK8.get_names_appearances_idx() == {'harry potter': [0, 1], 'kathrin': [1]}
+    assert peopleK9.get_names_appearances_idx() == {}
 
 
-def test_json_write():
-    assert PeopleKAssocions1.write_to_json("text_analyzer/2_examples/Q5_examples/test1.json")
-    assert PeopleKAssocions2.write_to_json("text_analyzer/2_examples/Q5_examples/test2.json")
-    assert PeopleKAssocions3.write_to_json("text_analyzer/2_examples/Q5_examples/test3.json")
-    assert PeopleKAssocions4.write_to_json("text_analyzer/2_examples/Q5_examples/test4.json")
-    assert PeopleKAssocions6.write_to_json("text_analyzer/2_examples/Q5_examples/test6.json")
-    assert PeopleKAssocions7.write_to_json("text_analyzer/2_examples/Q5_examples/test7.json")
-    def load_json(file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    def compare_json(file1, file2):
-        """
-        Compares two json files after load them
-        :param file1: first json file
-        :param file2: second json file
-        :return: true if they are equal, false otherwise
-        """
-        try:
-            # Load both JSON files into dictionaries
-            data1 = load_json(file1)
-            data2 = load_json(file2)
-            # Compare the two dictionaries and return True if they are identical
-            return data1 == data2
-        except Exception as e:
-            print(f"Error comparing JSON files: {e}")
-            return False
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test1.json","text_analyzer/2_examples/Q5_examples/example_1/Q5_result1.json")
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test2.json","text_analyzer/2_examples/Q5_examples/example_2/Q5_result2.json")
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test3.json","text_analyzer/2_examples/Q5_examples/example_3/Q5_result3.json")
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test4.json","text_analyzer/2_examples/Q5_examples/example_4/Q5_result4.json")
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test6.json","text_analyzer/2_examples/Q5_examples/example_2/Q5_result2.json")
-    assert compare_json("text_analyzer/2_examples/Q5_examples/test7.json","text_analyzer/2_examples/Q5_examples/example_3/Q5_result3.json")
-
-
-
-
+def test_return_result():
+    """
+    Test the return value
+    in this cases we checked theat if people don't finde will not include in the result and
+    to check if min name is not shown and the other name was fined will be counted
+    :return:
+    """
+    res1 = ('{\n'
+            '    "Question 4": {\n'
+            '        "Person Contexts and K-Seqs": [\n'
+            '            [\n'
+            '                "alix dan",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "alix"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "alix",\n'
+            '                        "will"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "alix",\n'
+            '                        "will",\n'
+            '                        "known"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "alix",\n'
+            '                        "will",\n'
+            '                        "known",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "known"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "known",\n'
+            '                        "mathmtican"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "known",\n'
+            '                        "mathmtican",\n'
+            '                        "professor"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "known",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mallcom"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mallcom",\n'
+            '                        "will"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mallcom",\n'
+            '                        "will",\n'
+            '                        "known"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mallcom",\n'
+            '                        "will",\n'
+            '                        "known",\n'
+            '                        "mathmtican"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mathmtican"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mathmtican",\n'
+            '                        "professor"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "professor"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "will"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "will",\n'
+            '                        "known"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "will",\n'
+            '                        "known",\n'
+            '                        "mathmtican"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "will",\n'
+            '                        "known",\n'
+            '                        "mathmtican",\n'
+            '                        "professor"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "will",\n'
+            '                        "known",\n'
+            '                        "person"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                "bagman sr",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "bagman"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                "ludo bagman",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "bagman"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                "otto bagman",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "bagman"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "bagman",\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learned",\n'
+            '                        "from",\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "person"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "smarter",\n'
+            '                        "person"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res2 = ('{\n'
+            '    "Question 4": {\n'
+            '        "Person Contexts and K-Seqs": [\n'
+            '            [\n'
+            '                "malcolm baddock",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "malcolm"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he",\n'
+            '                        "learn"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he",\n'
+            '                        "learn",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn",\n'
+            '                        "from",\n'
+            '                        "malcolm"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "malcolm"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                "malcolm mcgonagall",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "from",\n'
+            '                        "malcolm"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he",\n'
+            '                        "learn"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "he",\n'
+            '                        "learn",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn",\n'
+            '                        "from"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "learn",\n'
+            '                        "from",\n'
+            '                        "malcolm"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "malcolm"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res3 = ('{\n'
+            '    "Question 4": {\n'
+            '        "Person Contexts and K-Seqs": []\n'
+            '    }\n'
+            '}')
+    res4 = ('{\n'
+            '    "Question 4": {\n'
+            '        "Person Contexts and K-Seqs": [\n'
+            '            [\n'
+            '                "harry potter",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "best"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "cathy"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "friend"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "harry"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "mallcom"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "was"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                "kathrin",\n'
+            '                [\n'
+            '                    [\n'
+            '                        "best"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "cathy"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "friend"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "harry"\n'
+            '                    ],\n'
+            '                    [\n'
+            '                        "was"\n'
+            '                    ]\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    assert peopleK1.return_results() == res1
+    assert peopleK2.return_results() == res2
+    assert peopleK3.return_results() == res3
+    assert peopleK4.return_results() == res3
+    assert peopleK5.return_results() == res3
+    assert peopleK6.return_results() == res3
+    assert peopleK7.return_results() == res3
+    assert peopleK8.return_results() == res4
+    assert peopleK9.return_results() == res3

@@ -14,15 +14,17 @@ class SearchEngine:
         """
         Initializes the SearchEngine with necessary paths to input files for questions, __sentences, and k-sequences.
         """
+        if not kSeqJson:
+            raise ValueError("The kSeqJson path must be provided.")
         self.__QNum = QNum
         self.__sentence_input_path = sentence_input_path
         self.__remove_input_path = remove_input_path
         self.__jsonInputFile = jsonInputFile
         self.__kSeqJson = kSeqJson
-        self.__kSeqData = self.load_kseq_data()
+        self.__kSeqData = self.__load_kseq_data()
         try:
             # Try to load k-seq data, and based on availability, load either JSON or raw data
-            self.load_kseq_data()
+            self.__load_kseq_data()
             if preprocessed:
                 self.__sentences, self.__names = load_Sentences_names(
                     json_file_path=jsonInputFile)  # Load preprocessed JSON file
@@ -32,9 +34,8 @@ class SearchEngine:
             else:
                 raise ValueError(
                     "Requires either jsonInputFile or sentence_input_path and remove_input_path to be availed")
-        except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)  # Exit program if there's an error
+        except (FileNotFoundError, PermissionError, TypeError, Exception,ValueError) as e:
+            raise e(f"Error: {e}")  # Handle any file-related or other errors
 
     def __buildGenralDataBase(self):
         """"
@@ -63,6 +64,8 @@ class SearchEngine:
     def search_in_supplied_text(self, data: list[str]) -> list[list[str]]:
         """
         Searches in the supplied text in o(1) complexity
+        :note this function is not needed but this function is a general search function
+        to search on full supplied text not only search keys
         :param data: list of sentences to search
         (this search if the supplied text in the text will return the lines were they found )
         :return: list of lines where each line is a sentence that contains the supplied text
@@ -73,12 +76,12 @@ class SearchEngine:
         else:
             return searchDictionary[tuple(data)]
 
-    def buildDataBaseForGivenKeys(self):
+    def __buildDataBaseForGivenKeys(self):
         """"
         Builds the database for the given keys
         time complexity : build O(lines_number * line_length**2)
         for search it tack O(1) in average case cause the data structure we use
-        is hash dictionary
+        is hash dictionary tun time complexity : O(1)
         :return : dictionary with all the keys and their corresponding lines
         """
         resDict = {tuple(key): []for key in self.__kSeqData}
@@ -100,10 +103,10 @@ class SearchEngine:
     def result_KseqData(self):
         """
         Builds the k-sequence based data
-
+        :return : dictionary with all the keys that appeared and their corresponding lines
         """
         res = {}
-        DataBase = self.buildDataBaseForGivenKeys()
+        DataBase = self.__buildDataBaseForGivenKeys()
         for value in self.__kSeqData:
             sub_seq = tuple(value)
             if sub_seq in DataBase:
@@ -138,23 +141,48 @@ class SearchEngine:
             ])
         return writeTojsonFile(filePath, result_dict)
 
-    def load_kseq_data(self) -> list[list[str]]:
+    def return_results(self) -> str:
+        """
+        Return the results of the search of key to json file
+        :return: string represent the results of the sequences in json format
+        """
+        result_dict = {
+            f"Question {self.__QNum}": {
+                "K-Seq Matches": []
+            }
+        }
+        # Prepare the data to be written
+        for seq, sentences in self.result_KseqData().items():
+            if not sentences:
+                continue
+            sequence_key = ' '.join(seq)  # Convert tuple to string for the key
+            result_dict[f"Question {self.__QNum}"]["K-Seq Matches"].append([
+                sequence_key,  # The sequence as a string
+                sentences  # The list of __sentences that match the sequence
+            ])
+        json_data = json.dumps(result_dict, indent=4)
+        return json_data
+
+    def __load_kseq_data(self) -> list[list[str]]:
         """
         Loads k-sequence data from a JSON file and processes it by cleaning up words and removing punctuation.
+        :return: A list of cleaned sentences (as lists of words)
         """
         try:
+            # Open the file and load its content
             with open(self.__kSeqJson, 'r', encoding='utf-8') as f:
                 data = json.load(f)  # Load the data from the JSON file
                 keys = data.get('keys', [])  # Extract the 'keys' field
                 availedData = []  # List to store cleaned __sentences
+
+                # Clean each sentence by processing the words
                 for sentence in keys:
                     # Clean each word in the sentence by removing punctuation and extra spaces
                     cleaned_sentence = [process_sentence(word) for word in sentence if word.strip()]
                     if cleaned_sentence:
                         availedData.append(cleaned_sentence)  # Add cleaned sentence to the result list
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"The file {self.__kSeqJson} was not found.")  # Raise specific error if file is not found
+            raise FileNotFoundError(f"The file {self.__kSeqJson} was not found.")
         except json.JSONDecodeError:
             raise json.JSONDecodeError(
                 f"The file {self.__kSeqJson} is not a valid JSON file.")  # Error if JSON is invalid
@@ -163,10 +191,11 @@ class SearchEngine:
         except Exception as e:
             raise Exception(
                 f"An error occurred while loading preprocessed data: {str(e)}")  # Catch any other unexpected errors
-        return availedData
 
-    def getSentences(self):
-        return self.__sentences
+        return availedData  # Return the cleaned k-sequences
+
+
+
 
 if __name__ == "__main__":
     searchEngine1 = SearchEngine(4,
@@ -202,4 +231,3 @@ if __name__ == "__main__":
                                  kSeqJson="text_analyzer/2_examples/Q4_examples/example_3/kseq_query_keys_3.json")
 
     # print(searchEngine4.write_to_json("q4_result1.json"))
-    print(searchEngine4.load_kseq_data())
