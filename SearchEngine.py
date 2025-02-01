@@ -1,8 +1,8 @@
 import json
 import os
-import sys
 import typing
-from Parser import writeTojsonFile, process_sentence
+
+from Parser import process_sentence
 from SequinceCounter import load_Sentences_names, load_data
 
 
@@ -34,7 +34,7 @@ class SearchEngine:
             else:
                 raise ValueError(
                     "Requires either jsonInputFile or sentence_input_path and remove_input_path to be availed")
-        except (FileNotFoundError, PermissionError, TypeError, Exception,ValueError) as e:
+        except (FileNotFoundError, PermissionError, TypeError, Exception, ValueError) as e:
             raise e(f"Error: {e}")  # Handle any file-related or other errors
 
     def __buildGenralDataBase(self):
@@ -84,7 +84,7 @@ class SearchEngine:
         is hash dictionary tun time complexity : O(1)
         :return : dictionary with all the keys and their corresponding lines
         """
-        resDict = {tuple(key): []for key in self.__kSeqData}
+        resDict = {tuple(key): [] for key in self.__kSeqData}
         # Iterate through each sentence in the list
         for sentence in self.__sentences:  # O(len(sentence))
             # Iterate through all possible subsequences of the sentence
@@ -117,29 +117,6 @@ class SearchEngine:
         for key in sorted_res_dict:
             sorted_res_dict[key] = sorted(sorted_res_dict[key], key=lambda x: x)
         return sorted_res_dict
-
-    def write_to_json(self, filePath: typing.Union[os.PathLike, str]) -> bool:
-        """
-        Writes the sequence matches to a JSON file.
-        :param filePath: path to the JSON file to save the results to
-        :return: True if the file was successfully written, False otherwise
-        """
-        result_dict = {
-            f"Question {self.__QNum}": {
-                "K-Seq Matches": []
-            }
-        }
-
-        # Prepare the data to be written
-        for seq, sentences in self.result_KseqData().items():
-            if not sentences:
-                continue
-            sequence_key = ' '.join(seq)  # Convert tuple to string for the key
-            result_dict[f"Question {self.__QNum}"]["K-Seq Matches"].append([
-                sequence_key,  # The sequence as a string
-                sentences  # The list of __sentences that match the sequence
-            ])
-        return writeTojsonFile(filePath, result_dict)
 
     def return_results(self) -> str:
         """
@@ -193,8 +170,6 @@ class SearchEngine:
                 f"An error occurred while loading preprocessed data: {str(e)}")  # Catch any other unexpected errors
 
         return availedData  # Return the cleaned k-sequences
-
-
 
 
 if __name__ == "__main__":

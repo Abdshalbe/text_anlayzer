@@ -2,7 +2,6 @@ import json
 import os
 import typing
 from PeopleKAssociations import PeopleKAssociations
-from Parser import writeTojsonFile
 
 
 class Node:
@@ -106,36 +105,6 @@ class PeopleConnectionGraph(PeopleKAssociations):
         self.__question_number = QNum  # Initialize the question number attribute
         self.__graph = self.__build_people_graph()
 
-    def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
-        """
-        Write the __graph __edges to a JSON file with the required format.
-        :param filePath: path to JSON file to save the results to
-        :return: True if the file was successfully written, False otherwise
-        """
-
-        def format_edges(edges: list[Node]) -> list[str | list[str]]:
-            """
-            Converts the __edges from tuples of names to lists of names, formatted as required.
-            This method ensures that __edges are in a fixed order.
-            :param edges: List of tuples representing the __edges
-            :return: List of lists representing the __edges
-            """
-            formatted_edges = []
-            for edge in edges:
-                person1, person2 = edge
-                # Ensure the format is a list of individual words for each data in the edge
-                formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
-            # Sort __edges to ensure the order is as required in the question
-            formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
-            return formatted_edges
-
-        data = {
-            f"Question {self.__question_number}": {  # Use the corrected attribute node_data
-                "Pair Matches": format_edges(self.__graph.get_edges())
-            }
-        }
-        return writeTojsonFile(filePath, data)
-
     def return_results(self) -> str:
         """
         Return the results of the connection graph to json file
@@ -228,9 +197,3 @@ class PeopleConnectionGraph(PeopleKAssociations):
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e("error")
 
-if __name__ == "__main__":
-    graph = Graph()
-    graph.add_node("111")
-    graph2 = Graph()
-    graph2.add_node("111")
-    print(graph==graph2)

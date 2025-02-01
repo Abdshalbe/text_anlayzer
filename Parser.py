@@ -89,25 +89,6 @@ def convert_to_nested_format(input_dict: dict[str:list[str]]) -> list[list[str]]
     return result
 
 
-def writeTojsonFile(filePath: str | os.PathLike, data: typing.Any) -> bool:
-    """
-    Writes the file to the json file with the given path
-    :param data:
-    :param filePath: os path where the file is to be written
-    :return:
-    """
-    try:
-        with open(filePath, 'w', encoding='utf-8') as f:
-            # Try to write the data to the file
-            json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"File {filePath} written successfully.")
-    except (FileNotFoundError, PermissionError, IOError) as e:
-        # Handle file errors
-        print(f"Failed to open or write to the file {filePath}. Error: {str(e)}")
-        return False
-    return True
-
-
 def validate_file_path(file_path: str, description: str) -> str:
     """
     Check if the file_path is a non-empty string
@@ -213,6 +194,8 @@ class Parser:
             return {}
         peopleList = self.__readPeopleFile(self.__PeopleInputPath)
         for person in peopleList:
+            if len(person) == 0:
+                continue
             mainName = self.__removeUnwantedWords(process_sentence(person[0]))
             if mainName not in namesDict and mainName != "":
                 namesDict[mainName] = []
@@ -247,18 +230,6 @@ class Parser:
                         pass
                     resList.append(row)
         return resList
-
-    def write_result_to_json(self, filePath: str) -> bool:
-        data = {
-            "Question 1": {
-                "Processed Sentences": self.__Sentences,
-                "Processed Names": convert_to_nested_format(self.__People)
-            }
-        }
-        if writeTojsonFile(filePath, data):
-            return True
-        else:
-            return False
 
     def return_results(self) -> str:
         """
@@ -312,8 +283,3 @@ if __name__ == '__main__':
                             sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_3/sentences_small_3.csv",
                             removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
     # print(preprocessor_2.write_result_to_json("11.json"))
-    print(preprocessor_3.write_result_to_json("1.json"))
-
-
-
-

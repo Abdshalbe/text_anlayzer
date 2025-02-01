@@ -173,7 +173,8 @@ people_names1 = [
     ['Millicent Bagnold', ''],
     ['Bathilda Bagshot', 'batty'],
     ['Kquewanda Bailey', ''],
-    ['Ballyfumble Stranger', 'quin , quivering quintus , quintusofthesillyname']
+    ['Ballyfumble Stranger', 'quin , quivering quintus , quintusofthesillyname'],['on a he','']
+
 ]
 # check remove whits space
 people_names2 = [

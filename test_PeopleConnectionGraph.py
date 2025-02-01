@@ -191,6 +191,12 @@ names1 = [['Over-Attentive Wizard', ''], ['Bertram Aubrey', ''],
     , ['Harry Potter',
        '"The boy who lived, Undesirable Number One, the Chosen One, Parry Otter, the Chosen Boy, the Mudbloods friend"']
     , ['Aberforth Dumbledore', '']]
+names2 = [['Ballyfumble Stranger', '"Quin, Quivering Quintus, Quintus-Of-The-Silly-Name"']
+    , ['Harry Potter',
+       '"The boy who lived, Undesirable Number One, the Chosen One, Parry Otter, the Chosen Boy, the Mudbloods friend"']
+    , ['Aberforth Dumbledore', '']]
+data_text2 = [['Dumbledore has been born in the same day Quin born'], ['they born on January 16th'],
+              ['Quivering Quintus marred Dumbledore after 20 years']]
 words_to_remove = [
     ['a'], ['about'], ['above'], ['actual'], ['after'], ['again'], ['against'], ['all'], ['alreadi'], ['also'],
     ['alway'], ['am'], ['amp'], ['an'], ['and'], ['ani'], ['anoth'], ['any'], ['anyth'], ['are'], ['around'],
@@ -225,6 +231,7 @@ words_to_remove = [
     ['o'], ['p'], ['k'], ['r'], ['s'], ['t'], ['u'], ['v'], ['w'], ['x'], ['u'], ['z'], ['mr'], ['miss'], ['mrs'],
     ['ms']
 ]
+
 people_names1_file = create_temp_csv(names_list1, ["Name", "Other Names"])
 people_names2_file = create_temp_csv(names_list2, ["Name", "Other Names"])
 people_names3_file = create_temp_csv(names_list3, ["Name", "Other Names"])
@@ -235,6 +242,8 @@ csv_remved = create_temp_csv(remvoe_words, ["words"])
 
 dataSentence1 = create_temp_csv_with_data(data_text, ['sentence'])
 data_names_csv = create_temp_csv_with_data(names1, ['Name', 'Other Names'])
+dataSentence2 = create_temp_csv_with_data(data_text2, ['sentence'])
+data_names_csv2 = create_temp_csv_with_data(names2, ['Name', 'Other Names'])
 datawords = create_temp_csv_with_data(words_to_remove, ['words'])
 parsered_json = process_json_data(Parser(1, dataSentence1, datawords, data_names_csv).return_results())
 
@@ -269,6 +278,8 @@ graph16 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_inp
 graph17 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names3_file,
                                 remove_input_path=datawords, Threshold=1, WindowSize=1)
 graph18 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names2_file,
+                                remove_input_path=datawords, Threshold=2, WindowSize=2)
+graph19 = PeopleConnectionGraph(6, sentence_input_path=dataSentence2, people_input_path=data_names_csv2,
                                 remove_input_path=datawords, Threshold=2, WindowSize=2)
 
 
@@ -426,6 +437,22 @@ def test_result():
             '        ]\n'
             '    }\n'
             '}')
+    res5 = ('{\n'
+            '    "Question 6": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "ballyfumble",\n'
+            '                    "stranger"\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
     assert graph1.return_results() == res1
     assert graph3.return_results() == res1
     assert graph5.return_results() == res2
@@ -441,3 +468,4 @@ def test_result():
     assert graph16.return_results() == res3
     assert graph17.return_results() == res3
     assert graph18.return_results() == res3
+    assert graph19.return_results() == res5  # check only nickname appear

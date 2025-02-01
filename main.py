@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from Parser import Parser
 from NamesCounter import NamesCounter
 from PeopleKAssociations import PeopleKAssociations
@@ -22,25 +21,31 @@ def readargs(args=None):
                         )
     parser.add_argument('-s', '--sentences',
                         help="Sentence file path",
+                        default=None
                         )
     parser.add_argument('-n', '--names',
                         help="Names file path",
+                        default=None
                         )
     parser.add_argument('-r', '--removewords',
                         help="Words to remove file path",
+                        default=None
                         )
     parser.add_argument('-p', '--preprocessed',
                         action='append',
                         help="json with preprocessed data",
+                        default=False
                         )
     # Task specific arguments
     parser.add_argument('--maxk',
                         type=int,
                         help="Max k",
+                        default=None
                         )
     parser.add_argument('--fixed_length',
                         type=int,
                         help="fixed length to find",
+                        default=-1
                         )
     parser.add_argument('--windowsize',
                         type=int,
@@ -67,137 +72,109 @@ def readargs(args=None):
 def main():
     args = readargs()
     try:
-        if args.task == 1:
+        print(args.task)
+        if args.task == '1':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
-            preProcessor = Parser(QuestionNumber=args.task,
+            preProcessor = Parser(QuestionNumber=int(args.task),
                                   sentenceInputPath=args.sentences,
                                   removeInputPath=args.removewords,
                                   peopleInputPath=args.names)
-            # Call the write_result_to_json method and check the result
-            if preProcessor.write_result_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
+            # Call the write_result method and check the result
+            result = preProcessor.return_results()
+            print(result)  # Print the result
+        elif args.task == '2':
+            print(f"Running Task {args.task}...")
+            # Initialize the preprocessor
+            if not isinstance(int(args.maxk), int) or int(args.maxk) < 0:
+                raise ValueError("maxk must be a positive integer")
+            if args.preprocessed:
+                sequinceCounter = SequinceCounter(args.task, json_input_path=args.preprocessed, preprocessed=True, N=int(args.maxk))
             else:
-                print("Failed to write result.")
+                sequinceCounter = SequinceCounter(args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, N=int(args.maxk))
+            result = sequinceCounter.return_results()
+            print(result)
 
-        elif args.task == 2:
+        elif args.task == '3':
+            print(f"Running Task {args.task}...")
+            if args.preprocessed:
+                name_counter = NamesCounter(args.task, json_input_path=args.preprocessed, preprocessed=True)
+            else:
+                name_counter = NamesCounter(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, people_input_path=args.names)
+            result = name_counter.return_results()
+            print(result)  # Print the result
+        elif args.task == '4':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
-                sequinceCounter = SequinceCounter(args.task, json_input_path=args.preprocessed,preprocessed=True,N=args.maxk)
+                searchEngine = SearchEngine(QNum=args.task, jsonInputFile=args.preprocessed, preprocessed=True, kSeqJson=args.qsek_query_path)
             else:
-                sequinceCounter = SequinceCounter(args.task,sentence_input_path=args.sentences,remove_input_path=args.removewords,N=args.maxk)
-            # Call the write_result_to_json method and check the result
-            result = sequinceCounter.write_result_to_json(f"finalProject/Q{args.task}_result.json")
-            if result:
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
+                searchEngine = SearchEngine(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, kSeqJson=args.qsek_query_path)
+            result = searchEngine.return_results()
+            print(result)  # Print the result
 
-        elif args.task == 3:
-            print(f"Running Task {args.task}...")
-            if args.preprocessed:
-                name_counter = NamesCounter(args.task, json_input_path=args.preprocessed,preprocessed=True)
-            else:
-                name_counter = NamesCounter(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords ,people_input_path=args.names)
-            # Call the write_result_to_json method and check the result
-            if name_counter.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
-
-        if args.task == 4:
-            print(f"Running Task {args.task}...")
-            # Initialize the preprocessor
-            if args.preprocessed:
-                searchEngine = SearchEngine(QNum=args.task,jsonInputFile=args.preprocessed,preprocessed=True,kSeqJson=args.qsek_query_path)
-            else:
-                searchEngine = SearchEngine(QNum=args.task,
-                                               sentence_input_path=args.sentences,
-                                               remove_input_path=args.removewords,kSeqJson=args.qsek_query_path)
-            # Call the write_result_to_json method and check the result
-            if searchEngine.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
-        if args.task == 5:
+        elif args.task == '5':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
                 people_ascions = PeopleKAssociations(QNum=args.task, json_input_path=args.preprocessed, preprocessed=True, N=args.maxk)
             else:
-                people_ascions = PeopleKAssociations(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, N=args.maxk)
-            if people_ascions.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
+                people_ascions = PeopleKAssociations(QNum=args.task, sentence_input_path=args.sentences, remove_input_path=args.removewords, people_input_path=args.names, N=args.maxk)
+            result = people_ascions.return_results()
+            print(result)  # Print the result
 
-        if args.task == 6:
+        elif args.task == '6':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
-                graph = PeopleConnectionGraph(QNum=args.task, jsonInputFile=args.preprocessed, preprocessed=True,
-                                                  WindowSize=args.windowsize, Threshold=args.threshold)
+                graph = PeopleConnectionGraph(QNum=args.task, jsonInputFile=args.preprocessed, preprocessed=True, WindowSize=args.windowsize, Threshold=args.threshold)
             else:
                 graph = PeopleConnectionGraph(QNum=args.task, sentence_input_path=args.sentences,
-                                                  remove_input_path=args.removewords,people_input_path=args.names ,WindowSize=args.windowsize, Threshold=args.threshold)
-            # Call the write_result_to_json method and check the result
-            if graph.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
+                                                  remove_input_path=args.removewords, people_input_path=args.names, WindowSize=args.windowsize, Threshold=args.threshold)
+            result = graph.return_results()
+            print(result)  # Print the result
 
-        if args.task == 7:
+        elif args.task == '7':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
-                connectionGraph = CheckConnection(QNum=args.task, Maximal_distance= args.maximal_distance,jsonInputFile=args.preprocessed,preprocessed=True,People_connections_to_check=args.pairs)
+                connectionGraph = CheckConnection(QNum=args.task, Maximal_distance=args.maximal_distance, jsonInputFile=args.preprocessed, preprocessed=True, People_connections_to_check=args.pairs)
             else:
-                connectionGraph = CheckConnection(QNum=args.task,Maximal_distance= args.maximal_distance, sentence_input_path=args.sentences,remove_input_path=args.removewords,people_input_path=args.names ,WindowSize=args.windowsize, Threshold=args.threshold,People_connections_to_check=args.pairs)
-            # Call the write_result_to_json method and check the result
+                connectionGraph = CheckConnection(QNum=args.task, Maximal_distance=args.maximal_distance, sentence_input_path=args.sentences, remove_input_path=args.removewords, people_input_path=args.names, WindowSize=args.windowsize, Threshold=args.threshold, People_connections_to_check=args.pairs)
+            result = connectionGraph.return_results()
+            print(result)  # Print the result
 
-            if connectionGraph.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
-
-        if args.task == 8:
+        elif args.task == '8':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
                 connectionGraph = CheckConnection(QNum=args.task, k=args.k,
                                                   jsonInputFile=args.preprocessed, preprocessed=True,
-                                                  People_connections_to_check=args.pairs,fixed_length=True)
+                                                  People_connections_to_check=args.pairs, fixed_length=True)
             else:
-                connectionGraph = CheckConnection(QNum=args.task,k=args.k,
+                connectionGraph = CheckConnection(QNum=args.task, k=args.k,
                                                   sentence_input_path=args.sentences,
                                                   remove_input_path=args.removewords, people_input_path=args.names,
                                                   WindowSize=args.windowsize, Threshold=args.threshold,
-                                                  People_connections_to_check=args.pairs,fixed_length=True)
-            # Call the write_result_to_json method and check the result
+                                                  People_connections_to_check=args.pairs, fixed_length=True)
+            result = connectionGraph.return_results()
+            print(result)  # Print the result
 
-            if connectionGraph.write_to_json(f"finalProject/Q{args.task}_result.json"):
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
-        if args.task == 9:
+        elif args.task == '9':
             print(f"Running Task {args.task}...")
             # Initialize the preprocessor
             if args.preprocessed:
                 sentences_graph = SentenceGraph(question_number=args.task,
-                                                json_input_path=args.preprocessed,preprocessed=True,threshold=args.threshold)
+                                                json_input_path=args.preprocessed, preprocessed=True, threshold=args.threshold)
             else:
                 sentences_graph = SentenceGraph(question_number=args.task,
                                                sentence_input_path=args.sentences,
-                                               remove_input_path=args.removewords,threshold=args.threshold)
-            # Call the write_result_to_json method and check the result
-            result = sentences_graph.write_to_json(f"finalProject/Q{args.task}_result.json")
-            if result:
-                print(f"Result successfully written to Q{args.task}_result.json")
-            else:
-                print("Failed to write result.")
+                                               remove_input_path=args.removewords, threshold=args.threshold)
+            result = sentences_graph.return_results()
+            print(result)  # Print the result
+
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Invalid: {e}")
         return 1  # Return 1 on failure
 
 

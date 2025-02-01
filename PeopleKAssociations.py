@@ -1,10 +1,9 @@
 import json
 import os
-import sys
 import typing
 
 from NamesCounter import NamesCounter
-from Parser import writeTojsonFile
+from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
 from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
 
 
@@ -72,19 +71,6 @@ class PeopleKAssociations:
             return res
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e("error")
-
-    def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
-        """
-        try to write to a json file the results of the class NamesCounter
-        :param filePath: path to json file to save the results to
-        :return: True if the file was successfully written, False otherwise
-        """
-        data = {
-            f"Question {self.__question_number}": {
-                "Person Contexts and K-Seqs": self.create_k_seqs()
-            }
-        }
-        return writeTojsonFile(filePath, data)
 
     def return_results(self) -> str:
         """

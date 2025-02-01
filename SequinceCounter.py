@@ -168,6 +168,8 @@ class SequinceCounter:
         }
         json_data = json.dumps(data, indent=4)
         return json_data
+
+
 if __name__ == '__main__':
     SEQUENCE_COUNTER1 = SequinceCounter(2,
                                         sentence_input_path="text_analyzer/2_examples/Q2_examples/example_1"

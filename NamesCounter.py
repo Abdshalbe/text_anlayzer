@@ -1,7 +1,6 @@
 import json
 import os
 import typing
-from Parser import writeTojsonFile
 from SequinceCounter import load_Sentences_names, load_data
 
 
@@ -33,7 +32,7 @@ class NamesCounter:
                 raise ValueError(
                     "either json_input_path or remove_input_path and sentence_input_path or people_input_path must be "
                     "provided")
-        except (FileNotFoundError, PermissionError, TypeError, Exception,ValueError) as e:
+        except (FileNotFoundError, PermissionError, TypeError, Exception, ValueError) as e:
             raise e(f"Error: {e}")  # Handle any file-related or other errors
 
     def __build_names_dictionary(self) -> dict[str, list[str]]:
@@ -89,20 +88,6 @@ class NamesCounter:
                                 names_appear_lines[name] = [index]
         return counter, names_appear_lines
 
-    def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
-        """
-        try to write to a json file the results of the class NamesCounter
-        :param filePath: path to json file to save the results to
-        :return: True if the file was successfully written, False otherwise
-        """
-        names_counter, _ = self.count_names()
-        data = {
-            f"Question {self.__QNum}": {
-                "Name Mentions": sorted([[key, names_counter[key]] for key in names_counter.keys()])
-            }
-        }
-        return writeTojsonFile(filePath, data)
-
     def return_results(self) -> str:
         """
         return the results of the class NamesCounter after count the names
@@ -149,5 +134,3 @@ if __name__ == '__main__':
                                   people_input_path="text_analyzer/2_examples/Q3_examples/example_4/people_small_4.csv",
                                   remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
                                   sentence_input_path="text_analyzer/2_examples/Q3_examples/example_4/sentences_small_4.csv")
-
-    print(NAMES_COUNTER7.write_to_json('1.json'))
