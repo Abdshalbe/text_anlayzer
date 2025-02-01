@@ -54,6 +54,7 @@ class Graph:
     Graph class to represent the graph structure
     nodes is ether a list of str or str
     """
+
     def __init__(self):
         self.__nodes = {}
         self.__edges = []
@@ -77,11 +78,17 @@ class Graph:
         else:
             return self.__nodes.get(data)
 
-    def get_edge(self) -> list[Node]:
+    def get_edges(self) -> list[Node]:
         return self.__edges
+
+    def get_nodes(self) -> dict[str,Node]:
+        return self.__nodes
 
     def __repr__(self) -> str:
         return str(self.__nodes)
+
+    def __eq__(self, other: "Graph") -> bool:
+        return isinstance(other, Graph) and self.__nodes == other.get_nodes() and self.__edges == other.get_edges()
 
 
 class PeopleConnectionGraph(PeopleKAssociations):
@@ -97,7 +104,7 @@ class PeopleConnectionGraph(PeopleKAssociations):
         self.__windowSize = WindowSize
         self.__Threshold = Threshold
         self.__question_number = QNum  # Initialize the question number attribute
-        self.__graph = self.build_people_graph()
+        self.__graph = self.__build_people_graph()
 
     def write_to_json(self, filePath: typing.Union[os, str]) -> bool:
         """
@@ -105,6 +112,7 @@ class PeopleConnectionGraph(PeopleKAssociations):
         :param filePath: path to JSON file to save the results to
         :return: True if the file was successfully written, False otherwise
         """
+
         def format_edges(edges: list[Node]) -> list[str | list[str]]:
             """
             Converts the __edges from tuples of names to lists of names, formatted as required.
@@ -120,9 +128,10 @@ class PeopleConnectionGraph(PeopleKAssociations):
             # Sort __edges to ensure the order is as required in the question
             formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
             return formatted_edges
+
         data = {
             f"Question {self.__question_number}": {  # Use the corrected attribute node_data
-                "Pair Matches": format_edges(self.__graph.get_edge())
+                "Pair Matches": format_edges(self.__graph.get_edges())
             }
         }
         return writeTojsonFile(filePath, data)
@@ -132,6 +141,7 @@ class PeopleConnectionGraph(PeopleKAssociations):
         Return the results of the connection graph to json file
         :return: string represent the results of the connection graph  in json format
         """
+
         def format_edges(edges: list[Node]) -> list[str | list[str]]:
             """
             Converts the __edges from tuples of names to lists of names, formatted as required.
@@ -150,7 +160,7 @@ class PeopleConnectionGraph(PeopleKAssociations):
 
         data = {
             f"Question {self.__question_number}": {  # Use the corrected attribute node_data
-                "Pair Matches": format_edges(self.__graph.get_edge())
+                "Pair Matches": format_edges(self.__graph.get_edges())
             }
         }
 
@@ -165,7 +175,8 @@ class PeopleConnectionGraph(PeopleKAssociations):
         """
         try:
             personMetsCounter = {
-                person: {otherPerson: 0 for otherPerson in self.get_names_appearances_idx().keys() if person != otherPerson}
+                person: {otherPerson: 0 for otherPerson in self.get_names_appearances_idx().keys() if
+                         person != otherPerson}
                 for person in self.get_names_appearances_idx().keys()}
             # Get the appearance indices of each data
             names_appearances_idx = self.get_names_appearances_idx()
@@ -189,7 +200,14 @@ class PeopleConnectionGraph(PeopleKAssociations):
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e("error")
 
-    def build_people_graph(self) -> Graph:
+    def get_graph(self) -> Graph:
+        """
+        This method is used to get the graph of the people connections
+        :return: graph OF people connections between the people connections
+        """
+        return self.__graph
+
+    def __build_people_graph(self) -> Graph:
         """
         Build a __graph based on the main dictionary, where __edges are added if the meeting frequency (c_ij) is >=
         __Threshold. :return: A Graph object with the constructed __nodes and __edges.
@@ -209,3 +227,10 @@ class PeopleConnectionGraph(PeopleKAssociations):
             return people_graph
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e("error")
+
+if __name__ == "__main__":
+    graph = Graph()
+    graph.add_node("111")
+    graph2 = Graph()
+    graph2.add_node("111")
+    print(graph==graph2)

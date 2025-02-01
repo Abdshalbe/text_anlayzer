@@ -52,8 +52,8 @@ class TestGraph:
         graph.add_edge("node1", "node2")
 
         # Assert that the edge exists
-        assert len(graph.get_edge()) == 1
-        edge = graph.get_edge()[0]
+        assert len(graph.get_edges()) == 1
+        edge = graph.get_edges()[0]
         assert edge[0].get_data() == "node1"
         assert edge[1].get_data() == "node2"
 
@@ -63,9 +63,9 @@ class TestGraph:
         graph.add_edge("node2", "node3")
 
         # Assert the edges are sorted correctly
-        assert graph.get_edge()[0][0].get_data() == "node1"
-        assert graph.get_edge()[1][0].get_data() == "node1"
-        assert graph.get_edge()[2][0].get_data() == "node2"
+        assert graph.get_edges()[0][0].get_data() == "node1"
+        assert graph.get_edges()[1][0].get_data() == "node1"
+        assert graph.get_edges()[2][0].get_data() == "node2"
 
     def test_node_str_repr(self):
         # Test __str__ and __repr__ methods for Node
@@ -95,8 +95,8 @@ class TestGraph:
         graph.add_edge("node2", "node1")  # Duplicate edge
 
         # Assert that the edge is added only once
-        assert len(graph.get_edge()) == 1
-        edge = graph.get_edge()[0]
+        assert len(graph.get_edges()) == 1
+        edge = graph.get_edges()[0]
         assert edge[0].get_data() == "node1"
         assert edge[1].get_data() == "node2"
 
@@ -112,7 +112,7 @@ class TestGraph:
         graph.add_edge("node2", "node3")
 
         # Ensure that edges are sorted by the first node's data
-        edges = graph.get_edge()
+        edges = graph.get_edges()
         assert edges[0][0].get_data() == "node1"
         assert edges[1][0].get_data() == "node2"
 
@@ -225,39 +225,219 @@ words_to_remove = [
     ['o'], ['p'], ['k'], ['r'], ['s'], ['t'], ['u'], ['v'], ['w'], ['x'], ['u'], ['z'], ['mr'], ['miss'], ['mrs'],
     ['ms']
 ]
+people_names1_file = create_temp_csv(names_list1, ["Name", "Other Names"])
+people_names2_file = create_temp_csv(names_list2, ["Name", "Other Names"])
+people_names3_file = create_temp_csv(names_list3, ["Name", "Other Names"])
+csv_sentence1 = create_temp_csv(text1, ["sentence"])
+csv_sentence2 = create_temp_csv(text2, ["sentence"])
+csv_sentence3 = create_temp_csv(text3, ["sentence"])
+csv_remved = create_temp_csv(remvoe_words, ["words"])
 
 dataSentence1 = create_temp_csv_with_data(data_text, ['sentence'])
 data_names_csv = create_temp_csv_with_data(names1, ['Name', 'Other Names'])
 datawords = create_temp_csv_with_data(words_to_remove, ['words'])
 parsered_json = process_json_data(Parser(1, dataSentence1, datawords, data_names_csv).return_results())
 
+graph1 = PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=2, Threshold=2)
+graph2 = PeopleConnectionGraph(6, sentence_input_path=dataSentence1, people_input_path=data_names_csv,
+                               remove_input_path=datawords, Threshold=2, WindowSize=2)
+graph3 = PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=7, Threshold=3)
+graph4 = PeopleConnectionGraph(6, sentence_input_path=dataSentence1, people_input_path=data_names_csv,
+                               remove_input_path=datawords, Threshold=3, WindowSize=7)
+graph5 = PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=1, Threshold=5)
+graph6 = PeopleConnectionGraph(6, sentence_input_path=dataSentence1, people_input_path=data_names_csv,
+                               remove_input_path=datawords, Threshold=5, WindowSize=1)
+graph7 = PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=31, Threshold=2)
+graph8 = PeopleConnectionGraph(6, sentence_input_path=dataSentence1, people_input_path=data_names_csv,
+                               remove_input_path=datawords, Threshold=2, WindowSize=31)
+graph9 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names1_file,
+                               remove_input_path=datawords, Threshold=3, WindowSize=3)
+graph10 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names1_file,
+                                remove_input_path=datawords, Threshold=4, WindowSize=7)
+graph11 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names1_file,
+                                remove_input_path=datawords, Threshold=1, WindowSize=1)
+graph12 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names2_file,
+                                remove_input_path=datawords, Threshold=2, WindowSize=2)
+graph13 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names2_file,
+                                remove_input_path=datawords, Threshold=7, WindowSize=2)
+graph14 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names2_file,
+                                remove_input_path=datawords, Threshold=1, WindowSize=3)
+graph15 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names3_file,
+                                remove_input_path=datawords, Threshold=1, WindowSize=4)
+graph16 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names3_file,
+                                remove_input_path=datawords, Threshold=3, WindowSize=2)
+graph17 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names3_file,
+                                remove_input_path=datawords, Threshold=1, WindowSize=1)
+graph18 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names2_file,
+                                remove_input_path=datawords, Threshold=2, WindowSize=2)
+
 
 def test_equal_csr():
-    assert PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=2,
-                                 Threshold=2).return_results() == PeopleConnectionGraph(6,
-                                                                                        sentence_input_path=dataSentence1,
-                                                                                        people_input_path=data_names_csv,
-                                                                                        remove_input_path=datawords,
-                                                                                        Threshold=2,
-                                                                                        WindowSize=2).return_results()
-    assert PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=2,
-                                 Threshold=2).return_results() == PeopleConnectionGraph(6,
-                                                                                        sentence_input_path=dataSentence1,
-                                                                                        people_input_path=data_names_csv,
-                                                                                        remove_input_path=datawords,
-                                                                                        Threshold=2,
-                                                                                        WindowSize=2).return_results()
-    assert PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=1,
-                                 Threshold=3).return_results() == PeopleConnectionGraph(6,
-                                                                                        sentence_input_path=dataSentence1,
-                                                                                        people_input_path=data_names_csv,
-                                                                                        remove_input_path=datawords,
-                                                                                        Threshold=3,
-                                                                                        WindowSize=1).return_results()
-    assert PeopleConnectionGraph(6, jsonInputFile=parsered_json, preprocessed=True, WindowSize=2,
-                                 Threshold=2).return_results() == PeopleConnectionGraph(6,
-                                                                                        sentence_input_path=dataSentence1,
-                                                                                        people_input_path=data_names_csv,
-                                                                                        remove_input_path=datawords,
-                                                                                        Threshold=2,
-                                                                                        WindowSize=2).return_results()
+    """
+    Test that two CSRs are equal to each other if the data is equal
+    """
+    assert graph2.return_results() != graph5.return_results()
+    assert graph8.return_results() != graph6.return_results()
+    assert graph3.return_results() != graph7.return_results()
+    assert graph1.return_results() == graph2.return_results()
+    assert graph3.return_results() == graph4.return_results()
+    assert graph5.return_results() == graph6.return_results()
+    assert graph7.return_results() == graph8.return_results()
+
+
+def test_build_graph():
+    """
+    Test that two graphs with empty inputs return empty graph
+    """
+    empty_graph = Graph()
+    assert graph17.get_graph() == empty_graph
+    assert graph16.get_graph() == empty_graph
+    assert graph15.get_graph() == empty_graph
+    assert graph13.get_graph() == empty_graph
+    assert graph11.get_graph() == empty_graph
+    assert graph10.get_graph() == empty_graph
+
+
+def test_result():
+    """
+    Test that the result of the graph is correct and sorted as should
+    IN THIS TEst i tested many cases "people counted once for every window" and
+    other cases like empty file and sorted result
+    """
+    res1 = ('{\n'
+            '    "Question 6": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "aunt",\n'
+            '                    "marge",\n'
+            '                    "dursley"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "harry",\n'
+            '                    "potter"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aunt",\n'
+            '                    "marge",\n'
+            '                    "dursley"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aunt",\n'
+            '                    "marge",\n'
+            '                    "dursley"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "harry",\n'
+            '                    "potter"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "harry",\n'
+            '                    "potter"\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res2 = ('{\n'
+            '    "Question 6": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aberforth",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "harry",\n'
+            '                    "potter"\n'
+            '                ]\n'
+            '            ],\n'
+            '            [\n'
+            '                [\n'
+            '                    "aurelius",\n'
+            '                    "dumbledore"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "harry",\n'
+            '                    "potter"\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res3 = '{\n    "Question 6": {\n        "Pair Matches": []\n    }\n}'
+    res4 = ('{\n'
+            '    "Question 6": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                [\n'
+            '                    "malcolm",\n'
+            '                    "baddock"\n'
+            '                ],\n'
+            '                [\n'
+            '                    "malcolm",\n'
+            '                    "mcgonagall"\n'
+            '                ]\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    assert graph1.return_results() == res1
+    assert graph3.return_results() == res1
+    assert graph5.return_results() == res2
+    assert graph7.return_results() == res3
+    assert graph8.return_results() == res3
+    assert graph9.return_results() == res3
+    assert graph10.return_results() == res3
+    assert graph11.return_results() == res3
+    assert graph12.return_results() == res4
+    assert graph13.return_results() == res3
+    assert graph14.return_results() == res3
+    assert graph15.return_results() == res3
+    assert graph16.return_results() == res3
+    assert graph17.return_results() == res3
+    assert graph18.return_results() == res3
