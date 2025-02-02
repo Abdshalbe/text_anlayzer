@@ -58,7 +58,7 @@ class Graph:
         self.__nodes = {}
         self.__edges = []
 
-    def add_node(self, data: str | tuple[str]) -> None:
+    def add_node(self, data: str |  tuple[list[str]] | tuple[str]) -> None:
         if data not in self.__nodes:
             self.__nodes[data] = Node(data)
 
