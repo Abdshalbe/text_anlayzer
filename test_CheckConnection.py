@@ -10,11 +10,10 @@ json_data = {
     ]
 }
 json_data1 = {
-    "keys": [
-        ["Cristiano Ronaldo", "lionel messi"],
-        ["harry maguire", "harry cane"],
-        ["Donald Trump", "Joe Biden"]
-    ]
+    "keys": [["cristiano ronaldo", "lionel messi"],
+             ["harry maguire", "harry cane"],
+             ["harry potter", "ron weasley"],
+             ["donald trump", "joe biden"]]
 }
 json_key_file = process_json_data(json.dumps(json_data))
 json_key_file1 = process_json_data(json.dumps(json_data1))
@@ -27,9 +26,10 @@ def test_extract_keys_from_json():
         ["hermione granger", "harry potter"]
     ]
     assert extract_keys_from_json(json_key_file1) == [
-        ["Cristiano Ronaldo", "lionel messi"],
+        ["cristiano ronaldo", "lionel messi"],
         ["harry maguire", "harry cane"],
-        ["Donald Trump", "Joe Biden"]
+        ["harry potter", "ron weasley"],
+        ["donald trump", "joe biden"]
     ]
 
 
@@ -67,11 +67,10 @@ json_data2 = {"keys": [
     ["Neville Longbottom", "Ron Weasley"],
     ["Harry Potter", "Luna Lovegood"],
     ["Draco Malfoy", "Ron Weasley"]]}
-json_data3 = {"keys": [
-    ["Cristiano Ronaldo", "lionel messi"],
-    ["harry maguire", "harry cane"],
-    ["Harry Potter", "Ron Weasley"],
-    ["Donald Trump", "Joe Biden"]]}
+json_data3 = {"keys": [["cristiano ronaldo", "lionel messi"],
+                       ["harry maguire", "harry cane"],
+                       ["harry potter", "ron weasley"],
+                       ["donald trump", "joe biden"]]}
 
 people_list2 = [["Cristiano Ronaldo", ''], ["lionel messi", ''],
                 ["harry maguire", ''], ["harry cane", ''],
@@ -99,51 +98,67 @@ json_file_to_comp = process_json_data(
 
 
 def equalCtr():
+    """
+    test that the constructor of task 7 with json or with csv are equal
+    """
     assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json, k=5).return_results() == CheckConnection(7,
-                                                                                                           jsonInputFile=json_file,
-                                                                                                           preprocessed=True,
-                                                                                                           People_connections_to_check=keys_json,
-                                                                                                           k=5).return_results()
+                           People_connections_to_check=keys_json,
+                           Maximal_distance=5).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json,
+                                                                                   Maximal_distance=5).return_results()
     assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json, k=4).return_results() == CheckConnection(7,
-                                                                                                           jsonInputFile=json_file,
-                                                                                                           preprocessed=True,
-                                                                                                           People_connections_to_check=keys_json,
-                                                                                                           k=4).return_results()
+                           People_connections_to_check=keys_json,
+                           Maximal_distance=4).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json,
+                                                                                   Maximal_distance=4).return_results()
     assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json, k=3).return_results() == CheckConnection(7,
-                                                                                                           jsonInputFile=json_file,
-                                                                                                           preprocessed=True,
-                                                                                                           People_connections_to_check=keys_json,
-                                                                                                           k=3).return_results()
+                           People_connections_to_check=keys_json,
+                           Maximal_distance=3).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json,
+                                                                                   Maximal_distance=3).return_results()
     assert CheckConnection(7, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json2, k=5).return_results() == CheckConnection(7,
-                                                                                                            jsonInputFile=json_file_to_comp,
-                                                                                                            preprocessed=True,
-                                                                                                            People_connections_to_check=keys_json2,
-                                                                                                            k=5).return_results()
+                           People_connections_to_check=keys_json2,
+                           Maximal_distance=5).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file_to_comp,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json2,
+                                                                                   Maximal_distance=5).return_results()
     assert CheckConnection(7, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json2, k=4).return_results() == CheckConnection(7,
-                                                                                                            jsonInputFile=json_file_to_comp,
-                                                                                                            preprocessed=True,
-                                                                                                            People_connections_to_check=keys_json2,
-                                                                                                            k=4).return_results()
+                           People_connections_to_check=keys_json2,
+                           Maximal_distance=4).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file_to_comp,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json2,
+                                                                                   Maximal_distance=4).return_results()
     assert CheckConnection(7, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json, k=3).return_results() == CheckConnection(7,
-                                                                                                           jsonInputFile=json_file_to_comp,
-                                                                                                           preprocessed=True,
-                                                                                                           People_connections_to_check=keys_json2,
-                                                                                                           k=3).return_results()
+                           People_connections_to_check=keys_json,
+                           Maximal_distance=3).return_results() == CheckConnection(7,
+                                                                                   jsonInputFile=json_file_to_comp,
+                                                                                   preprocessed=True,
+                                                                                   People_connections_to_check=keys_json2,
+                                                                                   Maximal_distance=3).return_results()
 
 
 def test_check_results_7():
+    """
+    test the result of task 7
+    i tested the following conditions:
+    Disconnected Graph: If the graph has no connections (isolated nodes), ensure that the check for indirect connections returns False for all pairs.
+    Large Graph with Multiple Paths: Ensure the program correctly identifies indirect connections even if multiple paths exist.
+    No Path Found: Ensure the correct return of False if no path exists between two people.
+    """
     result1 = ('{\n'
                '    "Question 7": {\n'
                '        "Pair Matches": [\n'
@@ -204,39 +219,268 @@ def test_check_results_7():
                '    "Question 7": {\n'
                '        "Pair Matches": [\n'
                '            [\n'
-               '                "Cristiano Ronaldo",\n'
+               '                "cristiano ronaldo",\n'
                '                "lionel messi",\n'
-               '                false\n'
+               '                true\n'
                '            ],\n'
                '            [\n'
-               '                "Donald Trump",\n'
-               '                "Joe Biden",\n'
+               '                "donald trump",\n'
+               '                "joe biden",\n'
+               '                true\n'
+               '            ],\n'
+               '            [\n'
+               '                "harry cane",\n'
+               '                "harry maguire",\n'
+               '                true\n'
+               '            ],\n'
+               '            [\n'
+               '                "harry potter",\n'
+               '                "ron weasley",\n'
+               '                false\n'
+               '            ]\n'
+               '        ]\n'
+               '    }\n'
+               '}')
+    result3 = ('{\n'
+               '    "Question 7": {\n'
+               '        "Pair Matches": [\n'
+               '            [\n'
+               '                "cristiano ronaldo",\n'
+               '                "lionel messi",\n'
+               '                true\n'
+               '            ],\n'
+               '            [\n'
+               '                "donald trump",\n'
+               '                "joe biden",\n'
                '                false\n'
                '            ],\n'
                '            [\n'
                '                "harry cane",\n'
                '                "harry maguire",\n'
                '                true\n'
+               '            ],\n'
+               '            [\n'
+               '                "harry potter",\n'
+               '                "ron weasley",\n'
+               '                false\n'
                '            ]\n'
                '        ]\n'
                '    }\n'
                '}')
-    # assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-    #                        sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-    #                        People_connections_to_check=keys_json, Maximal_distance=5).return_results() == result1
-    # #
-    # assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-    #                        sentence_input_path=sentence_lest1_scv, WindowSize=7, Threshold=1,
-    #                        People_connections_to_check=keys_json, Maximal_distance=4).return_results() == result1
-    # #
-    # assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-    #                        sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-    #                        People_connections_to_check=keys_json, Maximal_distance=20).return_results() == result1
+    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, Maximal_distance=5).return_results() == result1
     #
-    # assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-    #                        sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-    #                        People_connections_to_check=keys_json, Maximal_distance=31).return_results() == result1
+    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=7, Threshold=1,
+                           People_connections_to_check=keys_json, Maximal_distance=4).return_results() == result1
+    #
+    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, Maximal_distance=20).return_results() == result1
+
+    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, Maximal_distance=31).return_results() == result1
 
     assert CheckConnection(7, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest2_scv, WindowSize=4, Threshold=1,
-                           People_connections_to_check=keys_json2, Maximal_distance=8).return_results() == []
+                           People_connections_to_check=keys_json2, Maximal_distance=2).return_results() == result2
+    assert CheckConnection(7, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=2,
+                           People_connections_to_check=keys_json2, Maximal_distance=2).return_results() == result3
+
+
+def test_equal_cstr():
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=5).return_results() == CheckConnection(8,
+                                                                    jsonInputFile=json_file,
+                                                                    preprocessed=True,
+                                                                    People_connections_to_check=keys_json,
+                                                                    fixed_length=True,
+                                                                    k=5).return_results()
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=4).return_results() == CheckConnection(8,
+                                                                    jsonInputFile=json_file,
+                                                                    preprocessed=True,
+                                                                    People_connections_to_check=keys_json,
+                                                                    fixed_length=True,
+                                                                    k=4).return_results()
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=3).return_results() == CheckConnection(8,
+                                                                    jsonInputFile=json_file,
+                                                                    preprocessed=True,
+                                                                    People_connections_to_check=keys_json,
+                                                                    fixed_length=True,
+                                                                    k=3).return_results()
+    assert CheckConnection(8, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json2, fixed_length=True,
+                           k=5).return_results() == CheckConnection(8,
+                                                                    jsonInputFile=json_file_to_comp,
+                                                                    preprocessed=True,
+                                                                    People_connections_to_check=keys_json2,
+                                                                    fixed_length=True,
+                                                                    k=5).return_results()
+    assert CheckConnection(8, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json2, fixed_length=True,
+                           k=4).return_results() == CheckConnection(8,
+                                                                    jsonInputFile=json_file_to_comp,
+                                                                    preprocessed=True,
+                                                                    People_connections_to_check=keys_json2,
+                                                                    fixed_length=True,
+                                                                    k=4).return_results()
+
+
+def test_result8():
+    """
+    Test the result8 function
+    i tested the following
+    Fixed Length Larger Than Graph Depth: If the fixed length is greater than the number of nodes or connections, return False.
+    Path Not Found: If no path of the exact specified length exists, return False.
+    Looping Paths: Ensure no loops are allowed (i.e., a node should not appear twice in the path).
+    Exact Length Matching: Ensure that only paths that exactly match the specified length are returned as True.
+    """
+    res1 = ('{\n'
+            '    "Question 8": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                "Draco Malfoy",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Harry Potter",\n'
+            '                "Hermione Granger",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Harry Potter",\n'
+            '                "Luna Lovegood",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Harry Potter",\n'
+            '                "Professor Dumbledore",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Harry Potter",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Hermione Granger",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Luna Lovegood",\n'
+            '                "Neville Longbottom",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Luna Lovegood",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Neville Longbottom",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "Professor Dumbledore",\n'
+            '                "Ron Weasley",\n'
+            '                false\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res2 = ('{\n'
+            '    "Question 8": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                "cristiano ronaldo",\n'
+            '                "lionel messi",\n'
+            '                true\n'
+            '            ],\n'
+            '            [\n'
+            '                "donald trump",\n'
+            '                "joe biden",\n'
+            '                true\n'
+            '            ],\n'
+            '            [\n'
+            '                "harry cane",\n'
+            '                "harry maguire",\n'
+            '                true\n'
+            '            ],\n'
+            '            [\n'
+            '                "harry potter",\n'
+            '                "ron weasley",\n'
+            '                false\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    res3 = ('{\n'
+            '    "Question 8": {\n'
+            '        "Pair Matches": [\n'
+            '            [\n'
+            '                "cristiano ronaldo",\n'
+            '                "lionel messi",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "donald trump",\n'
+            '                "joe biden",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "harry cane",\n'
+            '                "harry maguire",\n'
+            '                false\n'
+            '            ],\n'
+            '            [\n'
+            '                "harry potter",\n'
+            '                "ron weasley",\n'
+            '                false\n'
+            '            ]\n'
+            '        ]\n'
+            '    }\n'
+            '}')
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=5).return_results() == res1
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=20).return_results() == res1
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=4).return_results() == res1
+    assert CheckConnection(8, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json, fixed_length=True,
+                           k=3).return_results() == res1
+    assert CheckConnection(8, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json2, fixed_length=True,
+                           k=5).return_results() == res2
+    assert CheckConnection(8, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json2, fixed_length=True,
+                           k=4).return_results() == res2
+    assert CheckConnection(8, people_input_path=people_list2_scv, remove_input_path=sentence_remove_scv,
+                           sentence_input_path=sentence_lest2_scv, WindowSize=2, Threshold=1,
+                           People_connections_to_check=keys_json2, fixed_length=True,
+                           k=10).return_results() == res3

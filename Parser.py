@@ -46,7 +46,7 @@ def process_sentence(sentence: str) -> str:
         return sentence
 
     # Dictionary for punctuation replacement (you can adjust this if needed)
-    helperDict = {punc: ' ' for punc in string.punctuation}  # Map punctuation to whitespace
+    helperDict = hash_dict_for_punctuation()  # Map punctuation to whitespace
 
     # Initialize the new sentence with the first character
     new_sentence = ''
@@ -57,7 +57,7 @@ def process_sentence(sentence: str) -> str:
         if char in helperDict:
             newChar = helperDict[char]  # Replace punctuation with space
         else:
-            newChar = char.lower()  # Convert the character to lowercase
+            newChar = ' '  # Convert the character to lowercase
         # Prevent consecutive spaces in the sentence
         if newChar == ' ' and (new_sentence.endswith(' ') or not new_sentence):
             continue

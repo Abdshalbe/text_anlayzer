@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import typing
 from typing import Any
 
@@ -113,10 +112,9 @@ class SequinceCounter:
             else:
                 raise ValueError("Either --preprocessed or both --sentence_input and --remove_input must be provided.")
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            print(f"Error: {e}")  # Handle any file-related or other errors
-            sys.exit(1)  # Exit program if there's an error
+            raise e(f"Error: {e}")  # Handle any file-related or other errors
 
-    def count_sequences(self) -> list[list[str | list[list[str | int]]]]:
+    def __count_sequences(self) -> list[list[str | list[list[str | int]]]]:
         """
         Generate k-sequences and count their occurrences.
         """
@@ -140,22 +138,6 @@ class SequinceCounter:
             result_list.append([f"{seq}_seq", sub_seq])
         return result_list
 
-    def write_result_to_json(self, filePath: str) -> bool:
-        """
-        Write the result of the sequences to json file
-        :param filePath: path to the json file
-        :return: true if the file was successfully created else false
-        """
-        data = {
-            f"Question {self.__questionNum}": {
-                f"{self.__N}-Seq Counts": self.count_sequences()
-            }
-        }
-        if Parser.writeTojsonFile(filePath, data):
-            return True
-        else:
-            return False
-
     def return_results(self) -> str:
         """
         Return the results of the sequences to json file
@@ -163,7 +145,7 @@ class SequinceCounter:
         """
         data = {
             f"Question {self.__questionNum}": {
-                f"{self.__N}-Seq Counts": self.count_sequences()
+                f"{self.__N}-Seq Counts": self.__count_sequences()
             }
         }
         json_data = json.dumps(data, indent=4)
@@ -196,5 +178,3 @@ if __name__ == '__main__':
     SEQUENCE_COUNTER6 = SequinceCounter(2,
                                         json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
                                         preprocessed=True, N=5)
-
-    SEQUENCE_COUNTER3.write_result_to_json('1.json')

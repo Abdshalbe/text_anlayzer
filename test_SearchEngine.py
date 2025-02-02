@@ -148,6 +148,11 @@ def test_result_KseqData():
 def test_result():
     """
     Test the result of the search engine is as needed
+    I TESTED :
+    Empty K-seq List: If the list of k-seqs contains no sequences.
+    K-seq Not Found in Any Sentence: The search should return an empty list if no sentences contain the k-seq.
+    Case Sensitivity: Handle case variations in search queries and sentences.
+    Multiple Occurrences of a K-seq in the Same Sentence: Ensure the same sequence is counted only once per sentence.
     """
     res1 = ('{\n'
             '    "Question 4": {\n'

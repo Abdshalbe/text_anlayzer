@@ -67,7 +67,7 @@ class Graph:
             self.__nodes[data1].add_connected_data(self.__nodes[data2])
             self.__nodes[data2].add_connected_data(self.__nodes[data1])
             sorted_names = sorted([self.__nodes[data1], self.__nodes[data2]], key=lambda person: person.get_data())
-            if (sorted_names[0], sorted_names[1]) not in self.__edges:
+            if (sorted_names[0], sorted_names[1]) not in self.__edges and (sorted_names[1], sorted_names[0]) not in self.__edges:
                 self.__edges.append((sorted_names[0], sorted_names[1]))
             self.__edges = sorted(self.__edges, key=lambda edge: edge[0].get_data())
 
@@ -80,7 +80,7 @@ class Graph:
     def get_edges(self) -> list[Node]:
         return self.__edges
 
-    def get_nodes(self) -> dict[str,Node]:
+    def get_nodes(self) -> dict[str, Node]:
         return self.__nodes
 
     def __repr__(self) -> str:
@@ -110,31 +110,33 @@ class PeopleConnectionGraph(PeopleKAssociations):
         Return the results of the connection graph to json file
         :return: string represent the results of the connection graph  in json format
         """
+        try:
+            def format_edges(edges: list[Node]) -> list[str | list[str]]:
+                """
+                Converts the __edges from tuples of names to lists of names, formatted as required.
+                This method ensures that __edges are in a fixed order.
+                :param edges: List of tuples representing the __edges
+                :return: List of lists representing the __edges
+                """
+                formatted_edges = []
+                for edge in edges:
+                    person1, person2 = edge
+                    # Ensure the format is a list of individual words for each data in the edge
+                    formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
+                # Sort __edges to ensure the order is as required in the question
+                formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
+                return formatted_edges
 
-        def format_edges(edges: list[Node]) -> list[str | list[str]]:
-            """
-            Converts the __edges from tuples of names to lists of names, formatted as required.
-            This method ensures that __edges are in a fixed order.
-            :param edges: List of tuples representing the __edges
-            :return: List of lists representing the __edges
-            """
-            formatted_edges = []
-            for edge in edges:
-                person1, person2 = edge
-                # Ensure the format is a list of individual words for each data in the edge
-                formatted_edges.append([person1.get_data().split(), person2.get_data().split()])
-            # Sort __edges to ensure the order is as required in the question
-            formatted_edges = sorted(formatted_edges, key=lambda x: (x[0], x[1]))
-            return formatted_edges
-
-        data = {
-            f"Question {self.__question_number}": {  # Use the corrected attribute node_data
-                "Pair Matches": format_edges(self.__graph.get_edges())
+            data = {
+                f"Question {self.__question_number}": {  # Use the corrected attribute node_data
+                    "Pair Matches": format_edges(self.__graph.get_edges())
+                }
             }
-        }
 
-        json_data = json.dumps(data, indent=4)
-        return json_data
+            json_data = json.dumps(data, indent=4)
+            return json_data
+        except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
+            raise e("error")
 
     def __count_people_in_windows(self) -> dict[str, dict[str, int]]:
         """
@@ -196,4 +198,3 @@ class PeopleConnectionGraph(PeopleKAssociations):
             return people_graph
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
             raise e("error")
-

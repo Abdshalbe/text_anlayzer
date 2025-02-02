@@ -20,7 +20,7 @@ class SentenceGraph:
                 self.__sentences = Parser.Parser(1, sentenceInputPath=sentence_input_path,
                                                  removeInputPath=remove_input_path).getSentences()
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-            raise e  # Handle any file-related or other errors
+            raise e(f"Error: {e}")  # Handle any file-related or other errors
         self.threshold = threshold  # Minimum number of shared words to form an edge
         self.__graph = self.builed_graph()  # Adjacency list
 

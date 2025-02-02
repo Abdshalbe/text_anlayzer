@@ -314,6 +314,10 @@ def test_result():
     Test that the result of the graph is correct and sorted as should
     IN THIS TEst i tested many cases "people counted once for every window" and
     other cases like empty file and sorted result
+    I TESTED : No Person Pairs in the Same Window: If no pair of people appears together in any window, the result should be empty.
+    Small Threshold (t = 1): This will result in many edges, so it should be tested with edge cases for performance.
+    No People Mentioned: If none of the people from the list appear in any sentences, the graph should have no edges.
+    Duplicate Edges: Ensure that the graph does not contain duplicate edges between the same pair of people.
     """
     res1 = ('{\n'
             '    "Question 6": {\n'

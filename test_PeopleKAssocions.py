@@ -97,10 +97,13 @@ def test_get_names_appearances_idx():
 
 def test_return_result():
     """
-    Test the return value
-    in this cases we checked theat if people don't finde will not include in the result and
-    to check if min name is not shown and the other name was fined will be counted
-    :return:
+Test the return value
+in this cases we checked theat if people don't finde will not include in the result and
+to check if min name is not shown and the other name was fined will be counted
+I TESTED : Empty K-seq List: If the list of k-seqs contains no sequences.
+K-seq Not Found in Any Sentence: The search should return an empty list if no sentences contain the k-seq.
+Case Sensitivity: Handle case variations in search queries and sentences.
+Multiple Occurrences of a K-seq in the Same Sentence: Ensure the same sequence is counted only once per sentence.
     """
     res1 = ('{\n'
             '    "Question 4": {\n'

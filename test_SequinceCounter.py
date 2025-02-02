@@ -146,6 +146,9 @@ def test_empty_files():
 def test_k_seq():
     """
     tedt that k seq return the correct value and works as needed
+    i tested that Empty Sentences: Sentences with no words after preprocessing (empty sentences should be removed).
+    Maximal K-seq Length Exceeds Sentence Length: If N is larger than the number of words in a sentence, the task should handle gracefully.
+    Repeated Sequences: A sequence may appear multiple times in the same sentence. The task should count all occurrences, including repeated ones.
     """
     result1 = ('{\n'
                '    "Question 2": {\n'

@@ -12,6 +12,7 @@ def test_preprocesser_text():
     assert process_sentence(" Mr- Potter ") == "mr potter"
     assert process_sentence("") == ""
     assert process_sentence("Mr.") == "mr"
+    assert process_sentence("José ") == 'jos'
     result1 = (
         "under a tuft of jet black hair over boy forehead dumbledore and mcgonagall could see a curiously shaped "
         "cut like a bolt of lightning")
@@ -1482,3 +1483,4 @@ def test_results():
     assert parser4.return_results() == data_str4
     assert parser5.return_results() == data_str5
     assert parser6.return_results() == data_str6
+

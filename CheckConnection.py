@@ -3,7 +3,7 @@ import os
 import typing
 from collections import deque
 
-from PeopleConnectionGraph import Graph, PeopleConnectionGraph,Node
+from PeopleConnectionGraph import Graph, PeopleConnectionGraph, Node
 import time
 
 
@@ -88,9 +88,6 @@ def build_graph_from_json(file_path: str) -> Graph:
 
 
 class CheckConnection:
-    def get_graph(self):
-        return self.__graph
-
     def __init__(self, QNum: int,
                  People_connections_to_check: typing.Union[str, os.PathLike],
                  Maximal_distance: int = 0,
@@ -101,6 +98,24 @@ class CheckConnection:
                  jsonInputFile: typing.Union[str, os.PathLike] = None, k=0,
                  fixed_length: bool = False,
                  preprocessed: bool = False):
+        """
+        this is the constructor for task 7 and 8 if the constructor get fixed_length True value
+        it will perform task 8 and will search for specific distance between each two value in
+        the gotten  People_connections_to_check
+        :param QNum: question number
+        :param People_connections_to_check: key file that contain a list of lists each contain
+        the two names to search for in People_cotnnections_to_check
+        :param Maximal_distance: maximum distance between two names in the supplied keyfile is used only if fixed length False
+        :param sentence_input_path: the path of the sentence input file to search on it
+        :param WindowSize: window size for the search of names appearance
+        :param Threshold: threshold is the minimal value for set people as connected
+        :param remove_input_path: path of the input file to word to remove
+        :param people_input_path: path of the input file to peoples names
+        :param jsonInputFile: json files as processed data
+        :param k: supplied when call 8 to search for exact length
+        :param fixed_length: true if 8 false other
+        :param preprocessed: true if supplied a json file else false
+        """
         try:
             if preprocessed:
                 self.__graph = build_graph_from_json(jsonInputFile)
@@ -122,30 +137,24 @@ class CheckConnection:
         Perform BFS recursively to find the shortest path between two people (nodes) in the graph.
         :param start_name: The starting data (node) node_data.
         :param target_name: The target data (node) node_data.
-        :param visited: Set of visited nodes (used for recursion).
-        :param path: The current path (used for recursion).
         :return: The shortest path between start_name and target_name as a list of names.
         """
         graph = self.__graph
         # Get the start and end nodes
         start_node = graph.get_node(start_name)
         end_node = graph.get_node(target_name)
-
         # Check if start or end nodes are not in the graph
         if start_node is None or end_node is None:
             return []
-
         # Queue for BFS
         queue = deque([start_node])
         # Dictionary to store the parent of each node
         parent = {start_node: None}
         # Set to keep track of visited nodes
-        visited = set([start_node])
-
+        visited = {start_node}
         # Perform BFS
         while queue:
             current_node = queue.popleft()
-
             # If we reach the destination, reconstruct the path
             if current_node == end_node:
                 path = []
@@ -153,14 +162,12 @@ class CheckConnection:
                     path.append(current_node.get_data())
                     current_node = parent[current_node]
                 return path[::-1]  # Reverse the path to get start -> end
-
             # Explore neighbors
             for neighbor in current_node.get_connected_data():
                 if neighbor not in visited:
                     visited.add(neighbor)
                     parent[neighbor] = current_node
                     queue.append(neighbor)
-
         # If no path is found
         return []
 
@@ -179,7 +186,7 @@ class CheckConnection:
         output = []
         for relationToCheck in self.__keys:
             relationToCheck = sorted(relationToCheck)
-            is_connected_with_k_nodes = self.__dfs_find_path(relationToCheck[0], relationToCheck[1])
+            is_connected_with_k_nodes = self.__dfs_find_path_exact_length(relationToCheck[0], relationToCheck[1])
             output.append([relationToCheck[0], relationToCheck[1], is_connected_with_k_nodes])
         return sorted(output)
 
@@ -243,12 +250,12 @@ class CheckConnection:
 
 if __name__ == '__main__':
     check = CheckConnection(7,
-                            sentence_input_path="text_analyzer/2_examples/Q7_examples/exmaple_2/sentences_small_2.csv",
-                            people_input_path="text_analyzer/2_examples/Q7_examples/exmaple_2/people_small_2.csv",
-                            remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv", Threshold=2,
-                            WindowSize=5,
-                            People_connections_to_check="text_analyzer/2_examples/Q7_examples/exmaple_2/people_connections_2.json",
-                            Maximal_distance=1000, fixed_length=False)
+                            sentence_input_path="text_analyzer/2_examples/Q8_examples/exmaple_2/sentences_small_2.csv",
+                            people_input_path="text_analyzer/2_examples/Q8_examples/exmaple_2/people_small_2.csv",
+                            remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv", Threshold=1,
+                            WindowSize=2, Maximal_distance=7,
+                            People_connections_to_check="text_analyzer/2_examples/Q8_examples/exmaple_2/people_connections_2.json",
+                            fixed_length=False)
 
     # execution_time, result = measure_execution_time(check.write_to_json, "W3Th2fl8.json")
 

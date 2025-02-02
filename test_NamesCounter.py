@@ -151,6 +151,9 @@ def test_result():
     """
     Test the result of NamesCounter is returend as should and name that are not
     appeard will not be showed
+    I TESTED : No Mentions in Text: If no person from the list appears in the sentences, the output should be an empty list or none.
+    Partial Mentions: Any mention of a person's name or part of their name should count, including nicknames.
+    Multiple Mentions of Nicknames: Ensure that the same nickname is counted for the same person.
     """
     result1 = ('{\n'
                '    "Question 3": {\n'
