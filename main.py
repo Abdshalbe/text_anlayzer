@@ -4,7 +4,7 @@ from PeopleKAssociations import PeopleKAssociations
 from PeopleConnectionGraph import PeopleConnectionGraph
 from CheckConnection import CheckConnection
 from SearchEngine import SearchEngine
-from SequinceCounter import SequinceCounter
+from SequenceCounter import SequenceCounter
 from SentencesGraph import SentenceGraph
 
 import argparse
@@ -93,11 +93,11 @@ def main():
             if not isinstance(int(args.maxk), int) or int(args.maxk) < 0:
                 raise ValueError("maxk must be a positive integer")
             if args.preprocessed:
-                sequenceCounter = SequinceCounter(int(args.task), json_input_path=args.preprocessed, preprocessed=True, N=int(args.maxk))
+                sequenceCounter = SequenceCounter(int(args.task), json_input_path=args.preprocessed, preprocessed=True, N=int(args.maxk))
             else:
                 if args.sentences is None or args.removewords is None:
                     raise ValueError("Please provide sentences file and removewords file ")
-                sequenceCounter = SequinceCounter(int(args.task), sentence_input_path=args.sentences, remove_input_path=args.removewords, N=int(args.maxk))
+                sequenceCounter = SequenceCounter(int(args.task), sentence_input_path=args.sentences, remove_input_path=args.removewords, N=int(args.maxk))
             result = sequenceCounter.return_results()
             print(result)
 
@@ -118,7 +118,7 @@ def main():
             if args.preprocessed:
                 searchEngine = SearchEngine(QNum=int(args.task), jsonInputFile=args.preprocessed, preprocessed=True, kSeqJson=args.qsek_query_path)
             else:
-                if args.sentences is None or args.removewords is None or args.names is None:
+                if args.sentences is None or args.removewords is None:
                     raise ValueError("Please provide sentences file and names file and remove words file ")
                 searchEngine = SearchEngine(QNum=int(args.task), sentence_input_path=args.sentences, remove_input_path=args.removewords, kSeqJson=args.qsek_query_path)
             result = searchEngine.return_results()
@@ -142,7 +142,7 @@ def main():
             if not isinstance(int(args.windowsize), int) or int(args.windowsize) < 0:
                 raise ValueError("windowsize must be a positive integer")
             if not isinstance(int(args.threshold), int) or int(args.threshold) < 0:
-                raise ValueError("threshold must be a positive integer")
+                raise ValueError("__threshold must be a positive integer")
             if args.preprocessed:
                 graph = PeopleConnectionGraph(QNum=int(args.task), jsonInputFile=args.preprocessed, preprocessed=True, WindowSize=args.windowsize, Threshold=args.threshold)
             else:
@@ -172,16 +172,16 @@ def main():
             # Initialize the preprocessor
             if not args.pairs:
                 raise ValueError("pairs file is required ")
-            if not isinstance(int(args.k), int) or int(args.k) < 0:
+            if not isinstance(int(args.fixed_length), int) or int(args.fixed_length) < 0:
                 raise ValueError("k must be a positive integer")
             if args.preprocessed:
-                connectionGraph = CheckConnection(QNum=int(args.task), k=int(args.k),
+                connectionGraph = CheckConnection(QNum=int(args.task), k=int(args.fixed_length),
                                                   jsonInputFile=args.preprocessed, preprocessed=True,
                                                   People_connections_to_check=args.pairs, fixed_length=True)
             else:
                 if not args.names or not args.sentences or not args.removewords or int(args.windowsize)<1 or int(args.threshold)<0 :
                     raise ValueError("one of supplied data from argumint is not availed or required")
-                connectionGraph = CheckConnection(QNum=int(args.task), k=int(args.k),
+                connectionGraph = CheckConnection(QNum=int(args.task), k=int(args.fixed_length),
                                                   sentence_input_path=args.sentences,
                                                   remove_input_path=args.removewords, people_input_path=args.names,
                                                   WindowSize=args.windowsize, Threshold=args.threshold,
@@ -192,7 +192,7 @@ def main():
         elif args.task == '9':
             # Initialize the preprocessor
             if not isinstance(int(args.threshold), int) or int(args.threshold) < 0:
-                raise ValueError("threshold must be a positive integer")
+                raise ValueError("__threshold must be a positive integer")
             if args.preprocessed:
                 sentences_graph = SentenceGraph(question_number=int(args.task),
                                                 json_input_path=args.preprocessed, preprocessed=True, threshold=int(args.threshold))
@@ -209,7 +209,7 @@ def main():
             raise ValueError("must provide task number between 1 and 9")
 
     except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
-        print(f"Invalid: {e}")
+        print(f"invalid input: {e}")
         return 1  # Return 1 on failure
 
 

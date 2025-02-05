@@ -1,7 +1,6 @@
 import csv
 import json
 import os
-import string
 import typing
 
 
@@ -44,13 +43,10 @@ def process_sentence(sentence: str) -> str:
     # Early return for empty string
     if not sentence:
         return sentence
-
     # Dictionary for punctuation replacement (you can adjust this if needed)
     helperDict = hash_dict_for_punctuation()  # Map punctuation to whitespace
-
     # Initialize the new sentence with the first character
     new_sentence = ''
-
     # Process each character in the sentence
     for i, char in enumerate(sentence):
         # Convert uppercase to lowercase and handle punctuation
@@ -62,7 +58,6 @@ def process_sentence(sentence: str) -> str:
         if newChar == ' ' and (new_sentence.endswith(' ') or not new_sentence):
             continue
         new_sentence += newChar
-
     return new_sentence.strip()
 
 
@@ -197,7 +192,7 @@ class Parser:
             if len(person) == 0:
                 continue
             mainName = self.__removeUnwantedWords(process_sentence(person[0]))
-            if mainName not in namesDict and mainName != "":
+            if mainName not in namesDict and mainName != "" and mainName != ' ':
                 namesDict[mainName] = []
                 nickNames = person[1].split(",")
                 for nickName in nickNames:
@@ -267,19 +262,3 @@ class Parser:
         :return: a dictionary of the words to remove mapped to True
         """
         return self.__Removes
-
-
-if __name__ == '__main__':
-    preprocessor_1 = Parser(1,
-                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_1/people_small_1.csv",
-                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_1/sentences_small_1.csv",
-                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    preprocessor_2 = Parser(1,
-                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_2/people_small_2.csv",
-                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_2/sentences_small_2.csv",
-                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    preprocessor_3 = Parser(1,
-                            peopleInputPath="text_analyzer/2_examples/Q1_examples/example_3/people_small_3.csv",
-                            sentenceInputPath="text_analyzer/2_examples/Q1_examples/example_3/sentences_small_3.csv",
-                            removeInputPath="text_analyzer/1_data/Data/REMOVEWORDS.csv")
-    # print(preprocessor_2.write_result_to_json("11.json"))

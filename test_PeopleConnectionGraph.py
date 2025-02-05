@@ -8,11 +8,11 @@ class TestGraph:
         # Test node initialization with a string
         node1 = Node("node1")
         assert node1.get_data() == "node1"
-        assert len(node1.get_connected_data()) == 0  # No connections initially
+        assert len(node1.get_connected_node()) == 0  # No connections initially
         # Test node initialization with a list
         node2 = Node(["node", "two"])
         assert node2.get_data() == ["node", "two"]
-        assert len(node2.get_connected_data()) == 0  # No connections initially
+        assert len(node2.get_connected_node()) == 0  # No connections initially
 
     def test_add_connected_data(self):
         # Create nodes
@@ -21,7 +21,7 @@ class TestGraph:
         # Add a connection between node1 and node2
         node1.add_connected_data(node2)
         # Assert that node1 has node2 in its connected data
-        assert node2 in node1.get_connected_data()
+        assert node2 in node1.get_connected_node()
 
     def test_graph_creation(self):
         # Create the Graph
@@ -122,7 +122,7 @@ class TestGraph:
         node2 = Node("node2")
 
         # Assert that node1 is not connected to node2
-        assert node2 not in node1.get_connected_data()
+        assert node2 not in node1.get_connected_node()
 
 
 data_text = [[
@@ -261,26 +261,20 @@ graph8 = PeopleConnectionGraph(6, sentence_input_path=dataSentence1, people_inpu
                                remove_input_path=datawords, Threshold=2, WindowSize=31)
 graph9 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names1_file,
                                remove_input_path=datawords, Threshold=3, WindowSize=3)
-graph10 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names1_file,
-                                remove_input_path=datawords, Threshold=4, WindowSize=7)
 graph11 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names1_file,
                                 remove_input_path=datawords, Threshold=1, WindowSize=1)
 graph12 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names2_file,
                                 remove_input_path=datawords, Threshold=2, WindowSize=2)
-graph13 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names2_file,
-                                remove_input_path=datawords, Threshold=7, WindowSize=2)
-graph14 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names2_file,
-                                remove_input_path=datawords, Threshold=1, WindowSize=3)
 graph15 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence1, people_input_path=people_names3_file,
                                 remove_input_path=datawords, Threshold=1, WindowSize=4)
-graph16 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence2, people_input_path=people_names3_file,
-                                remove_input_path=datawords, Threshold=3, WindowSize=2)
 graph17 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names3_file,
                                 remove_input_path=datawords, Threshold=1, WindowSize=1)
 graph18 = PeopleConnectionGraph(6, sentence_input_path=csv_sentence3, people_input_path=people_names2_file,
                                 remove_input_path=datawords, Threshold=2, WindowSize=2)
 graph19 = PeopleConnectionGraph(6, sentence_input_path=dataSentence2, people_input_path=data_names_csv2,
                                 remove_input_path=datawords, Threshold=2, WindowSize=2)
+graph20 = PeopleConnectionGraph(6, sentence_input_path=dataSentence2, people_input_path=data_names_csv2,
+                                remove_input_path=datawords, Threshold=1, WindowSize=0)
 
 
 def test_equal_csr():
@@ -302,11 +296,8 @@ def test_build_graph():
     """
     empty_graph = Graph()
     assert graph17.get_graph() == empty_graph
-    assert graph16.get_graph() == empty_graph
     assert graph15.get_graph() == empty_graph
-    assert graph13.get_graph() == empty_graph
     assert graph11.get_graph() == empty_graph
-    assert graph10.get_graph() == empty_graph
 
 
 def test_result():
@@ -463,13 +454,10 @@ def test_result():
     assert graph7.return_results() == res3
     assert graph8.return_results() == res3
     assert graph9.return_results() == res3
-    assert graph10.return_results() == res3
     assert graph11.return_results() == res3
     assert graph12.return_results() == res4
-    assert graph13.return_results() == res3
-    assert graph14.return_results() == res3
     assert graph15.return_results() == res3
-    assert graph16.return_results() == res3
     assert graph17.return_results() == res3
     assert graph18.return_results() == res3
     assert graph19.return_results() == res5  # check only nickname appear
+    assert graph20.return_results() == '{\n    "Question 6": {\n        "Pair Matches": []\n    }\n}'

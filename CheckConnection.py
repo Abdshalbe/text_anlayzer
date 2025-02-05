@@ -3,26 +3,10 @@ import os
 import typing
 from collections import deque
 
-from PeopleConnectionGraph import Graph, PeopleConnectionGraph, Node
-import time
+from PeopleConnectionGraph import Graph, PeopleConnectionGraph
 
 
 # Function to measure the execution time of any function
-def measure_execution_time(func, *args, **kwargs):
-    """
-    Measures the execution time of the given function.
-
-    :param func: The function to measure
-    :param args: Positional arguments to pass to the function
-    :param kwargs: Keyword arguments to pass to the function
-    :return: Tuple containing the execution time and the output of the function
-    """
-    start_time = time.time()
-    output = func(*args, **kwargs)
-    end_time = time.time()
-    execution_time_measure = end_time - start_time
-    return execution_time_measure, output
-
 
 def extract_keys_from_json(file_path: str) -> list:
     """
@@ -88,6 +72,11 @@ def build_graph_from_json(file_path: str) -> Graph:
 
 
 class CheckConnection:
+    """
+    This class is responsible for checking the connection of two names if fixed_length is true search for specific
+    path length else we will try to find the path with length less than maximum distance
+    """
+
     def __init__(self, QNum: int,
                  People_connections_to_check: typing.Union[str, os.PathLike],
                  Maximal_distance: int = 0,
@@ -99,22 +88,17 @@ class CheckConnection:
                  fixed_length: bool = False,
                  preprocessed: bool = False):
         """
-        this is the constructor for task 7 and 8 if the constructor get fixed_length True value
-        it will perform task 8 and will search for specific distance between each two value in
-        the gotten  People_connections_to_check
-        :param QNum: question number
-        :param People_connections_to_check: key file that contain a list of lists each contain
-        the two names to search for in People_cotnnections_to_check
-        :param Maximal_distance: maximum distance between two names in the supplied keyfile is used only if fixed length False
-        :param sentence_input_path: the path of the sentence input file to search on it
-        :param WindowSize: window size for the search of names appearance
-        :param Threshold: threshold is the minimal value for set people as connected
-        :param remove_input_path: path of the input file to word to remove
-        :param people_input_path: path of the input file to peoples names
-        :param jsonInputFile: json files as processed data
-        :param k: supplied when call 8 to search for exact length
-        :param fixed_length: true if 8 false other
-        :param preprocessed: true if supplied a json file else false
+        this is the constructor for task 7 and 8 if the constructor get fixed_length True value it will perform task
+        8 and will search for specific distance between each two value in the gotten  People_connections_to_check
+        :param QNum: question number :param People_connections_to_check: key file that contain a list of lists each
+        contain the two names to search for in People_connections_to_check :param Maximal_distance: maximum distance
+        between two names in the supplied keyfile is used only if fixed length False :param sentence_input_path: the
+        path of the sentence input file to search on it :param WindowSize: window size for the search of names
+        appearance :param Threshold: __threshold is the minimal value for set people as connected :param
+        remove_input_path: path of the input file to word to remove :param people_input_path: path of the input file
+        to peoples names :param jsonInputFile: json files as processed data :param k: supplied when call 8 to search
+        for exact length :param fixed_length: true if 8 false other :param preprocessed: true if supplied a json file
+        else false
         """
         try:
             if preprocessed:
@@ -140,13 +124,12 @@ class CheckConnection:
         :return: The shortest path between start_name and target_name as a list of names.
         """
         graph = self.__graph
-        # Get the start and end nodes
+        # Get the start and end nodes data
         start_node = graph.get_node(start_name)
         end_node = graph.get_node(target_name)
         # Check if start or end nodes are not in the graph
         if start_node is None or end_node is None:
             return []
-        # Queue for BFS
         queue = deque([start_node])
         # Dictionary to store the parent of each node
         parent = {start_node: None}
@@ -163,7 +146,7 @@ class CheckConnection:
                     current_node = parent[current_node]
                 return path[::-1]  # Reverse the path to get start -> end
             # Explore neighbors
-            for neighbor in current_node.get_connected_data():
+            for neighbor in current_node.get_connected_node():
                 if neighbor not in visited:
                     visited.add(neighbor)
                     parent[neighbor] = current_node
@@ -217,6 +200,8 @@ class CheckConnection:
         :param visited: Set of visited nodes to avoid revisiting.
         :param length: The current length of the path.
         :return: True if a path of exact length exists, False otherwise.
+        notice that this function is use back tracking something I have learned alone
+        I have not described in video because it will take a long time
         """
         graph = self.__graph
         # Initialize path and visited set if not provided
@@ -227,14 +212,14 @@ class CheckConnection:
         # If the path length exceeds the desired length, stop exploring further
         if length > self.__k:
             return False
-        # If the path length is exactly k and the target is reached, return True
+        # if the path length is exactly k and the target is reached, return True
         if length == self.__k and start == target:
             return True
-        # Mark the current node as visited
+        # mark the current node as visited
         visited.add(start)
-        # Explore the neighbors (connected people) of the current node
+        # Explore the connected people of the current node
         if graph.get_node(start):
-            for neighbor in graph.get_node(start).get_connected_data():
+            for neighbor in graph.get_node(start).get_connected_node():
                 neighbor_name = neighbor.get_data()
                 # If the neighbor has not been visited, recurse
                 if neighbor_name not in visited:
@@ -244,20 +229,4 @@ class CheckConnection:
                         return True
         # Backtrack, remove the current node from the visited set
         visited.remove(start)
-        # No path found
-        return False
-
-
-if __name__ == '__main__':
-    check = CheckConnection(7,
-                            sentence_input_path="text_analyzer/2_examples/Q8_examples/exmaple_2/sentences_small_2.csv",
-                            people_input_path="text_analyzer/2_examples/Q8_examples/exmaple_2/people_small_2.csv",
-                            remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv", Threshold=1,
-                            WindowSize=2, Maximal_distance=7,
-                            People_connections_to_check="text_analyzer/2_examples/Q8_examples/exmaple_2/people_connections_2.json",
-                            fixed_length=False)
-
-    # execution_time, result = measure_execution_time(check.write_to_json, "W3Th2fl8.json")
-
-    # Print the result and the execution time
-    print(check.return_results())
+        return False  # No path found

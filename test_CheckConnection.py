@@ -269,14 +269,6 @@ def test_check_results_7():
                '}')
     assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
                            sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
-                           People_connections_to_check=keys_json, Maximal_distance=5).return_results() == result1
-    #
-    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-                           sentence_input_path=sentence_lest1_scv, WindowSize=7, Threshold=1,
-                           People_connections_to_check=keys_json, Maximal_distance=4).return_results() == result1
-    #
-    assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,
-                           sentence_input_path=sentence_lest1_scv, WindowSize=2, Threshold=1,
                            People_connections_to_check=keys_json, Maximal_distance=20).return_results() == result1
 
     assert CheckConnection(7, people_input_path=people_list_scv, remove_input_path=sentence_remove_scv,

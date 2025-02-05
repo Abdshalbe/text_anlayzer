@@ -12,6 +12,7 @@ class Node:
         """
         self.__data: str | list[str] = node_data
         self.__connected_data: list["Node"] = []
+        self.__apprance_counter = 0
 
     def add_connected_data(self, data: "Node") -> None:
         """
@@ -21,7 +22,7 @@ class Node:
         if data not in self.__connected_data:
             self.__connected_data.append(data)
 
-    def get_connected_data(self) -> list["Node"]:
+    def get_connected_node(self) -> list["Node"]:
         """
         returns the connected people that are connected to the __data
         :return: list of Node objects representing the connected people
@@ -34,6 +35,12 @@ class Node:
         :return: str representing the main node_data
         """
         return self.__data
+
+    def get_apprance_counter(self) -> int:
+        return self.__apprance_counter
+
+    def increase_apprance_counter(self):
+        self.__apprance_counter += 1
 
     def __str__(self) -> str:
         """
@@ -58,16 +65,20 @@ class Graph:
         self.__nodes = {}
         self.__edges = []
 
-    def add_node(self, data: str |  tuple[list[str]] | tuple[str]) -> None:
+    def add_node(self, data: str | tuple[list[str]] | tuple[str]) -> None:
         if data not in self.__nodes:
             self.__nodes[data] = Node(data)
+            self.__nodes[data].increase_apprance_counter()
+        else:
+            self.__nodes[data].increase_apprance_counter()
 
     def add_edge(self, data1: str | tuple[list[str]], data2: str | tuple[list[str]]) -> None:
         if data1 in self.__nodes and data2 in self.__nodes:
             self.__nodes[data1].add_connected_data(self.__nodes[data2])
             self.__nodes[data2].add_connected_data(self.__nodes[data1])
             sorted_names = sorted([self.__nodes[data1], self.__nodes[data2]], key=lambda person: person.get_data())
-            if (sorted_names[0], sorted_names[1]) not in self.__edges and (sorted_names[1], sorted_names[0]) not in self.__edges:
+            if (sorted_names[0], sorted_names[1]) not in self.__edges and (
+                    sorted_names[1], sorted_names[0]) not in self.__edges:
                 self.__edges.append((sorted_names[0], sorted_names[1]))
             self.__edges = sorted(self.__edges, key=lambda edge: edge[0].get_data())
 
@@ -91,19 +102,30 @@ class Graph:
 
 
 class PeopleConnectionGraph(PeopleKAssociations):
+    """
+    analyze how people are connected based on their proximity in the document by constructing a graph.
+    People are considered connected if they are mentioned within the same window of sentences
+    """
+
     def __init__(self, QNum: int, WindowSize: int, Threshold: int,
                  sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,
                  people_input_path: typing.Union[str, os.PathLike] = None,
                  jsonInputFile: typing.Union[str, os.PathLike] = None, preprocessed: bool = False):
-        #  inherits from PeopleKAssociations class to not duplicate codes
-        super().__init__(QNum, sentence_input_path=sentence_input_path, people_input_path=people_input_path,
-                         remove_input_path=remove_input_path, json_input_path=jsonInputFile, preprocessed=preprocessed,
-                         N=1000000000)
-        self.__windowSize = WindowSize
-        self.__Threshold = Threshold
-        self.__question_number = QNum  # Initialize the question number attribute
-        self.__graph = self.__build_people_graph()
+        try:
+            #  inherits from PeopleKAssociations class to not duplicate codes
+            super().__init__(QNum, sentence_input_path=sentence_input_path, people_input_path=people_input_path,
+                             remove_input_path=remove_input_path, json_input_path=jsonInputFile,
+                             preprocessed=preprocessed,
+                             N=1000000000)
+            self.__windowSize = WindowSize
+            self.__Threshold = Threshold
+            self.__question_number = QNum  # Initialize the question number attribute
+            self.__graph = self.__build_people_graph()
+            if self.get_sentences_len() < self.__windowSize:
+                raise ValueError("The window size should be less than the sentence size.")
+        except (FileNotFoundError, PermissionError, TypeError, Exception) as e:
+            raise e(f"Error: {e}")
 
     def return_results(self) -> str:
         """
@@ -193,7 +215,7 @@ class PeopleConnectionGraph(PeopleKAssociations):
             for person in main_dict:
                 for other_person, meeting_count in main_dict[person].items():
                     if meeting_count >= self.__Threshold:
-                        # If the meeting frequency meets the threshold, add an edge between data and other_person
+                        # If the meeting frequency meets the __threshold, add an edge between data and other_person
                         people_graph.add_edge(person, other_person)
             return people_graph
         except (FileNotFoundError, PermissionError, TypeError, Exception) as e:

@@ -1,12 +1,17 @@
 import json
 import os
 import typing
-
+from typing import Any
 from Parser import process_sentence
-from SequinceCounter import load_Sentences_names, load_data
+from SequenceCounter import load_Sentences_names, load_data
 
 
+# noinspection PyTypeChecker
 class SearchEngine:
+    """
+    This class is responsible for searching for sentences in the text file from supplied text
+    """
+
     def __init__(self, QNum: int, sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,
                  jsonInputFile: typing.Union[str, os.PathLike] = None,
@@ -21,10 +26,10 @@ class SearchEngine:
         self.__remove_input_path = remove_input_path
         self.__jsonInputFile = jsonInputFile
         self.__kSeqJson = kSeqJson
-        self.__kSeqData = self.__load_kseq_data()
+        self.__kSeqData = self.__load_keys()
         try:
             # Try to load k-seq data, and based on availability, load either JSON or raw data
-            self.__load_kseq_data()
+            self.__load_keys()
             if preprocessed:
                 self.__sentences, self.__names = load_Sentences_names(
                     json_file_path=jsonInputFile)  # Load preprocessed JSON file
@@ -37,12 +42,13 @@ class SearchEngine:
         except (FileNotFoundError, PermissionError, TypeError, Exception, ValueError) as e:
             raise e(f"Error: {e}")  # Handle any file-related or other errors
 
-    def __buildGenralDataBase(self):
+    def __buildGeneralDataBase(self) -> dict[tuple[str], list[tuple[str]]]:
         """"
         Builds the database from the supplied sentence
         time complexity : build O(lines_number * line_length**2)
         for search it tack O(1) in average case cause the data structure we use
         is hash dictionary
+        (not needed for this task )
         """
         resDict = {}
         # Iterate through each sentence in the list
@@ -70,13 +76,13 @@ class SearchEngine:
         (this search if the supplied text in the text will return the lines were they found )
         :return: list of lines where each line is a sentence that contains the supplied text
         """
-        searchDictionary = self.__buildGenralDataBase()
+        searchDictionary = self.__buildGeneralDataBase()
         if tuple(data) not in searchDictionary:
             return []
         else:
             return searchDictionary[tuple(data)]
 
-    def __buildDataBaseForGivenKeys(self):
+    def __buildDataBaseForGivenKeys(self) -> dict[tuple[str, ...], list[Any]]:
         """"
         Builds the database for the given keys
         time complexity : build O(lines_number * line_length**2)
@@ -100,7 +106,7 @@ class SearchEngine:
                             resDict[sub_seq].append(sentence)
         return resDict
 
-    def result_KseqData(self):
+    def result_KseqData(self) -> dict[tuple[str], list[tuple[str]]]:
         """
         Builds the k-sequence based data
         :return : dictionary with all the keys that appeared and their corresponding lines
@@ -140,7 +146,8 @@ class SearchEngine:
         json_data = json.dumps(result_dict, indent=4)
         return json_data
 
-    def __load_kseq_data(self) -> list[list[str]]:
+    # noinspection PyArgumentList
+    def __load_keys(self) -> list[list[str]]:
         """
         Loads k-sequence data from a JSON file and processes it by cleaning up words and removing punctuation.
         :return: A list of cleaned sentences (as lists of words)
@@ -171,38 +178,3 @@ class SearchEngine:
 
         return availedData  # Return the cleaned k-sequences
 
-
-if __name__ == "__main__":
-    searchEngine1 = SearchEngine(4,
-                                 sentence_input_path="text_analyzer/2_examples/Q4_examples/example_1/sentences_small_1.csv",
-                                 remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_1/kseq_query_keys_1.json")
-
-    searchEngine2 = SearchEngine(4,
-                                 sentence_input_path="text_analyzer/2_examples/Q4_examples/example_2/sentences_small_2.csv",
-                                 remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_2/kseq_query_keys_2.json")
-
-    searchEngine3 = SearchEngine(4,
-                                 sentence_input_path="text_analyzer/2_examples/Q4_examples/example_3/sentences_small_3.csv",
-                                 remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_3/kseq_query_keys_3.json")
-
-    searchEngine4 = SearchEngine(4,
-                                 sentence_input_path="text_analyzer/2_examples/Q4_examples/example_4/sentences_small_4.csv",
-                                 remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_4/kseq_query_keys_4.json")
-
-    searchEngine5 = SearchEngine(4, jsonInputFile="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",
-                                 preprocessed=True,
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_1/kseq_query_keys_1.json")
-
-    searchEngine6 = SearchEngine(4, jsonInputFile="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",
-                                 preprocessed=True,
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_2/kseq_query_keys_2.json")
-
-    searchEngine7 = SearchEngine(4, jsonInputFile="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
-                                 preprocessed=True,
-                                 kSeqJson="text_analyzer/2_examples/Q4_examples/example_3/kseq_query_keys_3.json")
-
-    # print(searchEngine4.write_to_json("q4_result1.json"))

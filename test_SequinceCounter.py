@@ -1,4 +1,4 @@
-from SequinceCounter import generate_k_seqs, SequinceCounter, load_Sentences_names
+from SequenceCounter import generate_k_seqs, SequenceCounter, load_Sentences_names
 from test_Parser import *
 
 
@@ -55,27 +55,27 @@ def test_equal_Csr():
     """
     Test the equal_Csr that the given json file is equal to the csv files
     """
-    assert SequinceCounter(2, json_input_path=json1, preprocessed=True, N=2).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json1, preprocessed=True, N=2).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence1,
                                                                                                                  remove_input_path=csv_remved2,
                                                                                                                  N=2).return_results()
-    assert SequinceCounter(2, json_input_path=json2, preprocessed=True, N=4).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json2, preprocessed=True, N=4).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence6,
                                                                                                                  remove_input_path=csv_remved1,
                                                                                                                  N=4).return_results()
-    assert SequinceCounter(2, json_input_path=json3, preprocessed=True, N=5).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json3, preprocessed=True, N=5).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence2,
                                                                                                                  remove_input_path=csv_remved1,
                                                                                                                  N=5).return_results()
-    assert SequinceCounter(2, json_input_path=json4, preprocessed=True, N=3).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json4, preprocessed=True, N=3).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence3,
                                                                                                                  remove_input_path=csv_remved1,
                                                                                                                  N=3).return_results()
-    assert SequinceCounter(2, json_input_path=json5, preprocessed=True, N=6).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json5, preprocessed=True, N=6).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence4,
                                                                                                                  remove_input_path=csv_remved1,
                                                                                                                  N=6).return_results()
-    assert SequinceCounter(2, json_input_path=json6, preprocessed=True, N=1).return_results() == SequinceCounter(2,
+    assert SequenceCounter(2, json_input_path=json6, preprocessed=True, N=1).return_results() == SequenceCounter(2,
                                                                                                                  sentence_input_path=csv_sentence5,
                                                                                                                  remove_input_path=csv_remved1,
                                                                                                                  N=1).return_results()
@@ -135,11 +135,11 @@ def test_empty_files():
             '        ]\n'
             '    }\n'
             '}')
-    assert SequinceCounter(2, json_input_path=empty_file_json, preprocessed=True, N=3).return_results() == res1
-    assert SequinceCounter(2, sentence_input_path=empty_file_sen, remove_input_path=csv_remved1,
+    assert SequenceCounter(2, json_input_path=empty_file_json, preprocessed=True, N=3).return_results() == res1
+    assert SequenceCounter(2, sentence_input_path=empty_file_sen, remove_input_path=csv_remved1,
                            N=3).return_results() == res1
-    assert SequinceCounter(2, json_input_path=empty_file_json, preprocessed=True, N=4).return_results() == res2
-    assert SequinceCounter(2, sentence_input_path=empty_file_sen, remove_input_path=csv_remved1,
+    assert SequenceCounter(2, json_input_path=empty_file_json, preprocessed=True, N=4).return_results() == res2
+    assert SequenceCounter(2, sentence_input_path=empty_file_sen, remove_input_path=csv_remved1,
                            N=4).return_results() == res2
 
 
@@ -1725,12 +1725,12 @@ def test_k_seq():
                '        ]\n'
                '    }\n'
                '}')
-    assert SequinceCounter(2, json_input_path=json1, preprocessed=True, N=2).return_results() == result1
-    assert SequinceCounter(2, sentence_input_path=csv_sentence6, remove_input_path=csv_remved1,
+    assert SequenceCounter(2, json_input_path=json1, preprocessed=True, N=2).return_results() == result1
+    assert SequenceCounter(2, sentence_input_path=csv_sentence6, remove_input_path=csv_remved1,
                            N=4).return_results() == result2
-    assert SequinceCounter(2, json_input_path=json3, preprocessed=True, N=5).return_results() == result3
-    assert SequinceCounter(2, sentence_input_path=csv_sentence3, remove_input_path=csv_remved1,
+    assert SequenceCounter(2, json_input_path=json3, preprocessed=True, N=5).return_results() == result3
+    assert SequenceCounter(2, sentence_input_path=csv_sentence3, remove_input_path=csv_remved1,
                            N=3).return_results() == result4
-    assert SequinceCounter(2, json_input_path=json5, preprocessed=True, N=4).return_results() == result5
-    assert SequinceCounter(2, sentence_input_path=csv_sentence5, remove_input_path=csv_remved1,
+    assert SequenceCounter(2, json_input_path=json5, preprocessed=True, N=4).return_results() == result5
+    assert SequenceCounter(2, sentence_input_path=csv_sentence5, remove_input_path=csv_remved1,
                            N=1).return_results() == result6

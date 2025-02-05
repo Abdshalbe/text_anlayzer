@@ -1,10 +1,14 @@
 import json
 import os
 import typing
-from SequinceCounter import load_Sentences_names, load_data
+from SequenceCounter import load_Sentences_names, load_data
 
 
 class NamesCounter:
+    """
+    A class that responsible for counting people who have been appeared in people file
+    """
+
     def __init__(self, QNum: int, sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,
                  people_input_path: typing.Union[str, os.PathLike] = None,
@@ -25,7 +29,8 @@ class NamesCounter:
         try:
             if preprocessed:
                 self.__sentences, self.__names = load_Sentences_names(self.__json_input_path)
-            elif self.__remove_input_path is not None and self.__sentence_input_path is not None and self.__people_input_path is not None:
+            elif (self.__remove_input_path is not None and self.__sentence_input_path is not None and people_input_path
+                  is not None):
                 self.__sentences, self.__names = load_data(self.__sentence_input_path,
                                                            self.__remove_input_path, self.__people_input_path)
             else:
@@ -115,22 +120,3 @@ class NamesCounter:
         :return: a list of sentences
         """
         return self.__sentences
-
-
-if __name__ == '__main__':
-    NAMES_COUNTER4 = NamesCounter(3,
-                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_1/people_small_1.csv",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_1/sentences_small_1.csv")
-    NAMES_COUNTER5 = NamesCounter(3,
-                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_2/people_small_2.csv",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_2/sentences_small_2.csv")
-    NAMES_COUNTER6 = NamesCounter(3,
-                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_3/people_small_3.csv",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_3/sentences_small_3.csv")
-    NAMES_COUNTER7 = NamesCounter(3,
-                                  people_input_path="text_analyzer/2_examples/Q3_examples/example_4/people_small_4.csv",
-                                  remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv",
-                                  sentence_input_path="text_analyzer/2_examples/Q3_examples/example_4/sentences_small_4.csv")

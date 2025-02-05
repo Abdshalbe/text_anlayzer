@@ -28,11 +28,12 @@ def generate_k_seqs(sentences: list[list[str]], N: int) -> dict[str, list[Any]]:
     return seq_counts
 
 
+# noinspection PyArgumentList
 def load_Sentences_names(json_file_path: typing.Union[str, os]) -> (list[list[str]], list[list[str]]):
     """
         Loads preprocessed data from a JSON file.
         :param json_file_path: Path to the preprocessed JSON file
-        :time complicity = O(1) because the file is already preprocessed and therefore
+        :time complicity = O(1) because the file is already preprocessed, and therefore
          we just want to enter the data
         """
     try:
@@ -85,7 +86,7 @@ def load_data(sentence_input_path: typing.Union[str, os], remove_input_path: typ
     return sentences, names
 
 
-class SequinceCounter:
+class SequenceCounter:
 
     def __init__(self, question_num: int, sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,
@@ -99,8 +100,8 @@ class SequinceCounter:
         :param N: Maximal sequence length
         """
         try:
-            if N % 1 != 0 or N <= 0:
-                raise ValueError('the N must be a positive integer')
+            if N <= 0:
+                raise ValueError("the k should be at least 1")
             self.__N: int = N
             self.__questionNum = question_num
             if preprocessed:
@@ -120,8 +121,8 @@ class SequinceCounter:
         """
         return self.__convert_to_json_style(generate_k_seqs(self.__sentences, self.__N))
 
-    def __convert_to_json_style(self, seq_counts: dict[str, dict[tuple[tuple[str], int]]]) -> list[
-        list[str | list[list[str, int]]]]:
+    def __convert_to_json_style(self, seq_counts: dict[str, dict[tuple[tuple[str], int]]]) -> list[list[str | list[list[
+        str, int]]]]:
         """
         Convert the sequences to json-style and return it
         :param seq_counts: the sequences to convert into json-style
@@ -150,31 +151,3 @@ class SequinceCounter:
         }
         json_data = json.dumps(data, indent=4)
         return json_data
-
-
-if __name__ == '__main__':
-    SEQUENCE_COUNTER1 = SequinceCounter(2,
-                                        sentence_input_path="text_analyzer/2_examples/Q2_examples/example_1"
-                                                            "/sentences_small_1.csv",
-                                        people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
-                                        remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                        N=3)
-    SEQUENCE_COUNTER2 = SequinceCounter(2,
-                                        sentence_input_path="text_analyzer/2_examples/Q2_examples/example_2"
-                                                            "/sentences_small_2.csv",
-                                        remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                        N=4)
-    SEQUENCE_COUNTER3 = SequinceCounter(2,
-                                        sentence_input_path="text_analyzer/2_examples/Q2_examples/example_3"
-                                                            "/sentences_small_3.csv",
-                                        remove_input_path="text_analyzer/1_data/Data/REMOVEWORDS.csv",
-                                        N=5)
-    SEQUENCE_COUNTER4 = SequinceCounter(2,
-                                        json_input_path="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",
-                                        preprocessed=True, N=3)
-    SEQUENCE_COUNTER5 = SequinceCounter(2,
-                                        json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",
-                                        preprocessed=True, N=4)
-    SEQUENCE_COUNTER6 = SequinceCounter(2,
-                                        json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
-                                        preprocessed=True, N=5)

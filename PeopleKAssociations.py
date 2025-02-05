@@ -3,11 +3,13 @@ import os
 import typing
 
 from NamesCounter import NamesCounter
-from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
-from SequinceCounter import generate_k_seqs, load_Sentences_names, load_data
+from SequenceCounter import generate_k_seqs, load_Sentences_names, load_data
 
 
 class PeopleKAssociations:
+    """
+    this class is used to find the context in which people are mentioned. For each person  find the k-seqs
+    """
     def __init__(self, QNum: int, N: int, sentence_input_path: typing.Union[str, os.PathLike] = None,
                  remove_input_path: typing.Union[str, os.PathLike] = None,
                  people_input_path: typing.Union[str, os.PathLike] = None,
@@ -21,6 +23,8 @@ class PeopleKAssociations:
         self.__json_input_path: typing.Union[str, os.PathLike] = json_input_path
         self.__preprocessed: bool = preprocessed
         try:
+            if N <= 0:
+                raise ValueError("the N must be integer number greater than 0")
             if preprocessed:
                 self.__sentences, self.__names = load_Sentences_names(json_input_path)
             else:
@@ -55,11 +59,9 @@ class PeopleKAssociations:
                 for key in sorted(seq_counts.keys(),
                                   key=lambda x: int(x.split('_')[0])):  # Sort keys like '1_seq', '2_seq', etc.
                     seq_list = seq_counts[key]
-
                     # Add the sequences (stored as tuples) into the result list
                     for seq, count in seq_list:
                         result.append(list(seq))  # Convert tuple to list and append it
-
                 # Sort all sequences lexicographically
                 result.sort()  # This sorts the sequences in lexicographical order
                 return result
@@ -112,33 +114,3 @@ class PeopleKAssociations:
             return data
 
         return remove_duplicates(namesIdx)
-
-
-if __name__ == "__main__":
-    PeopleKAssocions1 = PeopleKAssociations(5,
-                                            people_input_path="text_analyzer/2_examples/Q5_examples/example_1/people_small_1.csv",
-                                            sentence_input_path="text_analyzer/2_examples/Q5_examples/example_1/sentences_small_1.csv",
-                                            remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=3)
-    PeopleKAssocions2 = PeopleKAssociations(5,
-                                            people_input_path="text_analyzer/2_examples/Q5_examples/example_2/people_small_2.csv",
-                                            sentence_input_path="text_analyzer/2_examples/Q5_examples/example_2/sentences_small_2.csv",
-                                            remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=4)
-    PeopleKAssocions3 = PeopleKAssociations(5,
-                                            people_input_path="text_analyzer/2_examples/Q5_examples/example_3/people_small_3.csv",
-                                            sentence_input_path="text_analyzer/2_examples/Q5_examples/example_3/sentences_small_3.csv",
-                                            remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=5)
-    PeopleKAssocions4 = PeopleKAssociations(5,
-                                            people_input_path="text_analyzer/2_examples/Q5_examples/example_4/people_small_4.csv",
-                                            sentence_input_path="text_analyzer/2_examples/Q5_examples/example_4/sentences_small_4.csv",
-                                            remove_input_path="text_analyzer/1_data/data/REMOVEWORDS.csv", N=6)
-    PeopleKAssocions5 = PeopleKAssociations(5,
-                                            json_input_path="text_analyzer/2_examples/Q1_examples/example_1/Q1_result1.json",
-                                            preprocessed=True, N=3)
-    PeopleKAssocions6 = PeopleKAssociations(5,
-                                            json_input_path="text_analyzer/2_examples/Q1_examples/example_2/Q1_result2.json",
-                                            preprocessed=True, N=4)
-    PeopleKAssocions7 = PeopleKAssociations(5,
-                                            json_input_path="text_analyzer/2_examples/Q1_examples/example_3/Q1_result3.json",
-                                            preprocessed=True, N=5)
-
-    print(PeopleKAssocions1.get_sentences_len())
