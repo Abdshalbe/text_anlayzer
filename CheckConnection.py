@@ -224,8 +224,7 @@ class CheckConnection:
                 # If the neighbor has not been visited, recurse
                 if neighbor_name not in visited:
                     # Recur for the neighbor and increase the path length
-                    if self.__dfs_find_path_exact_length(neighbor_name, target, path + [neighbor_name], visited,
-                                                         length + 1):
+                    if self.__dfs_find_path_exact_length(neighbor_name, target, path + [neighbor_name], visited, length + 1):
                         return True
         # Backtrack, remove the current node from the visited set
         visited.remove(start)
